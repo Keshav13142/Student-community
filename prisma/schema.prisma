@@ -11,8 +11,8 @@ model Account {
   id                String  @id
   userId            String
   type              String
-  provider          String
-  providerAccountId String
+  provider          String  @unique
+  providerAccountId String  @unique
   refresh_token     String?
   access_token      String?
   expires_at        Int?
@@ -21,6 +21,8 @@ model Account {
   id_token          String?
   session_state     String?
   user              User    @relation(fields: [userId], references: [id])
+
+  @@map("accounts")
 }
 
 model Session {
@@ -29,6 +31,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id])
+
+  @@map("sessions")
 }
 
 model User {
@@ -44,6 +48,16 @@ model User {
   profile       Profile?
   posts         Post[]
   admin         Community[] @relation(name: "admin")
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String   @unique
+  token      String   @unique
+  expires    DateTime
+
+  @@map("verificationtokens")
 }
 
 model Profile {
