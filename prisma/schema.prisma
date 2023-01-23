@@ -8,11 +8,11 @@ generator client {
 }
 
 model Account {
-  id                String  @id
+  id                String  @id @default(cuid())
   userId            String
   type              String
-  provider          String  @unique
-  providerAccountId String  @unique
+  provider          String
+  providerAccountId String
   refresh_token     String?
   access_token      String?
   expires_at        Int?
@@ -22,11 +22,12 @@ model Account {
   session_state     String?
   user              User    @relation(fields: [userId], references: [id])
 
+  @@unique([provider, providerAccountId], name: "provider_providerAccountId")
   @@map("accounts")
 }
 
 model Session {
-  id           String   @id
+  id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
@@ -36,9 +37,9 @@ model Session {
 }
 
 model User {
-  id            String      @id
-  name          String?
-  email         String?     @unique
+  id            String      @id @default(cuid())
+  name          String
+  email         String      @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -53,10 +54,11 @@ model User {
 }
 
 model VerificationToken {
-  identifier String   @unique
-  token      String   @unique
+  identifier String
+  token      String
   expires    DateTime
 
+  @@unique([identifier, token])
   @@map("verificationtokens")
 }
 
@@ -90,7 +92,7 @@ model Category {
 }
 
 model Community {
-  id       String    @id @unique @default(cuid())
+  id       String    @id @default(cuid())
   name     String    @unique
   desc     String?
   members  User[]    @relation(name: "member")
@@ -101,7 +103,7 @@ model Community {
 }
 
 model Message {
-  id          String    @id @unique @default(cuid())
+  id          String    @id @default(cuid())
   content     String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
