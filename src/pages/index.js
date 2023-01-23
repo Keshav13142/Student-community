@@ -20,7 +20,7 @@ export default function Home() {
         <main className="h-screen w-screen">
           <div className="flex flex-col gap-5 items-center justify-center h-full">
             {session.status === "loading" ? (
-              <Loader size="lg" content="Large" />
+              <Loader size="lg" content="" />
             ) : (
               <>
                 <span>(Github only works in dev cause of callback url)</span>
