@@ -16,6 +16,12 @@ export const authOptions = {
       clientSecret: process.env.DISCORD_CLIENT_SECRET,
     }),
   ],
+  pages: {
+    signIn: "/",
+    signOut: "/",
+    error: "/", // Error code passed in query string as ?error=
+    newUser: "/new-user", // New users will be directed here on first sign in
+  },
 };
 
 export default NextAuth(authOptions);
