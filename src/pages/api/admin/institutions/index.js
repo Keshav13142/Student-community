@@ -104,7 +104,7 @@ const handlePOST = async (name, image, res) => {
       },
     });
 
-    res.json({ institution });
+    res.json(institution);
   } catch (error) {
     console.log(error);
 
