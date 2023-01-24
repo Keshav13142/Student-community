@@ -37,18 +37,21 @@ model Session {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  name          String
-  email         String      @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  communities   Community[] @relation(name: "member")
-  messages      Message[]
-  profile       Profile?
-  posts         Post[]
-  admin         Community[] @relation(name: "admin")
+  id               String        @id @default(cuid())
+  name             String
+  email            String        @unique
+  emailVerified    DateTime?
+  image            String?
+  accounts         Account[]
+  sessions         Session[]
+  communities      Community[]   @relation(name: "members")
+  communityAdmin   Community[]   @relation(name: "community_admins")
+  messages         Message[]
+  profile          Profile?
+  posts            Post[]
+  institutionAdmin Institution[] @relation(name: "institution_admins")
+  institution      Institution?  @relation(fields: [institutionId], references: [id])
+  institutionId    String?
 
   @@map("users")
 }
@@ -92,14 +95,16 @@ model Category {
 }
 
 model Community {
-  id       String    @id @default(cuid())
-  name     String    @unique
-  desc     String?
-  members  User[]    @relation(name: "member")
-  admins   User[]    @relation(name: "admin")
-  messages Message[]
-  image    String?
-  code     String    @default(cuid())
+  id            String      @id @default(cuid())
+  name          String      @unique
+  desc          String?
+  members       User[]      @relation(name: "members")
+  admins        User[]      @relation(name: "community_admins")
+  messages      Message[]
+  image         String?
+  code          String      @default(cuid())
+  institution   Institution @relation(fields: [institutionId], references: [id])
+  institutionId String
 }
 
 model Message {
@@ -111,4 +116,14 @@ model Message {
   community   Community @relation(fields: [communityId], references: [id])
   userId      String
   communityId String
+}
+
+model Institution {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  code        String      @unique @default(cuid())
+  image       String?
+  communities Community[]
+  users       User[]
+  admins      User[]      @relation("institution_admins")
 }
