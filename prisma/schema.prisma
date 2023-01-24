@@ -102,7 +102,7 @@ model Community {
   admins        User[]      @relation(name: "community_admins")
   messages      Message[]
   image         String?
-  code          String      @default(cuid())
+  code          String      @unique @default(cuid())
   institution   Institution @relation(fields: [institutionId], references: [id])
   institutionId String
 }

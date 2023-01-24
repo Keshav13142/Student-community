@@ -5,6 +5,7 @@ export default async function handler(req, res) {
 
   if (!userId) {
     res.status(500).json({ error: "Unauthorized!!" });
+    return;
   }
 
   if (req.method === "GET") {
