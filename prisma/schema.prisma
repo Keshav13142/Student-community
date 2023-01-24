@@ -124,6 +124,6 @@ model Institution {
   code        String      @unique @default(cuid())
   image       String?
   communities Community[]
-  users       User[]
+  members     User[]
   admins      User[]      @relation("institution_admins")
 }
