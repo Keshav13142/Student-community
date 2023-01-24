@@ -37,21 +37,23 @@ model Session {
 }
 
 model User {
-  id               String        @id @default(cuid())
-  name             String
-  email            String        @unique
-  emailVerified    DateTime?
-  image            String?
-  accounts         Account[]
-  sessions         Session[]
-  communities      Community[]   @relation(name: "members")
-  communityAdmin   Community[]   @relation(name: "community_admins")
-  messages         Message[]
-  profile          Profile?
-  posts            Post[]
-  institutionAdmin Institution[] @relation(name: "institution_admins")
-  institution      Institution?  @relation(fields: [institutionId], references: [id])
-  institutionId    String?
+  id                 String            @id @default(cuid())
+  name               String
+  email              String            @unique
+  emailVerified      DateTime?
+  image              String?
+  accounts           Account[]
+  sessions           Session[]
+  communities        Community[]       @relation(name: "members")
+  communityAdmin     Community[]       @relation(name: "community_admins")
+  messages           Message[]
+  profile            Profile?
+  posts              Post[]
+  institutionAdmin   Institution[]     @relation(name: "institution_admins")
+  institution        Institution?      @relation(fields: [institutionId], references: [id])
+  institutionId      String?
+  PendingApprovals   PendingApprovals? @relation(fields: [pendingApprovalsId], references: [id])
+  pendingApprovalsId String?
 
   @@map("users")
 }
@@ -95,16 +97,25 @@ model Category {
 }
 
 model Community {
-  id            String      @id @default(cuid())
-  name          String      @unique
-  desc          String?
-  members       User[]      @relation(name: "members")
-  admins        User[]      @relation(name: "community_admins")
-  messages      Message[]
-  image         String?
-  code          String      @unique @default(cuid())
-  institution   Institution @relation(fields: [institutionId], references: [id])
-  institutionId String
+  id               String             @id @default(cuid())
+  name             String             @unique
+  desc             String?
+  private          Boolean            @default(false)
+  members          User[]             @relation(name: "members")
+  admins           User[]             @relation(name: "community_admins")
+  messages         Message[]
+  image            String?
+  code             String             @unique @default(cuid())
+  institution      Institution        @relation(fields: [institutionId], references: [id])
+  institutionId    String
+  PendingApprovals PendingApprovals[]
+}
+
+model PendingApprovals {
+  id          String    @id @default(cuid())
+  users       User[]
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
 }
 
 model Message {
