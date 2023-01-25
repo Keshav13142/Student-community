@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   const { userId } = req.body;
 
   if (!userId) {
-    res.status(500).json({ error: "Unauthorized!!" });
+    res.status(500).json({ error: "Whoa are you??!!" });
     return;
   }
 
@@ -51,11 +51,6 @@ export default async function handler(req, res) {
   // Handle POST request => Create a new Community
   if (req.method === "POST") {
     await handlePOST(req, res, institution);
-  }
-
-  // Handle PUT request => Update community details
-  if (req.method === "PUT") {
-    await handlePUT(req, res);
   }
 }
 
@@ -130,36 +125,6 @@ const handlePOST = async (req, res, institution) => {
             name: true,
           },
         },
-      },
-    });
-
-    res.json(community);
-  } catch (error) {
-    console.log(error);
-
-    res.status(500).json({ error: "Something went wrong!!" });
-  }
-};
-
-const handlePUT = async (req, res) => {
-  const { name, desc, image, communityId } = req.body;
-
-  if (await getCommunityWithName(name)) {
-    res
-      .status(500)
-      .json({ error: "Community with this name already exists!!" });
-    return;
-  }
-
-  try {
-    const community = await prisma.community.update({
-      where: {
-        id: communityId,
-      },
-      data: {
-        name,
-        desc,
-        image,
       },
     });
 
