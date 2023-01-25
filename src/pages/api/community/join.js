@@ -5,12 +5,12 @@ export default async function handler(req, res) {
 
   if (!communityCode) {
     res.status(500).json({ error: "Invalid code!!" });
-    res.end();
+    return;
   }
 
   if (!userId) {
     res.status(500).json({ error: "Unauthorized!!" });
-    res.end();
+    return;
   }
 
   try {
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
       res.status(500).json({
         error: `You must be a member of the institution to join the community!!`,
       });
-      res.end();
+      return;
     }
 
     const community = await prisma.community.findFirst({
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
 
     if (community) {
       res.json(community);
-      res.end();
+      return;
     }
 
     const joinedCommunity = await prisma.community.update({
