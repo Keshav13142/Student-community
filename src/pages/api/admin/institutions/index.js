@@ -3,8 +3,8 @@ import prisma from "@/lib/prisma";
 export default async function handler(req, res) {
   //Return error if admin secret is missing
   if (req.body.secret !== process.env.ADMIN_SECRET) {
-    res.status(500).json({ error: "Unauthorized" });
-    return;
+    res.status(500).json({ error: "Missing userId" });
+    res.end();
   }
 
   // Handle GET request => return all institutions
@@ -67,7 +67,7 @@ const getInstWithName = async (name) => {
 const handlePOST = async (name, image, res) => {
   if (!name) {
     res.status(500).json({ error: "Institution name is required!!" });
-    return;
+    res.end();
   }
 
   try {
@@ -76,7 +76,7 @@ const handlePOST = async (name, image, res) => {
       res
         .status(500)
         .json({ error: "Institution with this name already exists!!" });
-      return;
+      res.end();
     }
 
     // Save into db

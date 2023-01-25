@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   if (!userId) {
     res.status(500).json({ error: "Unauthorized!!" });
-    return;
+    res.end();
   }
 
   if (req.method === "GET") {
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         },
       })
     );
-    return;
+    res.end();
   }
 
   try {
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
       res.status(500).json({
         error: "Only admins of institutions can  create communities!!",
       });
-      return;
+      res.end();
     }
   } catch (error) {
     console.log(error);
@@ -76,7 +76,7 @@ const handlePOST = async (req, res, institution) => {
 
   if (!name) {
     res.status(500).json({ error: "Community name is required!!" });
-    return;
+    res.end();
   }
 
   try {
@@ -84,7 +84,7 @@ const handlePOST = async (req, res, institution) => {
       res
         .status(500)
         .json({ error: "Community with this name already exists!!" });
-      return;
+      res.end();
     }
 
     const community = await prisma.community.create({
@@ -137,7 +137,7 @@ const handlePUT = async (req, res) => {
     res
       .status(500)
       .json({ error: "Community with this name already exists!!" });
-    return;
+    res.end();
   }
 
   try {
