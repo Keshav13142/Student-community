@@ -37,23 +37,22 @@ model Session {
 }
 
 model User {
-  id                 String            @id @default(cuid())
-  name               String
-  email              String            @unique
-  emailVerified      DateTime?
-  image              String?
-  accounts           Account[]
-  sessions           Session[]
-  communities        Community[]       @relation(name: "members")
-  communityAdmin     Community[]       @relation(name: "community_admins")
-  messages           Message[]
-  profile            Profile?
-  posts              Post[]
-  institutionAdmin   Institution[]     @relation(name: "institution_admins")
-  institution        Institution?      @relation(fields: [institutionId], references: [id])
-  institutionId      String?
-  PendingApprovals   PendingApprovals? @relation(fields: [pendingApprovalsId], references: [id])
-  pendingApprovalsId String?
+  id               String             @id @default(cuid())
+  name             String
+  email            String             @unique
+  emailVerified    DateTime?
+  image            String?
+  accounts         Account[]
+  sessions         Session[]
+  communities      Community[]        @relation(name: "members")
+  communityAdmin   Community[]        @relation(name: "community_admins")
+  messages         Message[]
+  profile          Profile?
+  posts            Post[]
+  institutionAdmin Institution[]      @relation(name: "institution_admins")
+  institution      Institution?       @relation(fields: [institutionId], references: [id])
+  institutionId    String?
+  PendingApprovals PendingApprovals[]
 
   @@map("users")
 }
@@ -108,12 +107,14 @@ model Community {
   code             String             @unique @default(cuid())
   institution      Institution        @relation(fields: [institutionId], references: [id])
   institutionId    String
-  PendingApprovals PendingApprovals[]
+  pendingApprovals PendingApprovals[]
 }
 
 model PendingApprovals {
   id          String    @id @default(cuid())
-  users       User[]
+  approved    Boolean   @default(false)
+  users       User      @relation(fields: [userId], references: [id])
+  userId      String
   community   Community @relation(fields: [communityId], references: [id])
   communityId String
 }

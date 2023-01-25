@@ -11,5 +11,5 @@ export default async function handler(req, res) {
     // Not Signed in
     res.status(401);
   }
-  res.end();
+  return;
 }

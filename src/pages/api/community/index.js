@@ -72,7 +72,7 @@ const getInstitutionByUserId = async (id) => {
 
 // Create a new Community
 const handlePOST = async (req, res, institution) => {
-  const { name, image, userId, desc } = req.body;
+  const { name, image, userId, desc, isPrivate } = req.body;
 
   if (!name) {
     res.status(500).json({ error: "Community name is required!!" });
@@ -92,6 +92,7 @@ const handlePOST = async (req, res, institution) => {
         name,
         desc,
         image,
+        private: isPrivate,
         admins: {
           connect: {
             id: userId,
