@@ -130,11 +130,13 @@ model Message {
 }
 
 model Institution {
-  id          String      @id @default(cuid())
-  name        String      @unique
-  code        String      @unique @default(cuid())
-  image       String?
-  communities Community[]
-  members     User[]
-  admins      User[]      @relation("institution_admins")
+  id           String      @id @default(cuid())
+  name         String      @unique
+  code         String      @unique @default(cuid())
+  image        String?
+  website      String?
+  supportEmail String?
+  communities  Community[]
+  members      User[]
+  admins       User[]      @relation("institution_admins")
 }
