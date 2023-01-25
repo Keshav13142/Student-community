@@ -8,15 +8,23 @@ export default async function handler(req, res) {
     return;
   }
 
+  // Get all public communities in the institution
   if (req.method === "GET") {
     res.json(
       await prisma.community.findMany({
         where: {
-          members: {
-            some: {
-              id: userId,
+          AND: [
+            {
+              institution: {
+                members: {
+                  some: userId,
+                },
+              },
             },
-          },
+            {
+              private: false,
+            },
+          ],
         },
       })
     );
