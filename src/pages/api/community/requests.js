@@ -90,7 +90,7 @@ const handlePOST = async (userId, communityId, res) => {
           id: communityId,
         },
       },
-      users: {
+      user: {
         connect: {
           id: userId,
         },

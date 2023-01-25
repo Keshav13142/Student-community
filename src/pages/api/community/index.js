@@ -17,7 +17,9 @@ export default async function handler(req, res) {
             {
               institution: {
                 members: {
-                  some: userId,
+                  some: {
+                    id: userId,
+                  },
                 },
               },
             },
