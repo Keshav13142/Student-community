@@ -76,17 +76,19 @@ model Profile {
 }
 
 model Post {
-  id         String     @id @unique @default(cuid())
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  content    String
-  published  Boolean
-  author     User       @relation(fields: [userId], references: [id])
-  title      String
-  banner     String?
-  categories Category[]
-  slug       String     @unique
-  userId     String
+  id            String      @id @unique @default(cuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  content       String
+  published     Boolean
+  author        User        @relation(fields: [userId], references: [id])
+  title         String
+  banner        String?
+  categories    Category[]
+  isntitution   Institution @relation(fields: [institutionId], references: [id])
+  slug          String      @unique
+  userId        String
+  institutionId String
 }
 
 model Category {
@@ -140,4 +142,5 @@ model Institution {
   communities  Community[]
   members      User[]
   admins       User[]      @relation("institution_admins")
+  posts        Post[]
 }

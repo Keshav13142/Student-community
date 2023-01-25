@@ -7,5 +7,5 @@ export default async function handler(req, res) {
     return;
   }
 
-  res.json(await prisma.user.findMany());
+  res.json(await prisma.user.findMany({ include: { profile: true } }));
 }
