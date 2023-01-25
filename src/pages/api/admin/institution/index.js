@@ -11,15 +11,25 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     res.json(
       await prisma.institution.findMany({
-        select: {
-          id: true,
-          _count: true,
-          name: true,
-          code: true,
+        include: {
+          admins: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+          members: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
           communities: {
             select: {
-              name: true,
               id: true,
+              name: true,
             },
           },
         },
