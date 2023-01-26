@@ -1,12 +1,21 @@
 import prisma from "@/lib/prisma";
+import { unstable_getServerSession } from "next-auth/next";
+import { authOptions } from "../../auth/[...nextauth]";
 
 export default async function handler(req, res) {
+  const { user } = await unstable_getServerSession(req, res, authOptions);
+
+  if (!user) {
+    res.status(401).json({ message: "You must be logged in." });
+    return;
+  }
+
   if (req.method === "POST") {
-    const { email, bio, githubLink, linkedinLink, institutionCode } = req.body;
+    const { bio, githubLink, linkedinLink, institutionCode } = req.body;
 
     try {
       const updatedUser = await prisma.user.update({
-        where: { email },
+        where: { id: user.id },
         data: {
           profile: {
             create: {
