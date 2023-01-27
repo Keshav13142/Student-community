@@ -15,8 +15,7 @@ const Navbar = () => {
           variant="ghost"
           colorScheme="purple"
           fontSize="25px"
-          display={{ base: "block", md: "none" }}
-          s
+          display={{ base: "block", lg: "none" }}
           icon={<HiOutlineMenuAlt2 />}
         />
         <Heading size={"lg"} alignSelf="center">

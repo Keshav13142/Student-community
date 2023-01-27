@@ -1,6 +1,6 @@
 import { Flex, Grid, GridItem, Stack } from "@chakra-ui/react";
 import React from "react";
-import Navbar from "../nabar";
+import Navbar from "../navbar";
 import SideBar from "../sidebar";
 
 const Layout = ({ children }) => {

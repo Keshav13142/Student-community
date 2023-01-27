@@ -1,47 +1,17 @@
-import prisma from "@/lib/prisma";
+import DiscoverCommunities from "@/src/components/home/Discover";
 import Layout from "@/src/components/Layout";
-import { unstable_getServerSession } from "next-auth";
-import React from "react";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { AppContext } from "@/src/context/AppContext";
+import React, { useContext, useState } from "react";
+import Community from "../../components/home/Community";
 
-export const getServerSideProps = async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
+const Home = () => {
+  const { selectedCommunity } = useContext(AppContext);
+
+  return (
+    <Layout>
+      {selectedCommunity ? <Community /> : <DiscoverCommunities />}
+    </Layout>
   );
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  let communities = await prisma.community.findMany({
-    where: {
-      institution: {
-        members: {
-          some: {
-            id: session?.data?.user.id,
-          },
-        },
-      },
-    },
-  });
-
-  return {
-    props: {
-      communities,
-      user: session?.user,
-    },
-  };
-};
-
-const Home = ({ communities, user }) => {
-  return <Layout>Home</Layout>;
 };
 
 Home.auth = true;

@@ -1,12 +1,16 @@
 import prisma from "@/lib/prisma";
+import { unstable_getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req, res) {
-  const { userId } = req.body;
+  const { user } = await unstable_getServerSession(req, res, authOptions);
 
-  if (!userId) {
-    res.status(500).json({ error: "Whoa are you??!!" });
+  if (!user) {
+    res.status(401).json({ message: "You must be logged in." });
     return;
   }
+
+  console.log(user);
 
   // Get all public communities in the institution
   if (req.method === "GET") {
@@ -18,13 +22,15 @@ export default async function handler(req, res) {
               institution: {
                 members: {
                   some: {
-                    id: userId,
+                    id: user.id,
                   },
                 },
               },
             },
             {
-              private: false,
+              private: {
+                equals: false,
+              },
             },
           ],
         },
@@ -34,7 +40,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const institution = await getInstitutionByUserId(userId);
+    const institution = await getInstitutionByUserId(user.id);
 
     if (!institution) {
       res.status(500).json({
@@ -50,7 +56,7 @@ export default async function handler(req, res) {
 
   // Handle POST request => Create a new Community
   if (req.method === "POST") {
-    await handlePOST(req, res, institution);
+    await handlePOST(req, res, user.id, institution);
   }
 }
 
@@ -76,8 +82,8 @@ const getInstitutionByUserId = async (id) => {
 };
 
 // Create a new Community
-const handlePOST = async (req, res, institution) => {
-  const { name, image, userId, desc, isPrivate } = req.body;
+const handlePOST = async (req, res, userId, institution) => {
+  const { name, image, desc, isPrivate } = req.body;
 
   if (!name) {
     res.status(500).json({ error: "Community name is required!!" });
