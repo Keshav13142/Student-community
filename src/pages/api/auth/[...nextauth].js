@@ -26,7 +26,7 @@ export const authOptions = {
     }),
   ],
   pages: {
-    signIn: "/",
+    signIn: "/home",
     signOut: "/",
     error: "/", // Error code passed in query string as ?error=
     newUser: "/auth/new-user", // New users will be directed here on first sign in

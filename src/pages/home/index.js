@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma";
-import { Button } from "@chakra-ui/react";
+import Layout from "@/src/components/Layout";
 import { unstable_getServerSession } from "next-auth";
-import { signOut } from "next-auth/react";
 import React from "react";
 import { authOptions } from "../api/auth/[...nextauth]";
 
@@ -11,6 +10,15 @@ export const getServerSideProps = async (context) => {
     context.res,
     authOptions
   );
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
   let communities = await prisma.community.findMany({
     where: {
@@ -27,23 +35,13 @@ export const getServerSideProps = async (context) => {
   return {
     props: {
       communities,
-    }, // will be passed to the page component as props
+      user: session?.user,
+    },
   };
 };
 
-const Home = ({ communities }) => {
-  console.log(communities);
-  return (
-    <div>
-      Home
-      <Button
-        onClick={() => {
-          signOut({ callbackUrl: "/", redirect: false });
-        }}>
-        Sign out
-      </Button>
-    </div>
-  );
+const Home = ({ communities, user }) => {
+  return <Layout>Home</Layout>;
 };
 
 Home.auth = true;
