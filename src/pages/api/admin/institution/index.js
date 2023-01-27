@@ -95,10 +95,6 @@ const handlePOST = async (name, image, res) => {
         name,
         image,
       },
-      select: {
-        code: true,
-        id: true,
-      },
     });
 
     await prisma.community.create({

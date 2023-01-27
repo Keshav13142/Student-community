@@ -1,9 +1,14 @@
 import { newUserFormSchema } from "@/src/utils/zod_schemas";
 import {
   Button,
+  Flex,
   Input,
   InputGroup,
   InputRightElement,
+  Radio,
+  RadioGroup,
+  Stack,
+  Switch,
   Tooltip,
   useToast,
 } from "@chakra-ui/react";
@@ -19,6 +24,8 @@ const NewUserForm = () => {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+
+  const [codeType, setCodeType] = useState("memberCode");
 
   const [formValues, setFormValues] = useState({
     bio: "",
@@ -65,7 +72,10 @@ const NewUserForm = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formValues),
+      body: JSON.stringify({
+        ...formValues,
+        codeType,
+      }),
     });
 
     if (response.ok) {
@@ -93,29 +103,6 @@ const NewUserForm = () => {
 
   return (
     <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-      <InputGroup className="flex flex-col">
-        <Input
-          name="institutionCode"
-          isInvalid={formErrors.institutionCode}
-          errorBorderColor="red.200"
-          variant="filled"
-          placeholder="Institution code"
-          required
-          value={formValues.institutionCode}
-          onChange={handleInputChange}
-        />
-        <InputRightElement>
-          <Tooltip
-            placement="auto-start"
-            label="Enter the unique code of the institution you belong to!"
-            fontSize="md">
-            <span>
-              <AiOutlineInfoCircle />
-            </span>
-          </Tooltip>
-        </InputRightElement>
-        <span className="text-red-400 mt-1">{formErrors.institutionCode}</span>
-      </InputGroup>
       <Input
         variant="filled"
         placeholder="Bio"
@@ -153,6 +140,46 @@ const NewUserForm = () => {
         </InputRightElement>
         <span className="text-red-400 mt-1">{formErrors.linkedinLink}</span>
       </InputGroup>
+      <InputGroup className="flex flex-col">
+        <Input
+          name="institutionCode"
+          isInvalid={formErrors.institutionCode}
+          errorBorderColor="red.200"
+          variant="filled"
+          placeholder="Institution code"
+          required
+          value={formValues.institutionCode}
+          onChange={handleInputChange}
+        />
+        <InputRightElement>
+          <Tooltip
+            placement="auto-start"
+            label="Enter the unique code of the institution you belong to!"
+            fontSize="md">
+            <span>
+              <AiOutlineInfoCircle />
+            </span>
+          </Tooltip>
+        </InputRightElement>
+        <span className="text-red-400 mt-1">{formErrors.institutionCode}</span>
+      </InputGroup>
+      <Flex gap={10} alignItems="center">
+        <span>Code Type</span>
+        <RadioGroup
+          defaultValue="memberCode"
+          onChange={(v) => {
+            setCodeType(v);
+          }}>
+          <Stack spacing={5} direction="row">
+            <Radio colorScheme="blue" value="memberCode">
+              Member
+            </Radio>
+            <Radio colorScheme="purple" value="adminCode">
+              Admin
+            </Radio>
+          </Stack>
+        </RadioGroup>
+      </Flex>
       <Button
         isLoading={loading}
         loadingText="creating profile"

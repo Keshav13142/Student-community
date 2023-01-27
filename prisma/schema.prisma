@@ -53,6 +53,7 @@ model User {
   institution      Institution?       @relation(fields: [institutionId], references: [id])
   institutionId    String?
   PendingApprovals PendingApprovals[]
+  postComments     PostComments[]
 
   @@map("users")
 }
@@ -76,19 +77,29 @@ model Profile {
 }
 
 model Post {
-  id            String      @id @unique @default(cuid())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id            String         @id @unique @default(cuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   content       String
   published     Boolean
-  author        User        @relation(fields: [userId], references: [id])
+  author        User           @relation(fields: [userId], references: [id])
   title         String
   banner        String?
   categories    Category[]
-  isntitution   Institution @relation(fields: [institutionId], references: [id])
-  slug          String      @unique
+  isntitution   Institution    @relation(fields: [institutionId], references: [id])
+  slug          String         @unique
   userId        String
   institutionId String
+  postComments  PostComments[]
+}
+
+model PostComments {
+  id      String @id @unique @default(cuid())
+  content String
+  post    Post   @relation(fields: [postId], references: [id])
+  postId  String
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
 }
 
 model Category {
@@ -135,7 +146,8 @@ model Message {
 model Institution {
   id           String      @id @default(cuid())
   name         String      @unique
-  code         String      @unique @default(cuid())
+  memberCode   String      @unique @default(cuid())
+  adminCode    String      @unique @default(cuid())
   image        String?
   website      String?
   supportEmail String?
@@ -143,4 +155,6 @@ model Institution {
   members      User[]
   admins       User[]      @relation("institution_admins")
   posts        Post[]
+
+  @@unique([adminCode, memberCode])
 }

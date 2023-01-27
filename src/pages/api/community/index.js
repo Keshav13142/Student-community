@@ -10,8 +10,6 @@ export default async function handler(req, res) {
     return;
   }
 
-  console.log(user);
-
   // Get all public communities in the institution
   if (req.method === "GET") {
     res.json(

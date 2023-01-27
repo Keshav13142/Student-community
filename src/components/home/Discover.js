@@ -34,8 +34,6 @@ const DiscoverCommunities = () => {
         return;
       }
 
-      console.log(data);
-
       setPublicCommunitites(data);
 
       setLoading(false);

@@ -11,9 +11,43 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
-    const { bio, githubLink, linkedinLink, institutionCode } = req.body;
+    const { bio, githubLink, linkedinLink, codeType, institutionCode } =
+      req.body;
 
     try {
+      if (codeType === "adminCode") {
+        await prisma.institution.update({
+          where: {
+            [codeType]: institutionCode,
+          },
+          data: {
+            admins: {
+              connect: {
+                id: user.id,
+              },
+            },
+            members: {
+              connect: {
+                id: user.id,
+              },
+            },
+          },
+        });
+      } else {
+        await prisma.institution.update({
+          where: {
+            [codeType]: institutionCode,
+          },
+          data: {
+            members: {
+              connect: {
+                id: user.id,
+              },
+            },
+          },
+        });
+      }
+
       const updatedUser = await prisma.user.update({
         where: { id: user.id },
         data: {
@@ -26,7 +60,7 @@ export default async function handler(req, res) {
           },
           institution: {
             connect: {
-              code: institutionCode,
+              [codeType]: institutionCode,
             },
           },
         },

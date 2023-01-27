@@ -55,6 +55,7 @@ const SideBar = () => {
     <Stack
       className="shadow-md shadow-purple-600"
       maxW="md"
+      minW="xs"
       display={{ base: "none", lg: "flex" }}
       alignItems="center"
       p={3}>
