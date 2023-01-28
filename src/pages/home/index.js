@@ -1,4 +1,5 @@
 import { Flex, useToast } from "@chakra-ui/react";
+import Head from "next/head";
 import React, { useEffect, useState } from "react";
 
 const fetchPublicCommunities = async () => {
@@ -43,11 +44,22 @@ const DiscoverCommunities = () => {
   }, []);
 
   return (
-    <Flex direction="column" gap={10} p={5} alignItems="center" w="100%">
-      {publicCommunities?.map((c) => (
-        <div key={c.id}>{c.name}</div>
-      ))}
-    </Flex>
+    <>
+      <Head>
+        <title>Discover | Communitites</title>
+        <meta
+          name="description"
+          content="Discover various communities within your institution.."
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Flex direction="column" gap={10} p={5} alignItems="center" w="100%">
+        {publicCommunities?.map((c) => (
+          <div key={c.id}>{c.name}</div>
+        ))}
+      </Flex>
+    </>
   );
 };
 
