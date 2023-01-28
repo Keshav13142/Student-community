@@ -1,19 +1,25 @@
 import prisma from "@/lib/prisma";
+import { checkIfUserIsCommAdmin } from "@/src/utils/server";
 
 export default async function handler(req, res) {
   const { communityId, userId } = req.body;
 
-  if (!communityId) {
-    res.status(500).json({ error: "Invalid code!!" });
-    return;
-  }
+  // TODO => Get the logged in user details from the session instead of req body
 
-  if (!userId) {
-    res.status(500).json({ error: "Unauthorized!!" });
+  if (!communityId || !userId) {
+    res.status(500).json({ error: "Missing fields!!" });
     return;
   }
 
   try {
+    // Check if the user is an admin of the community
+    if (!checkIfUserIsCommAdmin(userId)) {
+      res
+        .status(500)
+        .json({ error: "Only community admins can perform this action!!" });
+      return;
+    }
+
     if (req.method === "POST") {
       const { memberIds } = req.body;
 
@@ -82,6 +88,6 @@ export default async function handler(req, res) {
   } catch (error) {
     console.log(error);
 
-    res.status(500).json({ error: "Something went wrong!!" });
+    res.status(500).json({ error: error.message });
   }
 }

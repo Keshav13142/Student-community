@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 
+// This route is for handling queries about the community requests for a particular user
 export default async function handler(req, res) {
   const { userId } = req.body;
 
@@ -35,6 +36,6 @@ export default async function handler(req, res) {
   } catch (error) {
     console.log(error);
 
-    res.status(500).json({ error: "Something went wrong!!" });
+    res.status(500).json({ error: error.message });
   }
 }

@@ -59,7 +59,7 @@ export default async function handler(req, res) {
       res.json({ message: "Successfully deleted institutions!!" });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ error: "Something went wrong!!" });
+      res.status(500).json({ error: error.message });
     }
   }
 }
@@ -107,6 +107,7 @@ const handlePOST = async (name, image, res) => {
             id: institution.id,
           },
         },
+        default: true,
       },
     });
 
@@ -114,6 +115,6 @@ const handlePOST = async (name, image, res) => {
   } catch (error) {
     console.log(error);
 
-    res.status(500).json({ error: "Something went wrong!!" });
+    res.status(500).json({ error: error.message });
   }
 };

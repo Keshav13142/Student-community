@@ -2,6 +2,7 @@ import { Flex, useToast } from "@chakra-ui/react";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 
+// Fetch the public communities in the institution that the current user is not a part of
 const fetchPublicCommunities = async () => {
   const response = await fetch("/api/community");
   if (response.ok) {
@@ -17,6 +18,7 @@ const DiscoverCommunities = () => {
 
   const toast = useToast();
 
+  //Fetch data on mount
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -63,6 +65,7 @@ const DiscoverCommunities = () => {
   );
 };
 
+// Protected route
 DiscoverCommunities.auth = true;
 
 export default DiscoverCommunities;

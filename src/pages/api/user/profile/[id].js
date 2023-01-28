@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 
+// Handle requests to update the user's profile
 export default async function handler(req, res) {
   if (req.method === "PUT") {
     const { id } = req.query;
@@ -30,7 +31,7 @@ export default async function handler(req, res) {
       res.json(updatedUser);
     } catch (error) {
       console.log(error);
-      res.status(500).json({ error: "Something went wrong!!" });
+      res.status(500).json({ error: error.message });
     }
   }
 }

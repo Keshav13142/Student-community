@@ -51,8 +51,10 @@ const NewUserForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Check the form inputs for error
     let zodError = newUserFormSchema.safeParse(formValues);
 
+    // Map through the errors and get then in the right format
     if (!zodError.success) {
       let errors = {};
 

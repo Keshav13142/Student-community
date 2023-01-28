@@ -10,6 +10,7 @@ import {
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
+// Fetch all the communities that the user is a part of
 const fetchCommunities = async () => {
   const response = await fetch("/api/community/me");
 
@@ -28,6 +29,7 @@ const SideBar = () => {
 
   const toast = useToast();
 
+  // Fetch data on mount
   useEffect(() => {
     (async () => {
       setLoading(true);

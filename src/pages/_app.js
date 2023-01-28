@@ -14,7 +14,9 @@ export default function App({
     <ChakraProvider>
       <SessionProvider session={session}>
         <AppContextProvider>
+          {/* Wrap the components in Layout */}
           <Layout>
+            {/* If the components have the auth property set to true, then protect them */}
             {Component.auth ? (
               <Auth>
                 <Component {...pageProps} />
@@ -29,11 +31,14 @@ export default function App({
   );
 }
 
+// Component that wraps the pages that need to be protected
 function Auth({ children }) {
   const router = useRouter();
 
+  // The required flag forces the session to have just 'loading' or 'authenticated' staus
   const { status } = useSession({
     required: true,
+    //Function to run when the session is unauthenticated
     onUnauthenticated: () => {
       router.push("/");
     },

@@ -1,14 +1,9 @@
 import { Avatar, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
-import React, { useEffect } from "react";
-import { BsChevronDown } from "react-icons/bs";
+import React from "react";
 
 const Profile = () => {
   const { data } = useSession();
-
-  useEffect(() => {
-    console.log("Hello form Profile");
-  }, []);
 
   return (
     <Menu>

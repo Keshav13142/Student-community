@@ -1,10 +1,15 @@
 import prisma from "@/lib/prisma";
+import {
+  checkIfUserIsInstAdmin,
+  getCommunityWithName,
+} from "@/src/utils/server";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req, res) {
   const { user } = await unstable_getServerSession(req, res, authOptions);
 
+  // Return error if user is not logged in
   if (!user) {
     res.status(401).json({ message: "You must be logged in." });
     return;
@@ -44,8 +49,9 @@ export default async function handler(req, res) {
     return;
   }
 
+  // Return error if user is not an admin of the institution
   try {
-    const institution = await getInstitutionByUserId(user.id);
+    const institution = await checkIfUserIsInstAdmin(user.id);
 
     if (!institution) {
       res.status(500).json({
@@ -56,7 +62,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.log(error);
 
-    res.status(500).json({ error: "Something went wrong!!" });
+    res.status(500).json({ error: error.message });
   }
 
   // Handle POST request => Create a new Community
@@ -64,27 +70,6 @@ export default async function handler(req, res) {
     await handlePOST(req, res, user.id, institution);
   }
 }
-
-// Get community with unique name
-const getCommunityWithName = async (name) => {
-  return await prisma.community.findUnique({
-    where: {
-      name,
-    },
-  });
-};
-
-const getInstitutionByUserId = async (id) => {
-  return await prisma.institution.findFirst({
-    where: {
-      admins: {
-        some: {
-          id,
-        },
-      },
-    },
-  });
-};
 
 // Create a new Community
 const handlePOST = async (req, res, userId, institution) => {
@@ -95,6 +80,7 @@ const handlePOST = async (req, res, userId, institution) => {
     return;
   }
 
+  // Check if a community with the name already exists
   try {
     if (await getCommunityWithName(name)) {
       res
@@ -143,6 +129,6 @@ const handlePOST = async (req, res, userId, institution) => {
   } catch (error) {
     console.log(error);
 
-    res.status(500).json({ error: "Something went wrong!!" });
+    res.status(500).json({ error: error.message });
   }
 };

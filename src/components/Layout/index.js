@@ -4,11 +4,13 @@ import React from "react";
 import Navbar from "../navbar";
 import SideBar from "../sidebar";
 
+// Routes that need the Layout
 const routesWithLayout = ["/home", "/community", "/blog"];
 
 const Layout = ({ children }) => {
   const router = useRouter();
 
+  // If the current URL has the route, then render it with the Layout
   if (routesWithLayout.some((route) => router.pathname.includes(route))) {
     return (
       <Stack height="100vh">
@@ -21,6 +23,7 @@ const Layout = ({ children }) => {
     );
   }
 
+  // Else return as it is
   return children;
 };
 

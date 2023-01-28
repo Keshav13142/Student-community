@@ -5,6 +5,7 @@ import React from "react";
 const Community = () => {
   const router = useRouter();
 
+  // Get the community id from the URL of the dynamic route in NextJS
   const { communityId } = router.query;
 
   console.log(communityId);

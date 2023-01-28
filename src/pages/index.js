@@ -13,11 +13,13 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
+    // Route to the home page if user is logged in!
     if (data?.user) {
       router.push("/home");
     }
   }, [data, router]);
 
+  // Render the Login/Register page if unauthenticated
   if (status === "unauthenticated") {
     return (
       <>
@@ -65,5 +67,6 @@ export default function Home() {
     );
   }
 
+  // If session data is loading render the loading screen
   return <Loader />;
 }
