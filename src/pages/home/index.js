@@ -1,19 +1,56 @@
-import DiscoverCommunities from "@/src/components/home/Discover";
-import Layout from "@/src/components/Layout";
-import { AppContext } from "@/src/context/AppContext";
-import React, { useContext, useState } from "react";
-import Community from "../../components/home/Community";
+import { Flex, useToast } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 
-const Home = () => {
-  const { selectedCommunity } = useContext(AppContext);
+const fetchPublicCommunities = async () => {
+  const response = await fetch("/api/community");
+  if (response.ok) {
+    return await response.json();
+  }
+  return null;
+};
+
+const DiscoverCommunities = () => {
+  const [publicCommunities, setPublicCommunitites] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+
+  const toast = useToast();
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+
+      const data = await fetchPublicCommunities();
+
+      if (!data) {
+        toast({
+          title: "Unable to fetch communities!!",
+          description: "Please try refreshing the page!!",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
+
+        return;
+      }
+
+      setPublicCommunitites(data);
+
+      setLoading(false);
+    })();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <Layout>
-      {selectedCommunity ? <Community /> : <DiscoverCommunities />}
-    </Layout>
+    <Flex direction="column" gap={10} p={5} alignItems="center" w="100%">
+      {publicCommunities?.map((c) => (
+        <div key={c.id}>{c.name}</div>
+      ))}
+    </Flex>
   );
 };
 
-Home.auth = true;
+DiscoverCommunities.auth = true;
 
-export default Home;
+export default DiscoverCommunities;

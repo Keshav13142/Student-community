@@ -1,20 +1,22 @@
 import { Avatar, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { BsChevronDown } from "react-icons/bs";
 
 const Profile = () => {
-  const {
-    data: { user },
-  } = useSession();
+  const { data } = useSession();
+
+  useEffect(() => {
+    console.log("Hello form Profile");
+  }, []);
 
   return (
     <Menu>
       <MenuButton
         size={{ base: "sm", md: "md" }}
         as={Avatar}
-        name={user.name}
-        src={user.image}
+        name={data?.user?.name}
+        src={data?.user?.image}
         cursor="pointer"
       />
       <MenuList>

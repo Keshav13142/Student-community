@@ -29,36 +29,36 @@ export default async function handler(req, res) {
         },
       });
 
-      const institution = await prisma.institution.update({
-        where: {
-          id: institutionId,
-        },
-        data: {
-          admins: {
-            connect: members.map((m) => ({
-              id: m,
-            })),
-          },
-          members: {
-            connect: members.map((m) => ({
-              id: m,
-            })),
-          },
-        },
-        include: {
-          _count: true,
-          admins: true,
-          members: true,
-          communities: {
-            select: {
-              admins: true,
-              members: true,
-            },
-          },
-        },
-      });
+      // const institution = await prisma.institution.update({
+      //   where: {
+      //     id: institutionId,
+      //   },
+      //   data: {
+      //     admins: {
+      //       connect: members.map((m) => ({
+      //         id: m,
+      //       })),
+      //     },
+      //     members: {
+      //       connect: members.map((m) => ({
+      //         id: m,
+      //       })),
+      //     },
+      //   },
+      //   include: {
+      //     _count: true,
+      //     admins: true,
+      //     members: true,
+      //     communities: {
+      //       select: {
+      //         admins: true,
+      //         members: true,
+      //       },
+      //     },
+      //   },
+      // });
 
-      res.json(institution);
+      // res.json(institution);
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: "Something went wrong!!" });

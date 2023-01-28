@@ -1,12 +1,13 @@
 import {
+  Avatar,
   Button,
   Divider,
-  Heading,
   Skeleton,
   Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 const fetchCommunities = async () => {
@@ -19,6 +20,8 @@ const fetchCommunities = async () => {
 };
 
 const SideBar = () => {
+  const router = useRouter();
+
   const [communities, setCommunities] = useState([]);
 
   const [loading, setLoading] = useState(false);
@@ -30,6 +33,8 @@ const SideBar = () => {
       setLoading(true);
 
       const data = await fetchCommunities();
+
+      console.log("Data from sidebar", data);
 
       if (!data) {
         toast({
@@ -61,18 +66,27 @@ const SideBar = () => {
       p={3}>
       <Text className="text-xl font-medium">Your communities</Text>
       <Divider />
-      <Skeleton isLoaded={!loading} display="flex" flexDirection="column">
+      <Skeleton
+        isLoaded={!loading}
+        display="flex"
+        flexDirection="column"
+        fadeDuration={1}>
         {communities === [] ? (
           <h2>Communities you join will show up here!</h2>
         ) : (
           communities?.map((c) => (
             <Button
+              className="py-7"
+              leftIcon={<Avatar src={c.image} name={c.name} />}
               alignSelf="center"
               w="100%"
-              variant="ghost"
+              variant="solid"
               textColor="purple.600"
+              onClick={() => {
+                router.push(`/community/${c.id}`);
+              }}
               key={c.id}>
-              {`# ${c.name}`}
+              {c.name}
             </Button>
           ))
         )}

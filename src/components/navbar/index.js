@@ -27,9 +27,8 @@ const Navbar = () => {
           direction="row"
           spacing="5"
           display={{ base: "none", md: "flex" }}>
+          <Button variant="link">Discover</Button>
           <Button variant="link">Blogs</Button>
-          <Button variant="link">Item</Button>
-          <Button variant="link">Item</Button>
         </Stack>
         <Profile />
       </Flex>

@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { SessionProvider, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import Layout from "../components/Layout";
 import Loader from "../components/Loader";
 import { AppContextProvider } from "../context/AppContext";
 
@@ -11,17 +12,19 @@ export default function App({
 }) {
   return (
     <ChakraProvider>
-      <AppContextProvider>
-        <SessionProvider session={session}>
-          {Component.auth ? (
-            <Auth>
+      <SessionProvider session={session}>
+        <AppContextProvider>
+          <Layout>
+            {Component.auth ? (
+              <Auth>
+                <Component {...pageProps} />
+              </Auth>
+            ) : (
               <Component {...pageProps} />
-            </Auth>
-          ) : (
-            <Component {...pageProps} />
-          )}
-        </SessionProvider>
-      </AppContextProvider>
+            )}
+          </Layout>
+        </AppContextProvider>
+      </SessionProvider>
     </ChakraProvider>
   );
 }

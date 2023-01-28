@@ -30,6 +30,13 @@ export default async function handler(req, res) {
                 equals: false,
               },
             },
+            {
+              members: {
+                none: {
+                  id: user.id,
+                },
+              },
+            },
           ],
         },
       })
