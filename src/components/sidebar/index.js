@@ -63,16 +63,11 @@ const SideBar = () => {
       className="shadow-md shadow-purple-600"
       maxW="md"
       minW="xs"
-      display={{ base: "none", lg: "flex" }}
       alignItems="center"
       p={3}>
       <Text className="text-xl font-medium">Your communities</Text>
       <Divider />
-      <Skeleton
-        isLoaded={!loading}
-        display="flex"
-        flexDirection="column"
-        fadeDuration={1}>
+      <Skeleton isLoaded={!loading} display="flex" flexDirection="column">
         {communities === [] ? (
           <h2>Communities you join will show up here!</h2>
         ) : (

@@ -1,4 +1,11 @@
-import { Button, Flex, Heading, IconButton, Stack } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Heading,
+  IconButton,
+  Show,
+  Stack,
+} from "@chakra-ui/react";
 import React from "react";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import Profile from "./Profile";
@@ -10,26 +17,26 @@ const Navbar = () => {
       alignItems="center"
       justifyContent="space-between"
       className="shadow-md">
-      <Flex>
-        <IconButton
-          variant="ghost"
-          colorScheme="purple"
-          fontSize="25px"
-          display={{ base: "block", lg: "none" }}
-          icon={<HiOutlineMenuAlt2 />}
-        />
+      <Flex gap={2}>
+        <Show below="lg">
+          <IconButton
+            variant="ghost"
+            colorScheme="purple"
+            fontSize="25px"
+            icon={<HiOutlineMenuAlt2 />}
+          />
+        </Show>
         <Heading size={"lg"} alignSelf="center">
           Student <span className="text-purple-600">Community</span>
         </Heading>
       </Flex>
       <Flex gap={20}>
-        <Stack
-          direction="row"
-          spacing="5"
-          display={{ base: "none", md: "flex" }}>
-          <Button variant="link">Discover</Button>
-          <Button variant="link">Blogs</Button>
-        </Stack>
+        <Show above="md">
+          <Stack direction="row" spacing="5">
+            <Button variant="link">Discover</Button>
+            <Button variant="link">Blogs</Button>
+          </Stack>
+        </Show>
         <Profile />
       </Flex>
     </Flex>

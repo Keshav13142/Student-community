@@ -1,5 +1,5 @@
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -8,156 +8,155 @@ generator client {
 }
 
 model Account {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @db.ObjectId
+  id                String  @id @default(cuid())
+  userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.String
+  id_token          String?
   session_state     String?
+  user              User    @relation(fields: [userId], references: [id])
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId], name: "provider_providerAccountId")
+  @@map("accounts")
 }
 
 model Session {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(cuid())
   sessionToken String   @unique
-  userId       String   @db.ObjectId
+  userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@map("sessions")
 }
 
 model User {
-  id                   String         @id @default(auto()) @map("_id") @db.ObjectId
-  name                 String?
-  email                String?        @unique
-  emailVerified        DateTime?
-  image                String?
-  accounts             Account[]
-  sessions             Session[]
-  profile              Profile?
-  posts                Post[]
-  postComments         PostComments[]
-  messages             Message[]
-  communityAdmins      Community[]    @relation("community_admins", fields: [communityAdminIds], references: [id])
-  communityAdminIds    String[]       @db.ObjectId
-  communityMembers     Community[]    @relation("community_members", fields: [communityMemberIds], references: [id])
-  communityMemberIds   String[]       @db.ObjectId
-  institutionAdmins    Institution[]  @relation("institution_admins", fields: [institutionAdminIds], references: [id])
-  institutionAdminIds  String[]       @db.ObjectId
-  institutionMembers   Institution[]  @relation("institution_members", fields: [institutionMemberIds], references: [id])
-  institutionMemberIds String[]       @db.ObjectId
+  id               String             @id @default(cuid())
+  name             String
+  email            String             @unique
+  emailVerified    DateTime?
+  image            String?
+  accounts         Account[]
+  sessions         Session[]
+  communities      Community[]        @relation(name: "members")
+  communityAdmin   Community[]        @relation(name: "community_admins")
+  messages         Message[]
+  profile          Profile?
+  posts            Post[]
+  institutionAdmin Institution[]      @relation(name: "institution_admins")
+  institution      Institution?       @relation(fields: [institutionId], references: [id])
+  institutionId    String?
+  PendingApprovals PendingApprovals[]
+  postComments     PostComments[]
+
+  @@map("users")
 }
 
 model VerificationToken {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   identifier String
-  token      String   @unique
+  token      String
   expires    DateTime
 
   @@unique([identifier, token])
+  @@map("verificationtokens")
 }
 
 model Profile {
-  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  id           String  @id @unique @default(cuid())
+  user         User    @relation(fields: [userId], references: [id])
   bio          String?
   githubLink   String?
   linkedinLink String?
-  user         User    @relation(fields: [userId], references: [id])
-  userId       String  @unique @db.ObjectId
+  userId       String  @unique
 }
 
 model Post {
-  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  id            String         @id @unique @default(cuid())
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   content       String
   published     Boolean
-  title         String
-  banner        String?
-  slug          String         @unique
-  institution   Institution    @relation(fields: [institutionId], references: [id])
-  institutionId String         @db.ObjectId
   author        User           @relation(fields: [userId], references: [id])
-  userId        String         @db.ObjectId
-  postComments  PostComments[]
+  title         String
+  bannerImage   String?
   categories    Category[]
+  isntitution   Institution    @relation(fields: [institutionId], references: [id])
+  slug          String         @unique
+  userId        String
+  institutionId String
+  postComments  PostComments[]
 }
 
 model PostComments {
-  id      String  @id @default(auto()) @map("_id") @db.ObjectId
-  content String
-  Post    Post?   @relation(fields: [postId], references: [id])
-  postId  String? @db.ObjectId
-  user    User    @relation(fields: [userId], references: [id])
-  userId  String  @db.ObjectId
+  id      String @id @unique @default(cuid())
+  comment String
+  post    Post   @relation(fields: [postId], references: [id])
+  postId  String
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
 }
 
 model Category {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
-  name   String
-  post   Post?   @relation(fields: [postId], references: [id])
-  postId String? @db.ObjectId
+  id    String @id @unique @default(cuid())
+  name  String
+  posts Post[]
 }
 
 model Community {
-  id               String             @id @default(auto()) @map("_id") @db.ObjectId
+  id               String             @id @default(cuid())
   name             String             @unique
   desc             String?
   private          Boolean            @default(false)
   default          Boolean            @unique @default(false)
+  members          User[]             @relation(name: "members")
+  admins           User[]             @relation(name: "community_admins")
+  messages         Message[]
   image            String?
   code             String             @unique @default(cuid())
-  admins           User[]             @relation("community_admins", fields: [adminIds], references: [id])
-  adminIds         String[]           @db.ObjectId
-  members          User[]             @relation("community_members", fields: [adminIds], references: [id])
-  memberIds        String[]           @db.ObjectId
   institution      Institution        @relation(fields: [institutionId], references: [id])
-  institutionId    String             @db.ObjectId
+  institutionId    String
   pendingApprovals PendingApprovals[]
-  messages         Message[]
 }
 
 model PendingApprovals {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String    @id @default(cuid())
   approved    Boolean   @default(false)
-  Community   Community @relation(fields: [communityId], references: [id])
-  communityId String    @db.ObjectId
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
 }
 
 model Message {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  id          String    @id @default(cuid())
   content     String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  Community   Community? @relation(fields: [communityId], references: [id])
-  communityId String?    @db.ObjectId
-  sender      User       @relation(fields: [userId], references: [id])
-  userId      String     @db.ObjectId
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  sender      User      @relation(fields: [userId], references: [id])
+  community   Community @relation(fields: [communityId], references: [id])
+  userId      String
+  communityId String
   // TODO => add message replies
 }
 
 model Institution {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  id           String      @id @default(cuid())
   name         String      @unique
   memberCode   String      @unique @default(cuid())
   adminCode    String      @unique @default(cuid())
   image        String?
   website      String?
   supportEmail String?
-  posts        Post[]
   communities  Community[]
-  admins       User[]      @relation("institution_admins", fields: [adminIds], references: [id])
-  adminIds     String[]    @db.ObjectId
-  members      User[]      @relation("institution_members", fields: [adminIds], references: [id])
-  memberIds    String[]    @db.ObjectId
+  members      User[]
+  admins       User[]      @relation("institution_admins")
+  posts        Post[]
 
   @@unique([adminCode, memberCode])
 }

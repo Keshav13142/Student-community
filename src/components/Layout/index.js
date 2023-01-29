@@ -1,4 +1,4 @@
-import { Flex, Stack } from "@chakra-ui/react";
+import { Flex, Hide, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import Navbar from "../navbar";
@@ -16,7 +16,9 @@ const Layout = ({ children }) => {
       <Stack height="100vh">
         <Navbar />
         <Flex className="h-full" direction="row" style={{ marginTop: "0px" }}>
-          <SideBar />
+          <Hide below="lg">
+            <SideBar />
+          </Hide>
           {children}
         </Flex>
       </Stack>
