@@ -73,7 +73,7 @@ export default async function handler(req, res) {
               linkedinLink,
             },
           },
-          institution: {
+          institutionAdmins: {
             connect: {
               [codeType]: institutionCode,
             },
