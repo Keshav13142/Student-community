@@ -11,8 +11,10 @@ export async function getServerSideProps({ req, res }) {
 
   if (session?.user) {
     return {
-      destination: "/home",
-      permanent: false,
+      redirect: {
+        destination: "/home",
+        permanent: false,
+      },
     };
   }
 
@@ -33,7 +35,7 @@ export default function Home() {
           content="Platform for students within institutions to interact"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       <main className="h-screen w-screen flex flex-col max-w-3xl m-auto justify-center gap-5 items-center">
         <h1 className="font-extrabold text-4xl">

@@ -54,7 +54,7 @@ const DiscoverCommunities = () => {
           content="Discover various communities within your institution.."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       <Flex direction="column" gap={10} p={5} alignItems="center" w="100%">
         {publicCommunities?.map((c) => (
