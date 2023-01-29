@@ -32,6 +32,7 @@ export const authOptions = {
     error: "/", // Error code passed in query string as ?error=
     newUser: "/auth/new-user", // New users will be directed here on first sign in
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);
