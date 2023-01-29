@@ -8,12 +8,11 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  Switch,
   Tooltip,
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { GoMarkGithub } from "react-icons/go";
 import { GrLinkedin } from "react-icons/gr";

@@ -1,6 +1,5 @@
 import { Flex, Hide, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React from "react";
 import Navbar from "../navbar";
 import SideBar from "../sidebar";
 

@@ -4,10 +4,8 @@ import {
   Heading,
   IconButton,
   Show,
-  Spacer,
   Stack,
 } from "@chakra-ui/react";
-import React from "react";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import Profile from "./Profile";
 

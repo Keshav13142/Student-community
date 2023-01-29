@@ -1,5 +1,4 @@
-import { Container, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
-import React from "react";
+import { Container, SkeletonText } from "@chakra-ui/react";
 
 const LoadingSkeleton = ({ count }) => {
   return (

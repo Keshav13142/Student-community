@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
 import Loader from "./Loader";
 

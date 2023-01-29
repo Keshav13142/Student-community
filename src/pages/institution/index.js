@@ -1,4 +1,4 @@
-import { Container } from "postcss";
+import { Container } from "@chakra-ui/react";
 import React from "react";
 
 const index = () => {

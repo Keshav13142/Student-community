@@ -2,10 +2,7 @@ import { AppContext } from "@/src/context/AppContext";
 import {
   Avatar,
   Button,
-  Container,
   Divider,
-  Flex,
-  Skeleton,
   Stack,
   Text,
   useToast,
@@ -14,6 +11,8 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { ImInfo } from "react-icons/im";
 import { TbBrowserPlus } from "react-icons/tb";
+import AboutInstitution from "../modals/AboutInstitution";
+import CreateCommunityModal from "../modals/CreateCommunityModal";
 import Loading from "./Loading";
 
 // Fetch all the communities that the user is a part of
@@ -28,6 +27,11 @@ const fetchCommunities = async () => {
 
 const SideBar = () => {
   const router = useRouter();
+
+  const [isInstitutionModalOpen, setIsInstitutionModalOpen] = useState(false);
+
+  const [isCreateCommunityModalOpen, setIsCreateCommunityModalOpen] =
+    useState(false);
 
   const { isInstitutionAdmin } = useContext(AppContext);
 
@@ -65,62 +69,82 @@ const SideBar = () => {
   }, []);
 
   return (
-    <Stack
-      className="border-r border-r-slate-200"
-      maxW="md"
-      minW="xs"
-      alignItems="center"
-      justifyContent="space-between"
-      height="full"
-      p={3}>
-      <Stack spacing={2} w="full" alignItems="center">
-        <Text className="text-2xl font-medium">Your communities</Text>
-        <Divider />
-        {loading ? (
-          <Loading count={4} />
-        ) : (
-          <Stack display="flex" flexDirection="column">
-            {communities === [] ? (
-              <h2>Communities you join will show up here!</h2>
-            ) : (
-              communities?.map((c) => (
-                <Button
-                  className="py-7"
-                  leftIcon={<Avatar src={c.image} name={c.name} />}
-                  alignSelf="center"
-                  w="100%"
-                  variant="link"
-                  textColor="purple.600"
-                  onClick={() => {
-                    router.push(`/community/${c.id}`);
-                  }}
-                  key={c.id}>
-                  {c.name}
-                </Button>
-              ))
-            )}
-          </Stack>
-        )}
-      </Stack>
-      <Stack w="full" spacing={3}>
-        {isInstitutionAdmin && (
+    <>
+      <AboutInstitution
+        onClose={() => {
+          setIsInstitutionModalOpen(false);
+        }}
+        isOpen={isInstitutionModalOpen}
+      />
+      <CreateCommunityModal
+        onClose={() => {
+          setIsCreateCommunityModalOpen(false);
+        }}
+        isOpen={isCreateCommunityModalOpen}
+      />
+      <Stack
+        className="border-r border-r-slate-200"
+        maxW="md"
+        minW="xs"
+        alignItems="center"
+        justifyContent="space-between"
+        height="full"
+        p={3}>
+        <Stack spacing={2} w="full" alignItems="center">
+          <Text className="text-2xl font-medium">Your communities</Text>
+          <Divider />
+          {loading ? (
+            <Loading count={4} />
+          ) : (
+            <Stack display="flex" flexDirection="column">
+              {communities === [] ? (
+                <h2>Communities you join will show up here!</h2>
+              ) : (
+                communities?.map((c) => (
+                  <Button
+                    className="py-7"
+                    leftIcon={<Avatar src={c.image} name={c.name} />}
+                    alignSelf="center"
+                    w="100%"
+                    variant="link"
+                    textColor="purple.600"
+                    onClick={() => {
+                      router.push(`/community/${c.id}`);
+                    }}
+                    key={c.id}>
+                    {c.name}
+                  </Button>
+                ))
+              )}
+            </Stack>
+          )}
+        </Stack>
+        <Stack w="full" spacing={3}>
+          {isInstitutionAdmin && (
+            <Button
+              w="full"
+              variant="outline"
+              colorScheme="purple"
+              onClick={() => {
+                setIsCreateCommunityModalOpen(true);
+              }}
+              leftIcon={<TbBrowserPlus />}>
+              Create new commuinity
+            </Button>
+          )}
           <Button
             w="full"
             variant="outline"
             colorScheme="purple"
-            leftIcon={<TbBrowserPlus />}>
-            Create new commuinity
+            onClick={() => {
+              setIsInstitutionModalOpen(true);
+            }}
+            leftIcon={<ImInfo />}>
+            About Institution
           </Button>
-        )}
-        <Button
-          w="full"
-          variant="outline"
-          colorScheme="purple"
-          leftIcon={<ImInfo />}>
-          About Institution
-        </Button>
+        </Stack>
       </Stack>
-    </Stack>
+    </>
   );
 };
 
