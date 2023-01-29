@@ -1,11 +1,11 @@
 import prisma from "@/lib/prisma";
-import { unstable_getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]";
 
 // Route to create a new user's profile and get them enrolled in an institution.
 export default async function handler(req, res) {
   // Get current user data from session
-  const { user } = await unstable_getServerSession(req, res, authOptions);
+  const { user } = await getServerSession(req, res, authOptions);
 
   // Return error if user is not logged in
   if (!user) {

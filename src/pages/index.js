@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import { unstable_getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth/next";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import { GoMarkGithub } from "react-icons/go";
@@ -7,7 +7,7 @@ import { SiDiscord } from "react-icons/si";
 import { authOptions } from "./api/auth/[...nextauth]";
 
 export async function getServerSideProps({ req, res }) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
 
   if (session?.user) {
     return {
