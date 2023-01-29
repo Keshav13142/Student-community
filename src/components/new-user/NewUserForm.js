@@ -92,8 +92,8 @@ const NewUserForm = () => {
       router.push("/home");
     } else {
       toast({
-        title: "Enter a valid institution code!!",
-        description: "Contact the your institution admin to know more!!",
+        title: "Invalid institution code!!",
+        description: "Contact your admin to know more!!",
         status: "error",
         duration: 5000,
         isClosable: true,
