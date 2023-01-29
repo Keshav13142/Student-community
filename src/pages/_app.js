@@ -1,9 +1,8 @@
 import "@/styles/globals.css";
 import { ChakraProvider } from "@chakra-ui/react";
-import { SessionProvider, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { SessionProvider } from "next-auth/react";
+import Auth from "../components/Auth";
 import Layout from "../components/Layout";
-import Loader from "../components/Loader";
 import { AppContextProvider } from "../context/AppContext";
 
 export default function App({
@@ -29,24 +28,4 @@ export default function App({
       </SessionProvider>
     </ChakraProvider>
   );
-}
-
-// Component that wraps the pages that need to be protected
-function Auth({ children }) {
-  const router = useRouter();
-
-  // The required flag forces the session to have just 'loading' or 'authenticated' staus
-  const { status } = useSession({
-    required: true,
-    //Function to run when the session is unauthenticated
-    onUnauthenticated: () => {
-      router.push("/");
-    },
-  });
-
-  if (status === "authenticated") {
-    return children;
-  }
-
-  return <Loader />;
 }

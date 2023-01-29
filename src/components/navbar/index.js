@@ -4,6 +4,7 @@ import {
   Heading,
   IconButton,
   Show,
+  Spacer,
   Stack,
 } from "@chakra-ui/react";
 import React from "react";
@@ -13,10 +14,9 @@ import Profile from "./Profile";
 const Navbar = () => {
   return (
     <Flex
-      padding={3}
       alignItems="center"
       justifyContent="space-between"
-      className="shadow-md">
+      className="py-2 px-6">
       <Flex gap={2}>
         <Show below="lg">
           <IconButton
@@ -33,8 +33,12 @@ const Navbar = () => {
       <Flex gap={20}>
         <Show above="md">
           <Stack direction="row" spacing="5">
-            <Button variant="link">Discover</Button>
-            <Button variant="link">Blogs</Button>
+            <Button variant="link" color="purple.600">
+              Discover
+            </Button>
+            <Button variant="link" color="purple.600">
+              Blogs
+            </Button>
           </Stack>
         </Show>
         <Profile />

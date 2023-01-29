@@ -1,14 +1,20 @@
+import { AppContext } from "@/src/context/AppContext";
 import {
   Avatar,
   Button,
+  Container,
   Divider,
+  Flex,
   Skeleton,
   Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ImInfo } from "react-icons/im";
+import { TbBrowserPlus } from "react-icons/tb";
+import Loading from "./Loading";
 
 // Fetch all the communities that the user is a part of
 const fetchCommunities = async () => {
@@ -23,6 +29,8 @@ const fetchCommunities = async () => {
 const SideBar = () => {
   const router = useRouter();
 
+  const { isInstitutionAdmin } = useContext(AppContext);
+
   const [communities, setCommunities] = useState([]);
 
   const [loading, setLoading] = useState(false);
@@ -35,8 +43,6 @@ const SideBar = () => {
       setLoading(true);
 
       const data = await fetchCommunities();
-
-      console.log("Data from sidebar", data);
 
       if (!data) {
         toast({
@@ -60,34 +66,60 @@ const SideBar = () => {
 
   return (
     <Stack
-      className="shadow-md shadow-purple-600"
+      className="border-r border-r-slate-200"
       maxW="md"
       minW="xs"
       alignItems="center"
+      justifyContent="space-between"
+      height="full"
       p={3}>
-      <Text className="text-xl font-medium">Your communities</Text>
-      <Divider />
-      <Skeleton isLoaded={!loading} display="flex" flexDirection="column">
-        {communities === [] ? (
-          <h2>Communities you join will show up here!</h2>
+      <Stack spacing={2} w="full" alignItems="center">
+        <Text className="text-2xl font-medium">Your communities</Text>
+        <Divider />
+        {loading ? (
+          <Loading count={4} />
         ) : (
-          communities?.map((c) => (
-            <Button
-              className="py-7"
-              leftIcon={<Avatar src={c.image} name={c.name} />}
-              alignSelf="center"
-              w="100%"
-              variant="solid"
-              textColor="purple.600"
-              onClick={() => {
-                router.push(`/community/${c.id}`);
-              }}
-              key={c.id}>
-              {c.name}
-            </Button>
-          ))
+          <Stack display="flex" flexDirection="column">
+            {communities === [] ? (
+              <h2>Communities you join will show up here!</h2>
+            ) : (
+              communities?.map((c) => (
+                <Button
+                  className="py-7"
+                  leftIcon={<Avatar src={c.image} name={c.name} />}
+                  alignSelf="center"
+                  w="100%"
+                  variant="link"
+                  textColor="purple.600"
+                  onClick={() => {
+                    router.push(`/community/${c.id}`);
+                  }}
+                  key={c.id}>
+                  {c.name}
+                </Button>
+              ))
+            )}
+          </Stack>
         )}
-      </Skeleton>
+      </Stack>
+      <Stack w="full" spacing={3}>
+        {isInstitutionAdmin && (
+          <Button
+            w="full"
+            variant="outline"
+            colorScheme="purple"
+            leftIcon={<TbBrowserPlus />}>
+            Create new commuinity
+          </Button>
+        )}
+        <Button
+          w="full"
+          variant="outline"
+          colorScheme="purple"
+          leftIcon={<ImInfo />}>
+          About Institution
+        </Button>
+      </Stack>
     </Stack>
   );
 };
