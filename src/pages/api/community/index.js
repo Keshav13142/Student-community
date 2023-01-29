@@ -7,13 +7,15 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req, res) {
-  const { user } = await getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
 
   // Return error if user is not logged in
-  if (!user) {
+  if (!session) {
     res.status(401).json({ message: "You must be logged in." });
     return;
   }
+
+  const { user } = session;
 
   // Get all public communities in the institution
   if (req.method === "GET") {

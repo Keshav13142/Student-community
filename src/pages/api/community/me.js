@@ -4,13 +4,15 @@ import { authOptions } from "../auth/[...nextauth]";
 
 // Get the communities that the current user is a part of
 export default async function handler(req, res) {
-  const { user } = await getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
 
   // Return error if user is not logged in
-  if (!user) {
+  if (!session) {
     res.status(401).json({ message: "You must be logged in." });
     return;
   }
+
+  const { user } = session;
 
   if (req.method === "GET") {
     try {
