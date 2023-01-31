@@ -128,7 +128,7 @@ const SideBar = () => {
               onClick={() => {
                 setIsCreateCommunityModalOpen(true);
               }}
-              leftIcon={<TbBrowserPlus />}>
+              leftIcon={<TbBrowserPlus fontSize={20} />}>
               Create new commuinity
             </Button>
           )}
