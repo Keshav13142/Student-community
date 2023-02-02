@@ -19,3 +19,14 @@ export const newUserFormSchema = z.object({
     .optional()
     .or(z.literal("")),
 });
+
+export const createCommunitySchema = z.object({
+  name: z
+    .string({ required_error: "Name is required" })
+    .min(1, { message: "Enter a valid name!" }),
+  image: z
+    .string()
+    .url({ message: "Enter a valid URL" })
+    .optional()
+    .or(z.literal("")),
+});

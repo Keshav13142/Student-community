@@ -9,8 +9,9 @@ export const fetchInstitutionData = async () => {
   return data;
 };
 
-export const createUserProfile = async (data) => {
-  return await AxiosClient.post("/user/profile", data);
+export const createUserProfile = async (profile) => {
+  const { data } = await AxiosClient.post("/user/profile", profile);
+  return data;
 };
 
 // Fetch all the communities that the user is a part of
@@ -21,13 +22,16 @@ export const fetchCommunities = async () => {
 
 export const checkIfAdmin = async () => {
   const { data } = await AxiosClient.get("/user/is-admin");
-
   return data;
 };
 
 // Fetch the public communities in the institution that the current user is not a part of
 export const fetchPublicAndRestrictedCommunities = async () => {
   const { data } = await AxiosClient.get("/community");
+  return data;
+};
 
+export const createCommunity = async (comm) => {
+  const { data } = await AxiosClient.post("/community", comm);
   return data;
 };

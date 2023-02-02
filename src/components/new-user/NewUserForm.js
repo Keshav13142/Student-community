@@ -53,7 +53,6 @@ const NewUserForm = () => {
       }
     },
     onSuccess: () => {
-      console.log("success");
       router.push("/home");
     },
   });

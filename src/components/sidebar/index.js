@@ -4,12 +4,13 @@ import {
   Avatar,
   Button,
   Divider,
+  Flex,
   Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import Link from "next/link";
+import { useContext, useState } from "react";
 import { ImInfo } from "react-icons/im";
 import { TbBrowserPlus } from "react-icons/tb";
 import { useQuery } from "react-query";
@@ -19,8 +20,6 @@ import Loading from "./Loading";
 
 const SideBar = () => {
   const toast = useToast();
-
-  const router = useRouter();
 
   const {
     data: communities,
@@ -76,24 +75,26 @@ const SideBar = () => {
           {loading ? (
             <Loading count={4} />
           ) : (
-            <Stack display="flex" flexDirection="column">
+            <Stack>
               {communities === [] ? (
                 <h2>Communities you join will show up here!</h2>
               ) : (
-                communities?.map((c) => (
-                  <Button
-                    className="py-7"
-                    leftIcon={<Avatar src={c.image} name={c.name} />}
-                    alignSelf="center"
-                    w="100%"
-                    variant="link"
-                    textColor="purple.600"
-                    onClick={() => {
-                      router.push(`/community/${c.id}`);
-                    }}
-                    key={c.id}>
-                    {c.name}
-                  </Button>
+                communities?.map((c, i) => (
+                  <Link key={c.id} href={`/community/${c.id}`}>
+                    <Flex
+                      paddingY={2}
+                      display="flex"
+                      justifyContent="flex-start"
+                      paddingX={2}
+                      gap={2}
+                      alignItems="center"
+                      w="full"
+                      textColor="purple.600">
+                      <Avatar size="sm" src={c.image} name={c.name} />
+                      <span className="font-medium ">{c.name}</span>
+                    </Flex>
+                    {i !== communities.length - 1 && <Divider />}
+                  </Link>
                 ))
               )}
             </Stack>

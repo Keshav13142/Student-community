@@ -114,7 +114,7 @@ model Community {
   name             String             @unique
   desc             String?
   type             CommunityType      @default(PUBLIC)
-  default          Boolean            @unique @default(false)
+  default          Boolean            @default(false)
   members          User[]             @relation(name: "members")
   admins           User[]             @relation(name: "community_admins")
   messages         Message[]

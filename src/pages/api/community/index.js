@@ -61,15 +61,15 @@ export default async function handler(req, res) {
       });
       return;
     }
+
+    // Handle POST request => Create a new Community
+    if (req.method === "POST") {
+      await handlePOST(req, res, user.id, institution);
+    }
   } catch (error) {
     console.log(error);
 
     res.status(500).json({ error: error.message });
-  }
-
-  // Handle POST request => Create a new Community
-  if (req.method === "POST") {
-    await handlePOST(req, res, user.id, institution);
   }
 }
 
