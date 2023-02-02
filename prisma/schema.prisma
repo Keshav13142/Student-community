@@ -163,7 +163,7 @@ model Institution {
 }
 
 enum CommunityType {
-  PUBLIC
-  PRIVATE
-  RESTRICTED
+  PUBLIC //Anyone can view and message
+  PRIVATE // Only members with code with can join and msg
+  RESTRICTED //Anyone can view, but must request access from admin to become member and send msg
 }
