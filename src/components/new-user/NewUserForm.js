@@ -1,3 +1,4 @@
+import { createUserProfile } from "@/src/utils/api-calls";
 import { newUserFormSchema } from "@/src/utils/zod_schemas";
 import {
   Button,
@@ -22,16 +23,40 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { GoMarkGithub } from "react-icons/go";
 import { GrLinkedin } from "react-icons/gr";
 import { ImWarning } from "react-icons/im";
+import { useMutation } from "react-query";
 
 const NewUserForm = () => {
   const toast = useToast();
 
   const router = useRouter();
+
+  const mutation = useMutation(createUserProfile, {
+    onError: ({
+      response: {
+        data: { error, ref },
+      },
+    }) => {
+      if (ref) {
+        setFromErrors((p) => ({ ...p, [ref]: error }));
+      } else {
+        toast({
+          title: error,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    },
+    onSuccess: () => {
+      console.log("success");
+      router.push("/home");
+    },
+  });
 
   const [loading, setLoading] = useState(false);
 
@@ -79,45 +104,10 @@ const NewUserForm = () => {
       return;
     }
 
-    setLoading(true);
-
-    const response = await fetch("/api/user/profile", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...formValues,
-        codeType,
-      }),
+    mutation.mutate({
+      ...formValues,
+      codeType,
     });
-
-    if (response.ok) {
-      toast({
-        title: "Updated Profile",
-        description: "Your journey starts here!!",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-
-      router.push("/home");
-    } else {
-      const error = await response.json();
-
-      if (error.ref) {
-        setFromErrors((p) => ({ ...p, [error.ref]: error.error }));
-      } else {
-        toast({
-          title: error.error,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
-    }
-
-    setLoading(false);
   };
 
   return (
@@ -247,7 +237,7 @@ const NewUserForm = () => {
         </RadioGroup>
       </Flex>
       <Button
-        isLoading={loading}
+        isLoading={mutation.isLoading}
         loadingText="creating profile"
         type="submit"
         variant="solid"

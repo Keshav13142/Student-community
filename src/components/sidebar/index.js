@@ -1,4 +1,5 @@
 import { AppContext } from "@/src/context/AppContext";
+import { fetchCommunities } from "@/src/utils/api-calls";
 import {
   Avatar,
   Button,
@@ -11,22 +12,21 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { ImInfo } from "react-icons/im";
 import { TbBrowserPlus } from "react-icons/tb";
+import { useQuery } from "react-query";
 import AboutInstitution from "../modals/AboutInstitution";
 import CreateCommunityModal from "../modals/CreateCommunityModal";
 import Loading from "./Loading";
 
-// Fetch all the communities that the user is a part of
-const fetchCommunities = async () => {
-  const response = await fetch("/api/community/me");
-
-  if (response.ok) {
-    return await response.json();
-  }
-  return null;
-};
-
 const SideBar = () => {
+  const toast = useToast();
+
   const router = useRouter();
+
+  const {
+    data: communities,
+    error,
+    loading,
+  } = useQuery("userCommunities", fetchCommunities);
 
   const [isInstitutionModalOpen, setIsInstitutionModalOpen] = useState(false);
 
@@ -35,38 +35,17 @@ const SideBar = () => {
 
   const { isInstitutionAdmin } = useContext(AppContext);
 
-  const [communities, setCommunities] = useState([]);
+  if (error) {
+    toast({
+      title: "Unable to fetch your communities!!",
+      description: "Please try refreshing the page!!",
+      status: "error",
+      duration: 4000,
+      isClosable: true,
+    });
 
-  const [loading, setLoading] = useState(false);
-
-  const toast = useToast();
-
-  // Fetch data on mount
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-
-      const data = await fetchCommunities();
-
-      if (!data) {
-        toast({
-          title: "Unable to fetch your communities!!",
-          description: "Please try refreshing the page!!",
-          status: "error",
-          duration: 4000,
-          isClosable: true,
-        });
-
-        return;
-      }
-
-      setCommunities(data);
-
-      setLoading(false);
-    })();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return null;
+  }
 
   return (
     <>

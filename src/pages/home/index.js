@@ -1,49 +1,29 @@
+import { fetchPublicAndRestrictedCommunities } from "@/src/utils/api-calls";
 import { Flex, useToast } from "@chakra-ui/react";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
-
-// Fetch the public communities in the institution that the current user is not a part of
-const fetchPublicCommunities = async () => {
-  const response = await fetch("/api/community");
-  if (response.ok) {
-    return await response.json();
-  }
-  return null;
-};
+import { useQuery } from "react-query";
 
 const DiscoverCommunities = () => {
-  const [publicCommunities, setPublicCommunitites] = useState([]);
-
-  const [loading, setLoading] = useState(false);
+  const {
+    data: publicCommunities,
+    error,
+    loading,
+  } = useQuery("publicCommunities", fetchPublicAndRestrictedCommunities);
 
   const toast = useToast();
 
-  //Fetch data on mount
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
+  if (error) {
+    toast({
+      title: "Unable to fetch communities!!",
+      description: "Please try refreshing the page!!",
+      status: "error",
+      duration: 4000,
+      isClosable: true,
+    });
 
-      const data = await fetchPublicCommunities();
-
-      if (!data) {
-        toast({
-          title: "Unable to fetch communities!!",
-          description: "Please try refreshing the page!!",
-          status: "error",
-          duration: 4000,
-          isClosable: true,
-        });
-
-        return;
-      }
-
-      setPublicCommunitites(data);
-
-      setLoading(false);
-    })();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return null;
+  }
 
   return (
     <>

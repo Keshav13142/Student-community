@@ -2,7 +2,6 @@ import { Avatar, Box, Stack } from "@chakra-ui/react";
 import React from "react";
 
 const Members = ({ members }) => {
-  console.log(members);
   return (
     <Stack maxW="sm" m="auto" spacing={3}>
       {members.map((m) => (

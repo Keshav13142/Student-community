@@ -1,3 +1,4 @@
+import { fetchInstitutionData } from "@/src/utils/api-calls";
 import {
   Box,
   Button,
@@ -16,36 +17,16 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import Admins from "./Admins";
 import Members from "./Members";
 
-const fetchInstitutionData = async () => {
-  const response = await fetch("/api/institution");
-
-  if (response.ok) {
-    return response.json();
-  }
-
-  return null;
-};
-
 const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
-  const [institutionData, setInstitutionData] = useState(null);
-
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-
-    (async () => {
-      // const data = await fetchInstitutionData();
-      // console.log(data);
-      setInstitutionData(await fetchInstitutionData());
-    })();
-
-    setLoading(false);
-  }, []);
+  const {
+    data: institutionData,
+    error,
+    isLoading,
+  } = useQuery("aboutInstitution", fetchInstitutionData);
 
   return (
     <Modal
