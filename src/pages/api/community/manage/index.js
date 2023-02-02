@@ -46,7 +46,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "PUT") {
-    const { name, desc, image, communityId, isPrivate } = req.body;
+    const { name, desc, image, communityId, type } = req.body;
 
     // Check if user is an admin of the institutions
     if (!(await checkIfUserIsInstAdmin(userId))) {
@@ -74,7 +74,7 @@ export default async function handler(req, res) {
           name,
           desc,
           image,
-          private: isPrivate,
+          type,
         },
       });
 

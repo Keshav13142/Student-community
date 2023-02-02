@@ -71,6 +71,7 @@ const SideBar = () => {
   return (
     <>
       <AboutInstitution
+        isAdmin={isInstitutionAdmin}
         onClose={() => {
           setIsInstitutionModalOpen(false);
         }}

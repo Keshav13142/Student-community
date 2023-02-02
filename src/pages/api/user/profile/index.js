@@ -15,11 +15,44 @@ export default async function handler(req, res) {
   const { user } = session;
 
   if (req.method === "POST") {
-    const { bio, githubLink, linkedinLink, codeType, institutionCode } =
-      req.body;
+    const {
+      username,
+      bio,
+      githubLink,
+      linkedinLink,
+      codeType,
+      institutionCode,
+    } = req.body;
 
     // Check if the user has a admin or member code and perform appropriate action
     try {
+      if (
+        await prisma.profile.findUnique({
+          where: {
+            username,
+          },
+        })
+      ) {
+        res
+          .status(500)
+          .json({ error: "Username is already taken!!", ref: "username" });
+        return;
+      }
+
+      // Check if the code is valid
+      if (
+        !(await prisma.institution.findFirst({
+          where: {
+            [codeType]: institutionCode,
+          },
+        }))
+      ) {
+        res
+          .status(500)
+          .json({ error: "Invalid code!!", ref: "institutionCode" });
+        return;
+      }
+
       await prisma.institution.update({
         where: {
           [codeType]: institutionCode,
@@ -69,6 +102,7 @@ export default async function handler(req, res) {
         data: {
           profile: {
             create: {
+              username,
               bio,
               githubLink,
               linkedinLink,

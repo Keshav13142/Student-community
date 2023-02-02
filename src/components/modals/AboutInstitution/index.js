@@ -17,6 +17,8 @@ import {
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import Admins from "./Admins";
+import Members from "./Members";
 
 const fetchInstitutionData = async () => {
   const response = await fetch("/api/institution");
@@ -28,7 +30,7 @@ const fetchInstitutionData = async () => {
   return null;
 };
 
-const AboutInstitution = ({ isOpen, onClose }) => {
+const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
   const [institutionData, setInstitutionData] = useState(null);
 
   const [loading, setLoading] = useState(false);
@@ -74,21 +76,31 @@ const AboutInstitution = ({ isOpen, onClose }) => {
                     }
                     alt="Intitution image"
                   />
-                  <Box>Name :{institutionData?.name}</Box>
                   <Box>
-                    Website :{institutionData?.website || "Not provided"}
+                    Name :
+                    <span className="text-xl font-bold">
+                      {institutionData?.name}
+                    </span>
+                  </Box>
+                  <Box>
+                    Website :
+                    <span className="text-xl font-bold">
+                      {institutionData?.website || "Not provided"}
+                    </span>
                   </Box>
                   <Box>
                     Support email :
-                    {institutionData?.supportEmail || "Not provided"}
+                    <span className="text-xl font-bold">
+                      {institutionData?.supportEmail || "Not provided"}
+                    </span>
                   </Box>
                 </Center>
               </TabPanel>
               <TabPanel>
-                <p>Members</p>
+                <Members members={institutionData?.members} />
               </TabPanel>
               <TabPanel>
-                <p>Admins</p>
+                <Admins isAdmin={isAdmin} />
               </TabPanel>
             </TabPanels>
           </Tabs>

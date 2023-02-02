@@ -69,6 +69,7 @@ model VerificationToken {
 
 model Profile {
   id           String  @id @unique @default(cuid())
+  username     String  @unique
   user         User    @relation(fields: [userId], references: [id])
   bio          String?
   githubLink   String?
@@ -112,7 +113,7 @@ model Community {
   id               String             @id @default(cuid())
   name             String             @unique
   desc             String?
-  private          Boolean            @default(false)
+  type             CommunityType      @default(PUBLIC)
   default          Boolean            @unique @default(false)
   members          User[]             @relation(name: "members")
   admins           User[]             @relation(name: "community_admins")
@@ -159,4 +160,10 @@ model Institution {
   posts        Post[]
 
   @@unique([adminCode, memberCode])
+}
+
+enum CommunityType {
+  PUBLIC
+  PRIVATE
+  RESTRICTED
 }

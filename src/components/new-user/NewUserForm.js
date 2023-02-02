@@ -2,12 +2,22 @@ import { newUserFormSchema } from "@/src/utils/zod_schemas";
 import {
   Button,
   Flex,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Portal,
   Radio,
   RadioGroup,
   Stack,
+  Text,
   Tooltip,
   useToast,
 } from "@chakra-ui/react";
@@ -16,6 +26,7 @@ import { useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { GoMarkGithub } from "react-icons/go";
 import { GrLinkedin } from "react-icons/gr";
+import { ImWarning } from "react-icons/im";
 
 const NewUserForm = () => {
   const toast = useToast();
@@ -27,6 +38,7 @@ const NewUserForm = () => {
   const [codeType, setCodeType] = useState("memberCode");
 
   const [formValues, setFormValues] = useState({
+    username: "",
     bio: "",
     institutionCode: "",
     githubLink: "",
@@ -34,6 +46,7 @@ const NewUserForm = () => {
   });
 
   const [formErrors, setFromErrors] = useState({
+    username: null,
     institutionCode: null,
     githubLink: null,
     linkedinLink: null,
@@ -90,13 +103,18 @@ const NewUserForm = () => {
 
       router.push("/home");
     } else {
-      toast({
-        title: "Invalid institution code!!",
-        description: "Contact your admin to know more!!",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      const error = await response.json();
+
+      if (error.ref) {
+        setFromErrors((p) => ({ ...p, [error.ref]: error.error }));
+      } else {
+        toast({
+          title: error.error,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     }
 
     setLoading(false);
@@ -104,6 +122,53 @@ const NewUserForm = () => {
 
   return (
     <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+      <InputGroup className="flex flex-col">
+        <Input
+          name="username"
+          isInvalid={formErrors.username}
+          errorBorderColor="red.200"
+          variant="filled"
+          placeholder="Username"
+          required
+          value={formValues.username}
+          onChange={handleInputChange}
+        />
+        <InputRightElement>
+          <Popover
+            placement="right-start"
+            trigger="hover"
+            openDelay={0}
+            closeDelay={700}>
+            <PopoverTrigger>
+              <IconButton
+                tabIndex="-1"
+                _hover={{ bg: "transparent" }}
+                icon={<ImWarning />}
+                rounded="full"
+                bg="transparent"
+              />
+            </PopoverTrigger>
+            <Portal>
+              <PopoverContent w="fit-content">
+                <PopoverArrow />
+                <PopoverHeader className="font-medium text-center">
+                  Username requirements
+                </PopoverHeader>
+                <PopoverBody>
+                  <Stack>
+                    <Text>- Must be unique</Text>
+                    <Text>- Lowercase Letters (a-z)</Text>
+                    <Text>- Numbers (0-9)</Text>
+                    <Text>- Dots (.)</Text>
+                    <Text>- Underscores (_)</Text>
+                  </Stack>
+                </PopoverBody>
+              </PopoverContent>
+            </Portal>
+          </Popover>
+        </InputRightElement>
+        <span className="text-red-400 mt-1">{formErrors.username}</span>
+      </InputGroup>
       <Input
         variant="filled"
         placeholder="Bio"
@@ -154,7 +219,7 @@ const NewUserForm = () => {
         />
         <InputRightElement>
           <Tooltip
-            placement="auto-start"
+            placement="right"
             label="Enter the unique code of the institution you belong to!"
             fontSize="md">
             <span>

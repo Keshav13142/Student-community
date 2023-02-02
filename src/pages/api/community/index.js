@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
   const { user } = session;
 
-  // Get all public communities in the institution
+  // Get all public and restricted communities in the institution
   if (req.method === "GET") {
     res.json(
       await prisma.community.findMany({
@@ -33,8 +33,8 @@ export default async function handler(req, res) {
               },
             },
             {
-              private: {
-                equals: false,
+              type: {
+                not: "PRIVATE",
               },
             },
             {
@@ -75,7 +75,7 @@ export default async function handler(req, res) {
 
 // Create a new Community
 const handlePOST = async (req, res, userId, institution) => {
-  const { name, image, desc, isPrivate } = req.body;
+  const { name, image, desc, type } = req.body;
 
   if (!name) {
     res.status(500).json({ error: "Community name is required!!" });
@@ -96,7 +96,7 @@ const handlePOST = async (req, res, userId, institution) => {
         name,
         desc,
         image,
-        private: isPrivate,
+        type,
         admins: {
           connect: {
             id: userId,

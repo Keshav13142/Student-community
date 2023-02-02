@@ -31,9 +31,15 @@ export default async function handler(req, res) {
         image: true,
         members: {
           select: {
+            id: true,
             name: true,
             email: true,
             image: true,
+            profile: {
+              select: {
+                username: true,
+              },
+            },
           },
         },
         admins: {
@@ -42,6 +48,11 @@ export default async function handler(req, res) {
             name: true,
             email: true,
             image: true,
+            profile: {
+              select: {
+                username: true,
+              },
+            },
           },
         },
       },
