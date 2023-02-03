@@ -74,18 +74,20 @@ export default async function handler(req, res) {
         },
       });
 
+      const community = await prisma.community.findFirst({
+        where: {
+          default: true,
+        },
+        select: {
+          id: true,
+        },
+      });
+
       // Add the user  to the default community
       // Had to use update many, to query for default institution. Probably will this later?!
-      await prisma.community.updateMany({
+      await prisma.community.update({
         where: {
-          AND: [
-            {
-              default: true,
-              institution: {
-                [codeType]: institutionCode,
-              },
-            },
-          ],
+          id: community.id,
         },
         data: {
           members: {
