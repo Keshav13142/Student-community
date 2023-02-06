@@ -37,23 +37,25 @@ model Session {
 }
 
 model User {
-  id               String             @id @default(cuid())
-  name             String
-  email            String             @unique
-  emailVerified    DateTime?
-  image            String?
-  accounts         Account[]
-  sessions         Session[]
-  communities      Community[]        @relation(name: "members")
-  communityAdmin   Community[]        @relation(name: "community_admins")
-  messages         Message[]
-  profile          Profile?
-  posts            Post[]
-  institutionAdmin Institution[]      @relation(name: "institution_admins")
-  institution      Institution?       @relation(fields: [institutionId], references: [id])
-  institutionId    String?
-  PendingApprovals PendingApprovals[]
-  postComments     PostComments[]
+  id                 String             @id @default(cuid())
+  name               String
+  email              String             @unique
+  emailVerified      DateTime?
+  image              String?
+  accounts           Account[]
+  sessions           Session[]
+  communities        Community[]        @relation(name: "community_members")
+  communityAdmin     Community[]        @relation(name: "community_admins")
+  communityModerator Community[]        @relation(name: "community_moderators")
+  messages           Message[]
+  profile            Profile?
+  posts              Post[]
+  institutionAdmin   Institution[]      @relation(name: "institution_admins")
+  institution        Institution?       @relation(fields: [institutionId], references: [id])
+  institutionId      String?
+  PendingApprovals   PendingApprovals[]
+  postComments       PostComments[]
+  type               UserType           @default(MEMBER)
 
   @@map("users")
 }
@@ -115,9 +117,10 @@ model Community {
   desc             String?
   type             CommunityType      @default(PUBLIC)
   default          Boolean            @default(false)
-  members          User[]             @relation(name: "members")
+  members          User[]             @relation(name: "community_members")
   admins           User[]             @relation(name: "community_admins")
   messages         Message[]
+  moderators       User[]             @relation(name: "community_moderators")
   image            String?
   code             String             @unique @default(cuid())
   institution      Institution        @relation(fields: [institutionId], references: [id])
@@ -166,4 +169,9 @@ enum CommunityType {
   PUBLIC //Anyone can view and message
   PRIVATE // Only members with code with can join and msg
   RESTRICTED //Anyone can view, but must request access from admin to become member and send msg
+}
+
+enum UserType {
+  ADMIN // Can create communtities and appoint other admins.
+  MEMBER // Members can also be appointed as moderators, with elevated priviledges
 }
