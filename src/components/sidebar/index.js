@@ -32,7 +32,7 @@ const SideBar = () => {
   const [isCreateCommunityModalOpen, setIsCreateCommunityModalOpen] =
     useState(false);
 
-  const { isInstitutionAdmin } = useContext(AppContext);
+  const { currentUser } = useContext(AppContext);
 
   if (error) {
     toast({
@@ -49,7 +49,7 @@ const SideBar = () => {
   return (
     <>
       <AboutInstitution
-        isAdmin={isInstitutionAdmin}
+        isAdmin={currentUser?.isAdmin}
         onClose={() => {
           setIsInstitutionModalOpen(false);
         }}
@@ -101,7 +101,7 @@ const SideBar = () => {
           )}
         </Stack>
         <Stack w="full" spacing={3}>
-          {isInstitutionAdmin && (
+          {currentUser?.isAdmin && (
             <Button
               w="full"
               variant="outline"

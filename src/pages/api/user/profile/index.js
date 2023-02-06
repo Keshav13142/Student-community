@@ -84,25 +84,27 @@ export default async function handler(req, res) {
       });
 
       // Add the user  to the default community
-      // Had to use update many, to query for default institution. Probably will this later?!
       await prisma.community.update({
         where: {
           id: community.id,
         },
         data: {
-          members: {
-            connect: {
-              id: user.id,
-            },
-          },
-          // If the code is an admin code, then add the user as community admin
-          ...(codeType === "adminCode" && {
-            admins: {
-              connect: {
-                id: user.id,
-              },
-            },
-          }),
+          // If the code is an admin code, then add the user as community admin, else as a normal member
+          ...(codeType === "adminCode"
+            ? {
+                admins: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+              }
+            : {
+                members: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+              }),
         },
       });
 
@@ -117,6 +119,9 @@ export default async function handler(req, res) {
               githubLink,
               linkedinLink,
             },
+          },
+          type: {
+            set: codeType === "adminCode" ? "ADMIN" : "MEMBER",
           },
           institution: {
             connect: {

@@ -10,6 +10,7 @@ export const authOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        session.user.isAdmin = user.type === "ADMIN";
       }
       return session;
     },

@@ -10,7 +10,6 @@ import {
   Popover,
   PopoverArrow,
   PopoverBody,
-  PopoverCloseButton,
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
@@ -23,12 +22,17 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { GoMarkGithub } from "react-icons/go";
 import { GrLinkedin } from "react-icons/gr";
 import { ImWarning } from "react-icons/im";
 import { useMutation } from "react-query";
+
+const reloadSession = () => {
+  const event = new Event("visibilitychange");
+  document.dispatchEvent(event);
+};
 
 const NewUserForm = () => {
   const toast = useToast();
@@ -54,6 +58,7 @@ const NewUserForm = () => {
     },
     onSuccess: () => {
       router.push("/home");
+      reloadSession();
     },
   });
 
