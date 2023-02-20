@@ -229,6 +229,7 @@ const NewUserForm = () => {
           defaultValue="memberCode"
           onChange={(v) => {
             setCodeType(v);
+            setFromErrors((p) => ({ ...p, institutionCode: null }));
           }}>
           <Stack spacing={5} direction="row">
             <Radio colorScheme="blue" value="memberCode">

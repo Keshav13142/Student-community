@@ -53,26 +53,35 @@ export default async function handler(req, res) {
         return;
       }
 
-      await prisma.institution.update({
-        where: {
-          [codeType]: institutionCode,
-        },
-        data: {
-          // If the code is an admin code, then add the user as institution admin
-          ...(codeType === "adminCode" && {
+      if (codeType === "adminCode") {
+        console.log('ADmin code',codeType,institutionCode)
+        await prisma.institution.update({
+          where: {
+            [codeType]: institutionCode,
+          },
+          data: {
             admins: {
               connect: {
                 id: user.id,
               },
             },
-          }),
-          members: {
-            connect: {
-              id: user.id,
-            },
           },
-        },
-      });
+        });
+      }
+      // else {
+      //   await prisma.institution.update({
+      //     where: {
+      //       [codeType]: institutionCode,
+      //     },
+      //     data: {
+      //       members: {
+      //         connect: {
+      //           id: user.id,
+      //         },
+      //       },
+      //     },
+      //   });
+      // }
 
       const community = await prisma.community.findFirst({
         where: {

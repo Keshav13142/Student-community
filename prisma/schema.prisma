@@ -44,14 +44,15 @@ model User {
   image              String?
   accounts           Account[]
   sessions           Session[]
-  communities        Community[]        @relation(name: "community_members")
-  communityAdmin     Community[]        @relation(name: "community_admins")
-  communityModerator Community[]        @relation(name: "community_moderators")
+  communities        Community[]        @relation("community_members")
+  communityAdmin     Community[]        @relation("community_admins")
+  communityModerator Community[]        @relation("community_moderators")
   messages           Message[]
   profile            Profile?
   posts              Post[]
-  institutionAdmin   Institution[]      @relation(name: "institution_admins")
-  institution        Institution?       @relation(fields: [institutionId], references: [id])
+  institutionAdmin   Institution?       @relation("institution_admins", fields: [institutionAdminId], references: [id])
+  institutionAdminId String?
+  institution        Institution?       @relation("institution_members", fields: [institutionId], references: [id])
   institutionId      String?
   PendingApprovals   PendingApprovals[]
   postComments       PostComments[]
@@ -117,10 +118,10 @@ model Community {
   desc             String?
   type             CommunityType      @default(PUBLIC)
   default          Boolean            @default(false)
-  members          User[]             @relation(name: "community_members")
-  admins           User[]             @relation(name: "community_admins")
+  members          User[]             @relation("community_members")
+  admins           User[]             @relation("community_admins")
   messages         Message[]
-  moderators       User[]             @relation(name: "community_moderators")
+  moderators       User[]             @relation("community_moderators")
   image            String?
   code             String             @unique @default(cuid())
   institution      Institution        @relation(fields: [institutionId], references: [id])
@@ -158,7 +159,7 @@ model Institution {
   website      String?
   supportEmail String?
   communities  Community[]
-  members      User[]
+  members      User[]      @relation("institution_members")
   admins       User[]      @relation("institution_admins")
   posts        Post[]
 
