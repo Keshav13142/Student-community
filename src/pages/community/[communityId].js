@@ -121,10 +121,10 @@ const Community = () => {
                 padding={3}
                 borderRadius={10}
                 bgColor={
-                  session.data?.user?.id === msg.userId ? "gray.300" : "plum"
+                  session.data?.user?.id === msg.senderId ? "gray.300" : "plum"
                 }
                 alignSelf={
-                  session.data?.user?.id === msg.userId
+                  session.data?.user?.id === msg.senderId
                     ? "flex-end"
                     : "flex-start"
                 }>

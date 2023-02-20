@@ -57,8 +57,8 @@ const NewUserForm = () => {
       }
     },
     onSuccess: () => {
-      router.push("/home");
       reloadSession();
+      router.push("/home");
     },
   });
 
