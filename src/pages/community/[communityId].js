@@ -16,6 +16,7 @@ import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import Pusher from "pusher-js";
 import React, { useEffect, useState } from "react";
 import { BiSend } from "react-icons/bi";
 import { FaChevronLeft } from "react-icons/fa";
@@ -42,16 +43,29 @@ const Community = () => {
       });
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(["messages", communityId], (prev) => [
-        ...prev,
-        data,
-      ]);
+      setInput("");
     },
   });
 
   useEffect(() => {
     if (communityId) {
       setIsEnabled(true);
+      const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+        cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+      });
+
+      const channel = pusher.subscribe(`community-${communityId}`);
+
+      channel.bind("chat", function (data) {
+        queryClient.setQueryData(["messages", communityId], (prev) => [
+          ...prev,
+          data,
+        ]);
+      });
+
+      return () => {
+        pusher.unsubscribe(`community-${communityId}`);
+      };
     }
   }, [communityId]);
 
@@ -80,7 +94,11 @@ const Community = () => {
   return (
     <>
       <Head>
-        <title>Community name</title>
+        <title>
+          {communityQuery.data
+            ? `Community | ${communityQuery.data.name}`
+            : "Loading..."}
+        </title>
         <meta name="description" content="Community description" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
@@ -143,7 +161,11 @@ const Community = () => {
                   setInput(e.target.value);
                 }}
               />
-              <IconButton icon={<BiSend />} type="submit" />
+              <IconButton
+                icon={<BiSend />}
+                type="submit"
+                disabled={mutation.isLoading}
+              />
             </Flex>
           </form>
         </Stack>

@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import pusher from "@/lib/pusher";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 
@@ -27,6 +28,11 @@ export default async function handler(req, res) {
       res.status(401).json({ error: "Empty message content!!" });
       return;
     }
+
+    await pusher.trigger(`community-${communityId}`, "chat", {
+      content,
+      senderId: user.id,
+    });
 
     try {
       const message = await prisma.message.create({
