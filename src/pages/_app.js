@@ -18,19 +18,19 @@ export default function App({
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
         <SessionProvider session={session}>
-          <AppContextProvider>
-            {/* Wrap the components in Layout */}
-            <Layout>
-              {/* If the components have the auth property set to true, then protect them */}
-              {Component.auth ? (
-                <Auth>
-                  <Component {...pageProps} />
-                </Auth>
-              ) : (
+          {/* <AppContextProvider> */}
+          {/* Wrap the components in Layout */}
+          <Layout>
+            {/* If the components have the auth property set to true, then protect them */}
+            {Component.auth ? (
+              <Auth>
                 <Component {...pageProps} />
-              )}
-            </Layout>
-          </AppContextProvider>
+              </Auth>
+            ) : (
+              <Component {...pageProps} />
+            )}
+          </Layout>
+          {/* </AppContextProvider> */}
           <ReactQueryDevtools />
         </SessionProvider>
       </ChakraProvider>

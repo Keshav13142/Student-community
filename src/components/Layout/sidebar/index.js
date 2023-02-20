@@ -1,16 +1,8 @@
-import { AppContext } from "@/src/context/AppContext";
 import { fetchCommunities } from "@/src/utils/api-calls";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Flex,
-  Stack,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { Button, Divider, Flex, Stack, Text, useToast } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { ImInfo } from "react-icons/im";
 import { TbBrowserPlus } from "react-icons/tb";
 import { useQuery } from "react-query";
@@ -32,7 +24,7 @@ const SideBar = () => {
   const [isCreateCommunityModalOpen, setIsCreateCommunityModalOpen] =
     useState(false);
 
-  const { currentUser } = useContext(AppContext);
+  const session = useSession();
 
   if (error) {
     toast({
@@ -49,7 +41,7 @@ const SideBar = () => {
   return (
     <>
       <AboutInstitution
-        isAdmin={currentUser?.isAdmin}
+        isAdmin={session.data?.user?.isAdmin}
         onClose={() => {
           setIsInstitutionModalOpen(false);
         }}
@@ -90,8 +82,7 @@ const SideBar = () => {
                       alignItems="center"
                       w="full"
                       textColor="purple.600">
-                      <Avatar size="sm" src={c.image} name={c.name} />
-                      <span className="font-medium ">{c.name}</span>
+                      <span className="font-medium ">{`# ${c.name}`}</span>
                     </Flex>
                     {i !== communities.length - 1 && <Divider />}
                   </Link>
@@ -101,7 +92,7 @@ const SideBar = () => {
           )}
         </Stack>
         <Stack w="full" spacing={3}>
-          {currentUser?.isAdmin && (
+          {session.data?.user?.isAdmin && (
             <Button
               w="full"
               variant="outline"
