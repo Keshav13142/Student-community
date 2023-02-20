@@ -1,7 +1,7 @@
 import { Flex, Hide, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import Navbar from "../navbar";
-import SideBar from "../sidebar";
+import Navbar from "./navbar";
+import SideBar from "./sidebar";
 
 // Routes that need the Layout
 const routesWithLayout = ["/home", "/community", "/blog"];

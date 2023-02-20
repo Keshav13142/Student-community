@@ -14,8 +14,8 @@ import { useContext, useState } from "react";
 import { ImInfo } from "react-icons/im";
 import { TbBrowserPlus } from "react-icons/tb";
 import { useQuery } from "react-query";
-import AboutInstitution from "../modals/AboutInstitution";
-import CreateCommunityModal from "../modals/CreateCommunityModal";
+import AboutInstitution from "../../modals/AboutInstitution";
+import CreateCommunityModal from "../../modals/CreateCommunityModal";
 import Loading from "./Loading";
 
 const SideBar = () => {
