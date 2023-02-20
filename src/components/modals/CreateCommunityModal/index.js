@@ -105,7 +105,7 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Create a new Community</ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton disabled={mutation.isLoading} />
         <ModalBody>
           <form onSubmit={onSubmit}>
             <Stack spacing={5}>
@@ -155,14 +155,17 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
         </ModalBody>
         <ModalFooter>
           <Button
-            isLoading={mutation.isLoading}
             colorScheme="purple"
             mr={3}
             variant="outline"
             onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={onSubmit} colorScheme="purple">
+
+          <Button
+            onClick={onSubmit}
+            colorScheme="purple"
+            isLoading={mutation.isLoading}>
             Create Community
           </Button>
         </ModalFooter>
