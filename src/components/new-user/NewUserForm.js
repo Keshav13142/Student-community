@@ -62,8 +62,6 @@ const NewUserForm = () => {
     },
   });
 
-  const [loading, setLoading] = useState(false);
-
   const [codeType, setCodeType] = useState("memberCode");
 
   const [formValues, setFormValues] = useState({

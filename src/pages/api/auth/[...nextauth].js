@@ -11,6 +11,7 @@ export const authOptions = {
       if (session.user) {
         session.user.id = user.id;
         session.user.isAdmin = user.type === "ADMIN";
+        session.user.hasProfile = user.hasProfile;
       }
       return session;
     },

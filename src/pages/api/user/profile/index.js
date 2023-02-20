@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       }
 
       if (codeType === "adminCode") {
-        console.log('ADmin code',codeType,institutionCode)
+        console.log("ADmin code", codeType, institutionCode);
         await prisma.institution.update({
           where: {
             [codeType]: institutionCode,
@@ -121,6 +121,7 @@ export default async function handler(req, res) {
       const updatedUser = await prisma.user.update({
         where: { id: user.id },
         data: {
+          hasProfile: true,
           profile: {
             create: {
               username,

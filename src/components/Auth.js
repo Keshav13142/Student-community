@@ -16,6 +16,14 @@ function Auth({ children }) {
   });
 
   if (session?.status === "authenticated") {
+    // If the user has not created a profile, prompt them
+    if (
+      !session.data?.user.hasProfile &&
+      router.pathname !== "/auth/new-user"
+    ) {
+      router.push("/auth/new-user");
+      return;
+    }
     return children;
   }
 
