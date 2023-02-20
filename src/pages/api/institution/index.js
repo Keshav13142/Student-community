@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const institution = await prisma.institution.findFirst({
       where: {
-        members: {
+        [user.isAdmin ? "admins" : "members"]: {
           some: {
             id: user.id,
           },

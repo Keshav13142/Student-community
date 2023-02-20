@@ -43,6 +43,11 @@ export default async function handler(req, res) {
                   id: user.id,
                 },
               },
+              admins: {
+                none: {
+                  id: user.id,
+                },
+              },
             },
           ],
         },

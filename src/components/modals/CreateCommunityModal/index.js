@@ -18,9 +18,9 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
-import { useMutation, useQueryClient } from "react-query";
 
 const CreateCommunityModal = ({ isOpen, onClose }) => {
   const queryClient = useQueryClient();
@@ -30,7 +30,7 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
   const mutation = useMutation(createCommunity, {
     onError: ({
       response: {
-        data: { error },
+        data: { error, ref },
       },
     }) => {
       toast({
@@ -42,8 +42,8 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("userCommunities");
-      queryClient.invalidateQueries("publicCommunities");
+      queryClient.invalidateQueries({ queryKey: ["userCommunities"] });
+      queryClient.invalidateQueries({ queryKey: ["publicCommunities"] });
       onClose();
       toast({
         title: "Created community successfully!",
@@ -105,7 +105,7 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Create a new Community</ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton disabled={mutation.isLoading} />
         <ModalBody>
           <form onSubmit={onSubmit}>
             <Stack spacing={5}>
@@ -155,14 +155,16 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
         </ModalBody>
         <ModalFooter>
           <Button
-            isLoading={mutation.isLoading}
             colorScheme="purple"
             mr={3}
             variant="outline"
             onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={onSubmit} colorScheme="purple">
+          <Button
+            isLoading={mutation.isLoading}
+            onClick={onSubmit}
+            colorScheme="purple">
             Create Community
           </Button>
         </ModalFooter>

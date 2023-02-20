@@ -53,54 +53,67 @@ export default async function handler(req, res) {
         return;
       }
 
-      await prisma.institution.update({
-        where: {
-          [codeType]: institutionCode,
-        },
-        data: {
-          // If the code is an admin code, then add the user as institution admin
-          ...(codeType === "adminCode" && {
+      if (codeType === "adminCode") {
+        console.log("ADmin code", codeType, institutionCode);
+        await prisma.institution.update({
+          where: {
+            [codeType]: institutionCode,
+          },
+          data: {
             admins: {
               connect: {
                 id: user.id,
               },
             },
-          }),
-          members: {
-            connect: {
-              id: user.id,
-            },
           },
+        });
+      }
+      // else {
+      //   await prisma.institution.update({
+      //     where: {
+      //       [codeType]: institutionCode,
+      //     },
+      //     data: {
+      //       members: {
+      //         connect: {
+      //           id: user.id,
+      //         },
+      //       },
+      //     },
+      //   });
+      // }
+
+      const community = await prisma.community.findFirst({
+        where: {
+          default: true,
+        },
+        select: {
+          id: true,
         },
       });
 
       // Add the user  to the default community
-      // Had to use update many, to query for default institution. Probably will this later?!
-      await prisma.community.updateMany({
+      await prisma.community.update({
         where: {
-          AND: [
-            {
-              default: true,
-              institution: {
-                [codeType]: institutionCode,
-              },
-            },
-          ],
+          id: community.id,
         },
         data: {
-          members: {
-            connect: {
-              id: user.id,
-            },
-          },
-          // If the code is an admin code, then add the user as community admin
-          ...(codeType === "adminCode" && {
-            admins: {
-              connect: {
-                id: user.id,
-              },
-            },
-          }),
+          // If the code is an admin code, then add the user as community admin, else as a normal member
+          ...(codeType === "adminCode"
+            ? {
+                admins: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+              }
+            : {
+                members: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+              }),
         },
       });
 
@@ -108,6 +121,7 @@ export default async function handler(req, res) {
       const updatedUser = await prisma.user.update({
         where: { id: user.id },
         data: {
+          hasProfile: true,
           profile: {
             create: {
               username,
@@ -115,6 +129,9 @@ export default async function handler(req, res) {
               githubLink,
               linkedinLink,
             },
+          },
+          type: {
+            set: codeType === "adminCode" ? "ADMIN" : "MEMBER",
           },
           institution: {
             connect: {

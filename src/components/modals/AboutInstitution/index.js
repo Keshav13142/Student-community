@@ -16,8 +16,8 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useQuery } from "react-query";
 import Admins from "./Admins";
 import Members from "./Members";
 
@@ -26,7 +26,7 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
     data: institutionData,
     error,
     isLoading,
-  } = useQuery("aboutInstitution", fetchInstitutionData);
+  } = useQuery(["aboutInstitution"], fetchInstitutionData);
 
   return (
     <Modal

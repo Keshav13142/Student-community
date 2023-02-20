@@ -10,7 +10,6 @@ import {
   Popover,
   PopoverArrow,
   PopoverBody,
-  PopoverCloseButton,
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
@@ -22,13 +21,18 @@ import {
   Tooltip,
   useToast,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { GoMarkGithub } from "react-icons/go";
 import { GrLinkedin } from "react-icons/gr";
 import { ImWarning } from "react-icons/im";
-import { useMutation } from "react-query";
+
+const reloadSession = () => {
+  const event = new Event("visibilitychange");
+  document.dispatchEvent(event);
+};
 
 const NewUserForm = () => {
   const toast = useToast();
@@ -53,11 +57,10 @@ const NewUserForm = () => {
       }
     },
     onSuccess: () => {
+      reloadSession();
       router.push("/home");
     },
   });
-
-  const [loading, setLoading] = useState(false);
 
   const [codeType, setCodeType] = useState("memberCode");
 
@@ -224,6 +227,7 @@ const NewUserForm = () => {
           defaultValue="memberCode"
           onChange={(v) => {
             setCodeType(v);
+            setFromErrors((p) => ({ ...p, institutionCode: null }));
           }}>
           <Stack spacing={5} direction="row">
             <Radio colorScheme="blue" value="memberCode">

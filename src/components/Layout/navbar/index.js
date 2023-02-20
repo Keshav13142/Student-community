@@ -14,7 +14,7 @@ const Navbar = () => {
     <Flex
       alignItems="center"
       justifyContent="space-between"
-      className="py-2 px-6">
+      className="py-2 px-6 shadow-md">
       <Flex gap={2}>
         <Show below="lg">
           <IconButton

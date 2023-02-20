@@ -1,18 +1,18 @@
-import { AppContext } from "@/src/context/AppContext";
 import { Avatar, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import { signOut } from "next-auth/react";
-import { useContext } from "react";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Profile = () => {
-  const { currentUser, setCurrentUser } = useContext(AppContext);
+  const router = useRouter();
+  const session = useSession();
 
   return (
     <Menu>
       <MenuButton
         size={{ base: "sm", md: "md" }}
         as={Avatar}
-        name={currentUser?.name}
-        src={currentUser?.image}
+        name={session.data?.user.name}
+        src={session.data?.user.image}
         cursor="pointer"
         border="purple"
         borderWidth="medium"
@@ -21,8 +21,8 @@ const Profile = () => {
         <MenuItem>Edit Profile</MenuItem>
         <MenuItem
           onClick={() => {
-            signOut({ callbackUrl: "/", redirect: false });
-            setCurrentUser(null);
+            signOut({ redirect: false });
+            router.push("/");
           }}>
           Logout
         </MenuItem>
