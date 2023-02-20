@@ -21,13 +21,13 @@ import {
   Tooltip,
   useToast,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { GoMarkGithub } from "react-icons/go";
 import { GrLinkedin } from "react-icons/gr";
 import { ImWarning } from "react-icons/im";
-import { useMutation } from "react-query";
 
 const reloadSession = () => {
   const event = new Event("visibilitychange");

@@ -40,3 +40,13 @@ export const getCommunityInfo = async (id) => {
   const { data } = await AxiosClient.get(`/community/${id}`);
   return data;
 };
+
+export const sendMessage = async (msgData) => {
+  const { data } = await AxiosClient.post(`/messages`, msgData);
+  return data;
+};
+
+export const fetchMessages = async (communityId) => {
+  const { data } = await AxiosClient.get(`/messages/${communityId}`);
+  return data;
+};

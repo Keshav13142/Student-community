@@ -1,15 +1,15 @@
 import { fetchPublicAndRestrictedCommunities } from "@/src/utils/api-calls";
 import { Flex, useToast } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
 
 const DiscoverCommunities = () => {
   const {
     data: publicCommunities,
     error,
     loading,
-  } = useQuery("publicCommunities", fetchPublicAndRestrictedCommunities);
+  } = useQuery(["publicCommunities"], fetchPublicAndRestrictedCommunities);
 
   const toast = useToast();
 

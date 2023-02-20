@@ -1,12 +1,11 @@
 import "@/styles/globals.css";
 import { ChakraProvider } from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SessionProvider } from "next-auth/react";
 import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
 import Auth from "../components/Auth";
 import Layout from "../components/Layout";
-import { AppContextProvider } from "../context/AppContext";
 
 export default function App({
   Component,
@@ -18,7 +17,6 @@ export default function App({
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
         <SessionProvider session={session}>
-          {/* <AppContextProvider> */}
           {/* Wrap the components in Layout */}
           <Layout>
             {/* If the components have the auth property set to true, then protect them */}
@@ -30,7 +28,6 @@ export default function App({
               <Component {...pageProps} />
             )}
           </Layout>
-          {/* </AppContextProvider> */}
           <ReactQueryDevtools />
         </SessionProvider>
       </ChakraProvider>

@@ -1,11 +1,11 @@
 import { fetchCommunities } from "@/src/utils/api-calls";
 import { Button, Divider, Flex, Stack, Text, useToast } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { ImInfo } from "react-icons/im";
 import { TbBrowserPlus } from "react-icons/tb";
-import { useQuery } from "react-query";
 import AboutInstitution from "../../modals/AboutInstitution";
 import CreateCommunityModal from "../../modals/CreateCommunityModal";
 import Loading from "./Loading";
@@ -17,7 +17,7 @@ const SideBar = () => {
     data: communities,
     error,
     loading,
-  } = useQuery("userCommunities", fetchCommunities);
+  } = useQuery(["userCommunities"], fetchCommunities);
 
   const [isInstitutionModalOpen, setIsInstitutionModalOpen] = useState(false);
 

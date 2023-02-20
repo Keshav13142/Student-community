@@ -18,9 +18,9 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
-import { useMutation, useQueryClient } from "react-query";
 
 const CreateCommunityModal = ({ isOpen, onClose }) => {
   const queryClient = useQueryClient();
@@ -42,8 +42,8 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("userCommunities");
-      queryClient.invalidateQueries("publicCommunities");
+      queryClient.invalidateQueries({ queryKey: ["userCommunities"] });
+      queryClient.invalidateQueries({ queryKey: ["publicCommunities"] });
       onClose();
       toast({
         title: "Created community successfully!",
