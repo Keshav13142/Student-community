@@ -30,7 +30,7 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
   const mutation = useMutation(createCommunity, {
     onError: ({
       response: {
-        data: { error },
+        data: { error, ref },
       },
     }) => {
       toast({

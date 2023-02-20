@@ -12,7 +12,7 @@ import {
   Progress,
   Stack,
 } from "@chakra-ui/react";
-import { useMutation, useQueries } from "@tanstack/react-query";
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -27,31 +27,25 @@ const Community = () => {
   const session = useSession();
   // Get the community id from the URL of the dynamic route in NextJS
   const { communityId } = router.query;
+  const queryClient = useQueryClient();
 
   const [isEnabled, setIsEnabled] = useState(false);
   const [input, setInput] = useState("");
 
   const mutation = useMutation(sendMessage, {
-    onError: ({
-      response: {
-        data: { error },
-      },
-    }) => {
+    onError: () => {
       toast({
-        title: error,
+        title: "Failed to send message😢",
         status: "error",
-        description: "Failed to send message😢",
         duration: 3000,
         isClosable: true,
       });
     },
-    onSuccess: () => {
-      toast({
-        title: "Created community successfully!",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
+    onSuccess: (data) => {
+      queryClient.setQueryData(["messages", communityId], (prev) => [
+        ...prev,
+        data,
+      ]);
     },
   });
 
@@ -78,6 +72,9 @@ const Community = () => {
 
   const handleMessageSend = async (e) => {
     e.preventDefault();
+    if (input.trim() !== "") {
+      mutation.mutate({ communityId, content: input });
+    }
   };
 
   return (
@@ -117,23 +114,23 @@ const Community = () => {
           </Flex>
 
           <ScrollableFeed className="flex flex-col p-2 gap-1">
-            {/* {dummy_messages.map((msg, idx) => (
+            {messagesQuery.data?.map((msg, idx) => (
               <Box
                 maxW="45%"
                 key={idx}
                 padding={3}
                 borderRadius={10}
                 bgColor={
-                  session.data?.user?.id === msg.senderId ? "gray.300" : "plum"
+                  session.data?.user?.id === msg.userId ? "gray.300" : "plum"
                 }
                 alignSelf={
-                  session.data?.user?.id === msg.senderId
+                  session.data?.user?.id === msg.userId
                     ? "flex-end"
                     : "flex-start"
                 }>
                 {msg.content}
               </Box>
-            ))} */}
+            ))}
           </ScrollableFeed>
 
           <form onSubmit={handleMessageSend}>

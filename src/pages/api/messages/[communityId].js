@@ -13,11 +13,23 @@ export default async function handler(req, res) {
 
   const { user } = session;
 
+  const { communityId } = req.query;
+
+  if (!communityId) {
+    res.status(401).json({ error: "Community ID not provided!!" });
+    return;
+  }
+
   if (req.method === "POST") {
-    const { content, communityId } = req.body;
+    const { content } = req.body;
+
+    if (!content) {
+      res.status(401).json({ error: "Empty message content!!" });
+      return;
+    }
 
     try {
-      await prisma.message.create({
+      const message = await prisma.message.create({
         data: {
           content,
           sender: {
@@ -32,7 +44,24 @@ export default async function handler(req, res) {
           },
         },
       });
-      res.status(201).json({ message: "Message sent successfully" });
+      res.status(201).json(message);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  if (req.method === "GET") {
+    try {
+      const messages = await prisma.message.findMany({
+        where: {
+          community: {
+            id: communityId,
+          },
+        },
+      });
+
+      res.json(messages);
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: error.message });
