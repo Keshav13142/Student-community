@@ -15,16 +15,9 @@ export default async function handler(req, res) {
         data: {
           name,
           image,
-          profile: {
-            update: {
-              bio,
-              githubLink,
-              linkedinLink,
-            },
-          },
-        },
-        include: {
-          profile: true,
+          bio,
+          githubLink,
+          linkedinLink,
         },
       });
 

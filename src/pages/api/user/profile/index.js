@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     // Check if the user has a admin or member code and perform appropriate action
     try {
       if (
-        await prisma.profile.findUnique({
+        await prisma.user.findUnique({
           where: {
             username,
           },
@@ -68,20 +68,6 @@ export default async function handler(req, res) {
           },
         });
       }
-      // else {
-      //   await prisma.institution.update({
-      //     where: {
-      //       [codeType]: institutionCode,
-      //     },
-      //     data: {
-      //       members: {
-      //         connect: {
-      //           id: user.id,
-      //         },
-      //       },
-      //     },
-      //   });
-      // }
 
       const community = await prisma.community.findFirst({
         where: {
@@ -122,14 +108,10 @@ export default async function handler(req, res) {
         where: { id: user.id },
         data: {
           hasProfile: true,
-          profile: {
-            create: {
-              username,
-              bio,
-              githubLink,
-              linkedinLink,
-            },
-          },
+          username,
+          bio,
+          githubLink,
+          linkedinLink,
           type: {
             set: codeType === "adminCode" ? "ADMIN" : "MEMBER",
           },

@@ -31,7 +31,7 @@ const Admins = ({ admins, currentUserId, isAdmin }) => {
               <Avatar src={m.image} name={m.name} />
               <Stack>
                 <span className="text-base font-medium">{m.name}</span>
-                <span className="text-blue-700 cursor-pointer">{`@${m.profile.username}`}</span>
+                <span className="text-blue-700 cursor-pointer">{`@${m.username}`}</span>
               </Stack>
             </Flex>
             {m.id === currentUserId ? (

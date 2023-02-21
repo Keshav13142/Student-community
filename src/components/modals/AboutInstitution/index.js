@@ -83,6 +83,7 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
               <TabPanel>
                 <Members
                   members={institutionData?.members}
+                  admins={institutionData?.admins}
                   isAdmin={isAdmin}
                   currentUserId={session.data?.user?.id}
                 />

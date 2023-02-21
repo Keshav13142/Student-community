@@ -21,7 +21,8 @@ const Members = ({ members, currentUserId, isAdmin }) => {
   return (
     <Stack spacing={3} alignItems="center">
       {members.map((m) => {
-        if (m.id === currentUserId && isAdmin) return null;
+        if ((m.id === currentUserId && isAdmin) || m.institutionAdminId)
+          return null;
         return (
           <Flex
             minW="xs"
@@ -34,7 +35,7 @@ const Members = ({ members, currentUserId, isAdmin }) => {
               <Avatar src={m.image} name={m.name} />
               <Stack>
                 <span className="text-base font-medium">{m.name}</span>
-                <span className="text-blue-700 cursor-pointer">{`@${m.profile.username}`}</span>
+                <span className="text-blue-700 cursor-pointer">{`@${m.username}`}</span>
               </Stack>
             </Flex>
             {m.id === currentUserId ? (

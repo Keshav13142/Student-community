@@ -33,12 +33,9 @@ export default async function handler(req, res) {
           select: {
             id: true,
             name: true,
+            username: true,
             image: true,
-            profile: {
-              select: {
-                username: true,
-              },
-            },
+            institutionAdminId: true,
           },
         },
         admins: {
@@ -46,11 +43,7 @@ export default async function handler(req, res) {
             id: true,
             name: true,
             image: true,
-            profile: {
-              select: {
-                username: true,
-              },
-            },
+            username: true,
           },
         },
       },
