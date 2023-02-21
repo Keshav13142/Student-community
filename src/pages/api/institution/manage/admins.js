@@ -13,7 +13,6 @@ export default async function handler(req, res) {
   }
 
   const { institutionId, userId, action } = req.body;
-  console.log(req.body);
 
   if (!institutionId || !userId || !action) {
     res.status(500).json({ error: "Missing details!!" });
