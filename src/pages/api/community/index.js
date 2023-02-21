@@ -48,6 +48,11 @@ export default async function handler(req, res) {
                   id: user.id,
                 },
               },
+              moderators: {
+                none: {
+                  id: user.id,
+                },
+              },
             },
           ],
         },

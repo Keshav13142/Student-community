@@ -17,6 +17,7 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Admins from "./Admins";
 import Members from "./Members";
@@ -28,12 +29,14 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
     isLoading,
   } = useQuery(["aboutInstitution"], fetchInstitutionData);
 
+  const session = useSession();
+
   return (
     <Modal
       blockScrollOnMount={false}
       isOpen={isOpen}
       onClose={onClose}
-      size="4xl">
+      size="2xl">
       <ModalOverlay />
       <ModalContent minHeight="2xl">
         <ModalHeader textAlign="center" fontSize="2xl">
@@ -78,10 +81,18 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
                 </Center>
               </TabPanel>
               <TabPanel>
-                <Members members={institutionData?.members} />
+                <Members
+                  members={institutionData?.members}
+                  isAdmin={isAdmin}
+                  currentUserId={session.data?.user?.id}
+                />
               </TabPanel>
               <TabPanel>
-                <Admins isAdmin={isAdmin} />
+                <Admins
+                  admins={institutionData?.admins}
+                  isAdmin={isAdmin}
+                  currentUserId={session.data?.user?.id}
+                />
               </TabPanel>
             </TabPanels>
           </Tabs>

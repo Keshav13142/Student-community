@@ -33,7 +33,6 @@ export default async function handler(req, res) {
           select: {
             id: true,
             name: true,
-            email: true,
             image: true,
             profile: {
               select: {
@@ -46,7 +45,6 @@ export default async function handler(req, res) {
           select: {
             id: true,
             name: true,
-            email: true,
             image: true,
             profile: {
               select: {
