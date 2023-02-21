@@ -1,9 +1,16 @@
 import { fetchCommunities } from "@/src/utils/api-calls";
-import { Button, Divider, Flex, Stack, Text, useToast } from "@chakra-ui/react";
+import {
+  Button,
+  Divider,
+  Flex,
+  Stack,
+  Text,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
 import { ImInfo } from "react-icons/im";
 import { TbBrowserPlus } from "react-icons/tb";
 import AboutInstitution from "../../modals/AboutInstitution";
@@ -11,6 +18,7 @@ import CreateCommunityModal from "../../modals/CreateCommunityModal";
 import Loading from "./Loading";
 
 const SideBar = () => {
+  const session = useSession();
   const toast = useToast();
 
   const {
@@ -19,12 +27,17 @@ const SideBar = () => {
     loading,
   } = useQuery(["userCommunities"], fetchCommunities);
 
-  const [isInstitutionModalOpen, setIsInstitutionModalOpen] = useState(false);
+  const {
+    isOpen: isAboutOpen,
+    onClose: onAboutClose,
+    onOpen: onAboutOpen,
+  } = useDisclosure();
 
-  const [isCreateCommunityModalOpen, setIsCreateCommunityModalOpen] =
-    useState(false);
-
-  const session = useSession();
+  const {
+    isOpen: isCreateOpen,
+    onClose: onCreateClose,
+    onOpen: onCreateOpen,
+  } = useDisclosure();
 
   if (error) {
     toast({
@@ -42,17 +55,11 @@ const SideBar = () => {
     <>
       <AboutInstitution
         isAdmin={session.data?.user?.isAdmin}
-        onClose={() => {
-          setIsInstitutionModalOpen(false);
-        }}
-        isOpen={isInstitutionModalOpen}
+        onClose={onAboutClose}
+        isOpen={isAboutOpen}
       />
-      <CreateCommunityModal
-        onClose={() => {
-          setIsCreateCommunityModalOpen(false);
-        }}
-        isOpen={isCreateCommunityModalOpen}
-      />
+      <CreateCommunityModal onClose={onCreateClose} isOpen={isCreateOpen} />
+
       <Stack
         className="border-r border-r-slate-200"
         maxW="md"
@@ -97,9 +104,7 @@ const SideBar = () => {
               w="full"
               variant="outline"
               colorScheme="purple"
-              onClick={() => {
-                setIsCreateCommunityModalOpen(true);
-              }}
+              onClick={onCreateOpen}
               leftIcon={<TbBrowserPlus fontSize={20} />}>
               Create new commuinity
             </Button>
@@ -108,9 +113,7 @@ const SideBar = () => {
             w="full"
             variant="outline"
             colorScheme="purple"
-            onClick={() => {
-              setIsInstitutionModalOpen(true);
-            }}
+            onClick={onAboutOpen}
             leftIcon={<ImInfo />}>
             About Institution
           </Button>

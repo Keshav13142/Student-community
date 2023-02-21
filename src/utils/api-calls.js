@@ -52,3 +52,11 @@ export const fetchMessages = async (communityId) => {
   const { data } = await AxiosClient.get(`/messages/${communityId}`);
   return data;
 };
+
+export const manageInstnAdmin = async (options) => {
+  const { data } = await AxiosClient.patch(
+    `/institution/manage/admins`,
+    options
+  );
+  return data;
+};

@@ -1,89 +1,72 @@
 import prisma from "@/lib/prisma";
-import { checkIfUserIsInstAdmin } from "@/src/utils/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]";
 
 // Route to handle assigning and removing institution admins
 export default async function handler(req, res) {
-  const { institutionId, userId } = req.body;
-
-  // TODO => Get the logged in user details from the session instead of req body
+  const session = await getServerSession(req, res, authOptions);
 
   // Return error if user is not logged in
-  if (!institutionId || !userId) {
+  if (!session) {
+    res.status(401).json({ message: "You must be logged in." });
+    return;
+  }
+
+  const { institutionId, userId, action } = req.body;
+  console.log(req.body);
+
+  if (!institutionId || !userId || !action) {
     res.status(500).json({ error: "Missing details!!" });
     return;
   }
 
-  // If the current user is not an admin then return error
-  if (!(await checkIfUserIsInstAdmin(userId))) {
-    res
-      .status(500)
-      .json({ error: "You don't have permission to perform this action!!" });
-    return;
-  }
-
+  // Adding user's as institution admins
   try {
-    if (req.method === "POST") {
-      // Get the list of members that need to be promoted to admin status
-      const { memberIds } = req.body;
-
+    if (req.method === "PATCH") {
       const institution = await prisma.institution.update({
         where: {
           id: institutionId,
         },
         data: {
           admins: {
-            connect: memberIds.map((m) => ({
-              id: m,
-            })),
+            ...(action === "promote"
+              ? {
+                  connect: {
+                    id: userId,
+                  },
+                }
+              : {
+                  disconnect: {
+                    id: userId,
+                  },
+                }),
           },
         },
         include: {
-          admins: {
-            select: {
-              id: true,
-              email: true,
-            },
-          },
           members: {
             select: {
               id: true,
-              email: true,
+              name: true,
+              username: true,
+              image: true,
+              institutionAdminId: true,
             },
           },
         },
       });
 
-      res.json(institution);
-    }
-
-    // Handle removing member from admin status
-    if (req.method === "DELETE") {
-      const { memberIds } = req.body;
-
-      const institution = await prisma.institution.update({
+      await prisma.user.update({
         where: {
-          id: institutionId,
+          id: userId,
         },
         data: {
-          admins: {
-            disconnect: memberIds.map((m) => ({
-              id: m,
-            })),
-          },
-        },
-        include: {
-          admins: {
-            select: {
-              id: true,
-              email: true,
-            },
-          },
-          members: {
-            select: {
-              id: true,
-              email: true,
-            },
-          },
+          ...(action === "promote"
+            ? {
+                type: "ADMIN",
+              }
+            : {
+                type: "MEMBER",
+              }),
         },
       });
 
@@ -91,7 +74,6 @@ export default async function handler(req, res) {
     }
   } catch (error) {
     console.log(error);
-
     res.status(500).json({ error: error.message });
   }
 }

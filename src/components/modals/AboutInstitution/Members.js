@@ -1,7 +1,6 @@
 import {
   Avatar,
   Badge,
-  Box,
   Flex,
   IconButton,
   Menu,
@@ -10,22 +9,21 @@ import {
   MenuList,
   Stack,
 } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
 import { HiDotsVertical } from "react-icons/hi";
-import {
-  MdOutlineAdminPanelSettings,
-  MdPersonRemoveAlt1,
-} from "react-icons/md";
+import { IoMdRemoveCircleOutline } from "react-icons/io";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { RxExternalLink } from "react-icons/rx";
 
-const Members = ({ members, currentUserId, isAdmin }) => {
+const Members = ({ members, isAdmin, doAction }) => {
+  const session = useSession();
+
   return (
     <Stack spacing={3} alignItems="center">
       {members.map((m) => {
-        if ((m.id === currentUserId && isAdmin) || m.institutionAdminId)
-          return null;
         return (
           <Flex
-            minW="xs"
+            minW="sm"
             key={m.id}
             p={2}
             className="border border-purple-400 rounded-lg shadow-sm"
@@ -34,13 +32,21 @@ const Members = ({ members, currentUserId, isAdmin }) => {
             <Flex alignItems="center" gap={5}>
               <Avatar src={m.image} name={m.name} />
               <Stack>
-                <span className="text-base font-medium">{m.name}</span>
+                <span className="text-base font-medium">
+                  {m.id === session?.data?.user?.id ? (
+                    <Badge variant="outline" colorScheme="green">
+                      You
+                    </Badge>
+                  ) : (
+                    <span className="text-base font-medium">{m.name}</span>
+                  )}
+                </span>
                 <span className="text-blue-700 cursor-pointer">{`@${m.username}`}</span>
               </Stack>
             </Flex>
-            {m.id === currentUserId ? (
-              <Badge variant="outline" colorScheme="green">
-                You
+            {m.institutionAdminId ? (
+              <Badge variant="outline" colorScheme="red">
+                Admin
               </Badge>
             ) : null}
             <Menu>
@@ -55,16 +61,48 @@ const Members = ({ members, currentUserId, isAdmin }) => {
                   <RxExternalLink size={20} className="mr-3" />
                   View Profile
                 </MenuItem>
-                {isAdmin ? (
+                {isAdmin && m.id !== session?.data?.user?.id ? (
                   <>
-                    <MenuItem color="blue.500">
-                      <MdOutlineAdminPanelSettings size={20} className="mr-3" />
-                      Promote to admin
-                    </MenuItem>
-                    <MenuItem color="red.500">
+                    {m.institutionAdminId ? (
+                      <MenuItem
+                        color="red.500"
+                        onClick={() => {
+                          doAction({
+                            userId: m.id,
+                            type: "remove-from-admin",
+                          });
+                        }}>
+                        <IoMdRemoveCircleOutline size={20} className="mr-3" />
+                        Remove from admins
+                      </MenuItem>
+                    ) : (
+                      <MenuItem
+                        color="blue.500"
+                        onClick={() => {
+                          doAction({
+                            userId: m.id,
+                            type: "promote-to-admin",
+                          });
+                        }}>
+                        <MdOutlineAdminPanelSettings
+                          size={20}
+                          className="mr-3"
+                        />
+                        Promote to admin
+                      </MenuItem>
+                    )}
+                    {/* ---------------- TODO -> Add this feature later ---------------------------  */}
+                    {/* <MenuItem
+                      color="red.500"
+                      onClick={() => {
+                        doAction({
+                          userId: m.id,
+                          type: "remove-from-instn",
+                        });
+                      }}>
                       <MdPersonRemoveAlt1 size={20} className="mr-3" />
                       Remove from institution
-                    </MenuItem>
+                    </MenuItem> */}
                   </>
                 ) : null}
               </MenuList>
