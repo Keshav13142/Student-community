@@ -141,6 +141,8 @@ model PendingApprovals {
   userId      String
   community   Community @relation(fields: [communityId], references: [id])
   communityId String
+
+  @@unique([userId, communityId])
 }
 
 model Message {
