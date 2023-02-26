@@ -1,3 +1,4 @@
+import AboutCommunity from "@/src/components/modals/AboutCommunity";
 import {
   fetchMessages,
   getCommunityInfo,
@@ -11,6 +12,7 @@ import {
   Input,
   Progress,
   Stack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -32,6 +34,12 @@ const Community = () => {
 
   const [isEnabled, setIsEnabled] = useState(false);
   const [input, setInput] = useState("");
+
+  const {
+    isOpen: isAboutOpen,
+    onClose: onAboutClose,
+    onOpen: onAboutOpen,
+  } = useDisclosure();
 
   const mutation = useMutation(sendMessage, {
     onError: () => {
@@ -103,6 +111,11 @@ const Community = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
+      <AboutCommunity
+        data={communityQuery.data}
+        isOpen={isAboutOpen}
+        onClose={onAboutClose}
+      />
       {communityQuery.isLoading ? (
         <Box w="full">
           <Progress size="md" isIndeterminate colorScheme="purple" />
@@ -128,7 +141,7 @@ const Community = () => {
                 {communityQuery.data?.name}
               </h3>
             </Flex>
-            <IconButton icon={<ImInfo />} />
+            <IconButton icon={<ImInfo />} onClick={onAboutOpen} />
           </Flex>
 
           <ScrollableFeed className="flex flex-col p-2 gap-1">
