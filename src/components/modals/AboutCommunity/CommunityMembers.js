@@ -112,7 +112,7 @@ const CommunityMembers = ({ data, doAction }) => {
                             type: isMod ? "remove-from-mod" : "promote-to-mod",
                           });
                         }}>
-                        {isAdmin ? (
+                        {isMod ? (
                           <MdRemoveModerator size={20} className="mr-3" />
                         ) : (
                           <MdAddModerator size={20} className="mr-3" />

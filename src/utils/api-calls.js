@@ -60,3 +60,8 @@ export const manageInstnAdmin = async (options) => {
   );
   return data;
 };
+
+export const updateCommunityRoles = async (options) => {
+  const { data } = await AxiosClient.patch(`/community/manage/roles`, options);
+  return data;
+};

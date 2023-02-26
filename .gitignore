@@ -34,3 +34,4 @@ yarn-error.log*
 .env
 .vercel
 prisma/migrations
+todo.md

@@ -1,4 +1,4 @@
-import { manageInstnAdmin } from "@/src/utils/api-calls";
+import { updateCommunityRoles } from "@/src/utils/api-calls";
 import {
   Alert,
   AlertIcon,
@@ -29,7 +29,7 @@ const options = {
   },
   "remove-from-mod": {
     title: "Revoke Moderator priviledges",
-    desc: "This user will no longer be a moderator!",
+    warning: "This user will no longer be a moderator!",
     type: "error",
   },
   "remove-from-admin": {
@@ -37,6 +37,14 @@ const options = {
     warning: "This will revoke all admin rights of the user",
     type: "error",
   },
+};
+
+const getRoleAction = (str) => {
+  const split = str.split("-");
+  return {
+    role: split[2],
+    action: split[0],
+  };
 };
 
 const toastOptions = {
@@ -55,23 +63,17 @@ const CommunityActions = ({
   const queryClient = useQueryClient();
   const toast = useToast();
 
-  const mutation = useMutation(manageInstnAdmin, {
+  const mutation = useMutation(updateCommunityRoles, {
     onError: () => {
       toast(toastOptions);
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(["aboutInstitution"], () => data);
+      queryClient.setQueryData(["communityInfo", communityId], () => data);
     },
   });
 
   const handleAction = () => {
-    const data = { userId, institutionId };
-    if (type === "promote-to-admin") {
-      mutation.mutate({ ...data, action: "promote" });
-    }
-    if (type === "remove-from-admin") {
-      mutation.mutate({ ...data, action: "revoke" });
-    }
+    mutation.mutate({ userId, communityId, ...getRoleAction(type) });
     onClose();
   };
 

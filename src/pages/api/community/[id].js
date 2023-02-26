@@ -22,7 +22,12 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const comm = await prisma.community.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        image: true,
+        desc: true,
+        type: true,
+        name: true,
         messages: true,
         members: {
           select: {
