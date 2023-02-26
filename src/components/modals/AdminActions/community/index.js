@@ -1,0 +1,120 @@
+import { manageInstnAdmin } from "@/src/utils/api-calls";
+import {
+  Alert,
+  AlertIcon,
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useToast,
+} from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+const options = {
+  "promote-to-admin": {
+    title: "Grant admin priviledges",
+    warning:
+      "This will provide the selected user All admin rights, Please be aware!!",
+    type: "info",
+  },
+  "promote-to-mod": {
+    title: "Grant Moderator priviledges",
+    warning:
+      "This will provide the selected user All Moderator rights, Please be aware!!",
+    type: "info",
+  },
+  "remove-from-mod": {
+    title: "Revoke Moderator priviledges",
+    desc: "This user will no longer be a moderator!",
+    type: "error",
+  },
+  "remove-from-admin": {
+    title: "Remove user from admin group",
+    warning: "This will revoke all admin rights of the user",
+    type: "error",
+  },
+};
+
+const toastOptions = {
+  title: "Something went wrong!😢",
+  status: "error",
+  duration: 3000,
+  isClosable: true,
+};
+
+const CommunityActions = ({
+  isOpen,
+  onClose,
+  communityId,
+  action: { type, userId },
+}) => {
+  const queryClient = useQueryClient();
+  const toast = useToast();
+
+  const mutation = useMutation(manageInstnAdmin, {
+    onError: () => {
+      toast(toastOptions);
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["aboutInstitution"], () => data);
+    },
+  });
+
+  const handleAction = () => {
+    const data = { userId, institutionId };
+    if (type === "promote-to-admin") {
+      mutation.mutate({ ...data, action: "promote" });
+    }
+    if (type === "remove-from-admin") {
+      mutation.mutate({ ...data, action: "revoke" });
+    }
+    onClose();
+  };
+
+  return (
+    <Modal
+      blockScrollOnMount={false}
+      isOpen={isOpen}
+      onClose={onClose}
+      size="md"
+      isCentered>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader textAlign="center" fontSize="2xl">
+          {options[type]?.title}
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Alert status={options[type]?.type} rounded="md">
+            <AlertIcon />
+            {options[type]?.warning}
+          </Alert>
+          {options[type]?.desc ? (
+            <Alert status={options[type]?.type} mt={2} rounded="md">
+              <AlertIcon />
+              {options[type]?.desc}
+            </Alert>
+          ) : null}
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme="blue" mr={3} onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            colorScheme="red"
+            variant={"outline"}
+            mr={3}
+            onClick={handleAction}>
+            Proceed
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export default CommunityActions;
