@@ -52,20 +52,26 @@ const handlePOST = async (userId, communityId, res) => {
 
   // TODO => check if user belongs to the institution (idk if this case is really needed)
 
-  const approval = await prisma.pendingApprovals.create({
-    data: {
-      community: {
-        connect: {
-          id: communityId,
+  try {
+    const approval = await prisma.pendingApprovals.create({
+      data: {
+        community: {
+          connect: {
+            id: communityId,
+          },
+        },
+        user: {
+          connect: {
+            id: userId,
+          },
         },
       },
-      user: {
-        connect: {
-          id: userId,
-        },
-      },
-    },
-  });
-
-  res.json(approval);
+    });
+    res.json(approval);
+  } catch (error) {
+    res.status(500).json({
+      error: `Request is being processed by Community admins!`,
+    });
+    return;
+  }
 };
