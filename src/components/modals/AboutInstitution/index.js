@@ -21,7 +21,7 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
 import InstitutionAdminActions from "../AdminActions/insitution";
-import Members from "./Members";
+import Members from "./InstitutionMembers";
 
 const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
   const {
