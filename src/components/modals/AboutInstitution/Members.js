@@ -15,7 +15,7 @@ import { IoMdRemoveCircleOutline } from "react-icons/io";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { RxExternalLink } from "react-icons/rx";
 
-const Members = ({ members, isAdmin, doAction }) => {
+const InstitutionMembers = ({ members, isAdmin, doAction }) => {
   const session = useSession();
 
   return (
@@ -114,4 +114,4 @@ const Members = ({ members, isAdmin, doAction }) => {
   );
 };
 
-export default Members;
+export default InstitutionMembers;
