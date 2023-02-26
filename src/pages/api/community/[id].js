@@ -22,7 +22,12 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const comm = await prisma.community.findUnique({
       where: { id },
-      include: { messages: true },
+      include: {
+        messages: true,
+        admins: true,
+        moderators: true,
+        members: true,
+      },
     });
     res.json(comm);
   }

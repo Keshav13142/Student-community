@@ -54,7 +54,6 @@ export default async function handler(req, res) {
       }
 
       if (codeType === "adminCode") {
-        console.log("ADmin code", codeType, institutionCode);
         await prisma.institution.update({
           where: {
             [codeType]: institutionCode,
@@ -84,22 +83,14 @@ export default async function handler(req, res) {
           id: community.id,
         },
         data: {
-          // If the code is an admin code, then add the user as community admin, else as a normal member
+          members: {
+            connect: {
+              id: user.id,
+            },
+          },
           ...(codeType === "adminCode"
-            ? {
-                admins: {
-                  connect: {
-                    id: user.id,
-                  },
-                },
-              }
-            : {
-                members: {
-                  connect: {
-                    id: user.id,
-                  },
-                },
-              }),
+            ? { admins: { connect: { id: user.id } } }
+            : {}),
         },
       });
 
