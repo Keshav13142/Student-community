@@ -24,9 +24,30 @@ export default async function handler(req, res) {
       where: { id },
       include: {
         messages: true,
-        admins: true,
-        moderators: true,
-        members: true,
+        members: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            image: true,
+            communityAdmin: {
+              select: {
+                id: true,
+              },
+              where: {
+                id,
+              },
+            },
+            communityModerator: {
+              select: {
+                id: true,
+              },
+              where: {
+                id,
+              },
+            },
+          },
+        },
       },
     });
     res.json(comm);
