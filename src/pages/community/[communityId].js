@@ -50,7 +50,7 @@ const Community = () => {
         isClosable: true,
       });
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       setInput("");
     },
   });
@@ -99,6 +99,14 @@ const Community = () => {
     }
   };
 
+  const isCurrentUserAdmin =
+    communityQuery?.data?.members.find((m) => m.id === session?.data?.user?.id)
+      .communityAdmin.length > 0;
+
+  const isCurrentUserMod =
+    communityQuery?.data?.members.find((m) => m.id === session?.data?.user?.id)
+      .communityModerator.length > 0;
+
   return (
     <>
       <Head>
@@ -112,7 +120,11 @@ const Community = () => {
         <link rel="icon" href="/favicon.png" />
       </Head>
       <AboutCommunity
-        data={communityQuery.data}
+        data={{
+          ...communityQuery.data,
+          isCurrentUserMod,
+          isCurrentUserAdmin,
+        }}
         isOpen={isAboutOpen}
         onClose={onAboutClose}
       />
@@ -167,6 +179,12 @@ const Community = () => {
           <form onSubmit={handleMessageSend}>
             <Flex gap={5} p={3}>
               <Input
+                disabled={
+                  communityQuery.data?.type === "RESTRICTED" &&
+                  !communityQuery.data?.members.some(
+                    (m) => m.id === session?.data?.user.id
+                  )
+                }
                 value={input}
                 placeholder="Send a message"
                 borderWidth={2}

@@ -17,11 +17,14 @@ import {
   Tabs,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import CommunityActions from "../AdminActions/community";
 import { default as CommunityMembers } from "./CommunityMembers";
 
 const AboutCommunity = ({ isOpen, onClose, data }) => {
+  const session = useSession();
+
   const {
     isOpen: isActionsOpen,
     onClose: onActionsClose,
@@ -65,7 +68,7 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
                     <img
                       className="h-20 w-20"
                       src={data?.image || require("/public/college.png")}
-                      alt="Intitution image"
+                      alt="Community logo"
                     />
                     <Box>
                       Name :

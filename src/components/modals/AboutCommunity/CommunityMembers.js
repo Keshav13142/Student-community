@@ -23,10 +23,6 @@ import { RxExternalLink } from "react-icons/rx";
 const CommunityMembers = ({ data, doAction }) => {
   const session = useSession();
 
-  const isCurrentUserAdmin =
-    data.members.find((m) => m.id === session?.data?.user?.id).communityAdmin
-      .length > 0;
-
   return (
     <Stack spacing={3} alignItems="center">
       {data.members.map((m) => {
@@ -79,7 +75,7 @@ const CommunityMembers = ({ data, doAction }) => {
                   <RxExternalLink size={20} className="mr-3" />
                   View Profile
                 </MenuItem>
-                {!isCurrentUser && isCurrentUserAdmin ? (
+                {!isCurrentUser && data?.isCurrentUserAdmin ? (
                   <>
                     {!isMod && (
                       <MenuItem
