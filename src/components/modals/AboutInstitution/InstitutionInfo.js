@@ -33,11 +33,11 @@ const InviteCode = ({ code, title }) => {
   );
 };
 
-const InstitutionInfo = ({ data, inviteCodes }) => {
+const InstitutionInfo = ({ data, inviteCodes, isAdmin }) => {
   return (
     <Stack flexDirection="column" gap={5} alignItems="center">
       <img
-        className="w-52"
+        className="w-36 h-36 rounded-xl"
         src={
           data?.image ||
           "http://vastusanskar.com/wp-content/uploads/2019/02/government-institution.jpg"
@@ -59,8 +59,12 @@ const InstitutionInfo = ({ data, inviteCodes }) => {
           {data?.supportEmail || "Not provided"}
         </span>
       </Box>
-      <InviteCode code={inviteCodes?.adminCode} title="Admin" />
-      <InviteCode code={inviteCodes?.memberCode} title="Member" />
+      {isAdmin && (
+        <>
+          <InviteCode code={inviteCodes?.adminCode} title="Admin" />
+          <InviteCode code={inviteCodes?.memberCode} title="Member" />
+        </>
+      )}
     </Stack>
   );
 };
