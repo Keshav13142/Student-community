@@ -1,5 +1,8 @@
 import { updateInstitutionInfo } from "@/src/utils/api-calls";
-import { parseZodErrors, updateInstitutionForm } from "@/src/utils/zod_schemas";
+import {
+  parseZodErrors,
+  updateInstitutionSchema,
+} from "@/src/utils/zod_schemas";
 import {
   Button,
   Flex,
@@ -72,7 +75,7 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const parsedInputs = updateInstitutionForm.safeParse(inputs);
+    const parsedInputs = updateInstitutionSchema.safeParse(inputs);
 
     if (!parsedInputs.success) {
       setErrors((p) => ({ ...p, ...parseZodErrors(parsedInputs) }));
@@ -87,11 +90,12 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
       <Stack spacing={4}>
         {formFields.map((f, idx) => (
           <InputGroup className="flex flex-col" key={idx}>
+            <span className="mb-1 font-medium">{f.placeholder}</span>
             <Input
               value={inputs[f.name]}
               name={f.name}
               _placeholder={{ color: "#1a1b26" }}
-              placeholder="Institution Name"
+              placeholder={f.placeholder}
               onChange={handleInputChange}
             />
             {f.icon && <InputRightElement>{f.icon}</InputRightElement>}
@@ -103,7 +107,11 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
             disabled={mutation.isLoading}
             colorScheme="red"
             variant="outline"
-            onClick={onCancel}
+            onClick={() => {
+              setInputs(initialInputs);
+              setErrors(initialErrors);
+              onCancel();
+            }}
             type="button">
             Cancel
           </Button>
