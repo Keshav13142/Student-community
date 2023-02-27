@@ -89,7 +89,17 @@ export const updateInstitutionInfo = async (options) => {
   return data;
 };
 
+export const updateCommunityInfo = async (options) => {
+  const { data } = await AxiosClient.patch(`/community/manage`, options);
+  return data;
+};
+
 export const getInstInviteCodes = async () => {
   const { data } = await AxiosClient.get(`/institution/code`);
+  return data;
+};
+
+export const getCommInviteCode = async () => {
+  const { data } = await AxiosClient.get(`/community/code`);
   return data;
 };

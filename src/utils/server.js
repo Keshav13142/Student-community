@@ -1,10 +1,18 @@
 import prisma from "@/lib/prisma";
 
-// Get community with unique name
-export const getCommunityWithName = async (name) => {
-  return await prisma.community.findUnique({
+// Get community with unique name within the same inst
+export const getCommunityWithName = async (name, userId, commId) => {
+  return await prisma.community.findFirst({
     where: {
+      id: { not: commId },
       name,
+      institution: {
+        admins: {
+          some: {
+            id: userId,
+          },
+        },
+      },
     },
   });
 };

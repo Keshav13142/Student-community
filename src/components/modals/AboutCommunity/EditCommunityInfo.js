@@ -1,0 +1,149 @@
+import { updateCommunityInfo } from "@/src/utils/api-calls";
+import { parseZodErrors, updateCommunitySchema } from "@/src/utils/zod_schemas";
+import {
+  Button,
+  Flex,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Radio,
+  RadioGroup,
+  Stack,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { BsFillImageFill } from "react-icons/bs";
+
+const formFields = [
+  { name: "name", icon: null, placeholder: "Community Name" },
+  { name: "desc", icon: null, placeholder: "Description" },
+  { name: "image", icon: <BsFillImageFill />, placeholder: "Logo link" },
+];
+
+const initialErrors = {
+  name: null,
+  desc: null,
+  image: null,
+  type: null,
+};
+
+const EditCommunityInfo = ({ data, onCancel }) => {
+  const initialInputs = {
+    name: data?.name,
+    desc: data?.desc || "",
+    image: data?.image || "",
+    type: data?.type,
+  };
+
+  const [inputs, setInputs] = useState(initialInputs);
+  const [errors, setErrors] = useState(initialErrors);
+  const queryClient = useQueryClient();
+  const toast = useToast();
+
+  const mutation = useMutation(updateCommunityInfo, {
+    onError: (error) => {
+      toast({
+        title: error.response.data.error,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+    onSuccess: (newData) => {
+      queryClient.setQueryData(["communityInfo", data?.id], (prev) => ({
+        ...prev,
+        ...newData,
+      }));
+      onCancel();
+    },
+  });
+
+  const handleInputChange = ({ target: { value, name } }) => {
+    setInputs((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    setErrors((p) => ({ ...p, [name]: null }));
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    const parsedInputs = updateCommunitySchema.safeParse(inputs);
+
+    if (!parsedInputs.success) {
+      setErrors((p) => ({ ...p, ...parseZodErrors(parsedInputs) }));
+      return;
+    }
+
+    mutation.mutate({ ...inputs, communityId: data.id });
+  };
+
+  return (
+    <form onSubmit={onSubmit}>
+      <Stack spacing={4}>
+        {formFields.map((f, idx) => (
+          <InputGroup className="flex flex-col" key={idx}>
+            <span className="mb-1 font-medium">{f.placeholder}</span>
+            <Input
+              value={inputs[f.name]}
+              name={f.name}
+              _placeholder={{ color: "#1a1b26" }}
+              placeholder={f.placeholder}
+              onChange={handleInputChange}
+            />
+            {f.icon && <InputRightElement>{f.icon}</InputRightElement>}
+            <span className="text-red-400 mt-1">{errors[f.name]}</span>
+          </InputGroup>
+        ))}
+        <RadioGroup
+          defaultValue={inputs.type}
+          name="type"
+          onChange={(v) => {
+            setInputs((p) => ({ ...p, type: v }));
+          }}>
+          <Stack spacing={3}>
+            <Text className="font-medium">Community type</Text>
+            <Radio value="PUBLIC">Public</Radio>
+            <Radio value="PRIVATE">Private</Radio>
+            <Radio value="RESTRICTED">Restricted</Radio>
+          </Stack>
+        </RadioGroup>
+        <Flex alignSelf="center" gap={3}>
+          <Button
+            disabled={mutation.isLoading}
+            colorScheme="red"
+            variant="outline"
+            onClick={() => {
+              setInputs(initialInputs);
+              setErrors(initialErrors);
+              onCancel();
+            }}
+            type="button">
+            Cancel
+          </Button>
+          <Button
+            disabled={mutation.isLoading}
+            variant="outline"
+            color="cadetblue"
+            onClick={() => {
+              setInputs(initialInputs);
+              setErrors(initialErrors);
+            }}>
+            Reset
+          </Button>
+          <Button
+            isLoading={mutation.isLoading}
+            colorScheme="purple"
+            type="submit">
+            Submit
+          </Button>
+        </Flex>
+      </Stack>
+    </form>
+  );
+};
+
+export default EditCommunityInfo;

@@ -1,20 +1,22 @@
 import prisma from "@/lib/prisma";
 import {
-  checkIfUserIsInstAdmin,
+  checkIfUserIsCommAdmin,
   getCommunityWithName,
 } from "@/src/utils/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]";
 
 // Update community details
 export default async function handler(req, res) {
-  const { userId } = req.body;
-
-  // TODO => Get the logged in user details from the session instead of req body
+  const session = await getServerSession(req, res, authOptions);
 
   // Return error if user is not logged in
-  if (!userId) {
-    res.status(500).json({ error: "Who are you? !!" });
+  if (!session) {
+    res.status(401).json({ message: "You must be logged in." });
     return;
   }
+
+  const { user } = session;
 
   // Return all the communitites the user is admin of
   if (req.method === "GET") {
@@ -23,7 +25,7 @@ export default async function handler(req, res) {
         where: {
           admins: {
             some: {
-              id: userId,
+              id: user.id,
             },
           },
         },
@@ -45,11 +47,16 @@ export default async function handler(req, res) {
     );
   }
 
-  if (req.method === "PUT") {
+  if (req.method === "PATCH") {
     const { name, desc, image, communityId, type } = req.body;
 
+    if (!name || !communityId || !type) {
+      res.status(500).json({ error: "Missing required fields!!" });
+      return;
+    }
+
     // Check if user is an admin of the institutions
-    if (!(await checkIfUserIsInstAdmin(userId))) {
+    if (!(await checkIfUserIsCommAdmin(user.id))) {
       res
         .status(500)
         .json({ error: "Only community admin can perform this action!!" });
@@ -57,7 +64,7 @@ export default async function handler(req, res) {
     }
 
     // Check if a community with the name already exists
-    if (await getCommunityWithName(name)) {
+    if (await getCommunityWithName(name, user.id, communityId)) {
       res
         .status(500)
         .json({ error: "Community with this name already exists!!" });
@@ -75,6 +82,13 @@ export default async function handler(req, res) {
           desc,
           image,
           type,
+        },
+        select: {
+          id: true,
+          name: true,
+          desc: true,
+          image: true,
+          type: true,
         },
       });
 

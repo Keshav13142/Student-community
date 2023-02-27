@@ -20,7 +20,7 @@ export const newUserFormSchema = z.object({
     .or(z.literal("")),
 });
 
-export const updateInstitutionForm = z.object({
+export const updateInstitutionSchema = z.object({
   name: z
     .string({ required_error: "Name is required" })
     .min(1, { message: "Enter a valid username" }),
@@ -37,6 +37,18 @@ export const updateInstitutionForm = z.object({
   supportEmail: z
     .string()
     .email({ message: "Enter a valid email" })
+    .or(z.literal("")),
+});
+
+export const updateCommunitySchema = z.object({
+  name: z
+    .string({ required_error: "Name is required" })
+    .min(1, { message: "Enter a valid name" }),
+  desc: z.string().optional(),
+  image: z
+    .string()
+    .url({ message: "Enter a valid URL" })
+    .optional()
     .or(z.literal("")),
 });
 
