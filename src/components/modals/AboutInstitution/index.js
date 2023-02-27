@@ -1,8 +1,9 @@
-import { fetchInstitutionData } from "@/src/utils/api-calls";
 import {
-  Box,
+  fetchInstitutionData,
+  getInstInviteCodes,
+} from "@/src/utils/api-calls";
+import {
   Button,
-  Center,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -18,15 +19,21 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 import { useState } from "react";
 import InstitutionAdminActions from "../AdminActions/insitution";
+import InstitutionInfo from "./InstitutionInfo";
 import Members from "./InstitutionMembers";
 
 const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
   const { data: institutionData } = useQuery(
     ["aboutInstitution"],
     fetchInstitutionData
+  );
+
+  const { data: inviteCodes } = useQuery(
+    ["institutionInviteCodes"],
+    getInstInviteCodes,
+    { enabled: Boolean(isAdmin) }
   );
 
   const {
@@ -68,33 +75,10 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <Center flexDirection="column" gap={5}>
-                    <Image
-                      height="100"
-                      src={
-                        institutionData?.image || require("/public/college.png")
-                      }
-                      alt="Intitution image"
-                    />
-                    <Box>
-                      Name :
-                      <span className="text-xl font-bold">
-                        {institutionData?.name}
-                      </span>
-                    </Box>
-                    <Box>
-                      Website :
-                      <span className="text-xl font-bold">
-                        {institutionData?.website || "Not provided"}
-                      </span>
-                    </Box>
-                    <Box>
-                      Support email :
-                      <span className="text-xl font-bold">
-                        {institutionData?.supportEmail || "Not provided"}
-                      </span>
-                    </Box>
-                  </Center>
+                  <InstitutionInfo
+                    data={institutionData}
+                    inviteCodes={inviteCodes}
+                  />
                 </TabPanel>
                 <TabPanel>
                   <Members
@@ -109,7 +93,7 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
               </TabPanels>
             </Tabs>
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter className="flex gap-2">
             <Button colorScheme="purple" mr={3} onClick={onClose}>
               Close
             </Button>

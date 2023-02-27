@@ -83,3 +83,8 @@ export const managePendingRequests = async (options) => {
   );
   return data;
 };
+
+export const getInstInviteCodes = async () => {
+  const { data } = await AxiosClient.get(`/institution/code`);
+  return data;
+};
