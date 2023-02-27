@@ -65,3 +65,8 @@ export const updateCommunityRoles = async (options) => {
   const { data } = await AxiosClient.patch(`/community/manage/roles`, options);
   return data;
 };
+
+export const requestToJoinCommunity = async (options) => {
+  const { data } = await AxiosClient.post(`/community/requests`, options);
+  return data;
+};

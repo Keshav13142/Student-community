@@ -1,18 +1,45 @@
+import { requestToJoinCommunity } from "@/src/utils/api-calls";
 import {
   Avatar,
   Button,
   Flex,
   IconButton,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { FaChevronLeft } from "react-icons/fa";
 import { ImInfo } from "react-icons/im";
 import AboutCommunity from "../modals/AboutCommunity";
 
 const CommunityTopBar = ({ data, isDisabled }) => {
   const router = useRouter();
+  const toast = useToast();
+
+  const [isRequestDisabled, setIsRequestDisabled] = useState(false);
+
+  const mutation = useMutation(requestToJoinCommunity, {
+    onError: (error) => {
+      setIsRequestDisabled(true);
+      toast({
+        title: error.response.data.error,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+    onSuccess: (data) => {
+      setIsRequestDisabled(true);
+      toast({
+        title: "A request has been sent to the admin!",
+        status: "info",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
 
   const {
     isOpen: isAboutOpen,
@@ -42,7 +69,15 @@ const CommunityTopBar = ({ data, isDisabled }) => {
         </Flex>
         <Flex alignItems="center" gap={5}>
           {isDisabled && (
-            <Button variant="outline" colorScheme="purple" size="sm">
+            <Button
+              onClick={() => {
+                mutation.mutate({ communityId: data.id });
+              }}
+              isLoading={mutation.isLoading}
+              variant="outline"
+              colorScheme="purple"
+              size="sm"
+              isDisabled={isRequestDisabled}>
               Request to join
             </Button>
           )}
