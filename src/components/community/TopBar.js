@@ -25,7 +25,7 @@ const CommunityTopBar = ({ data, isDisabled }) => {
       setIsRequestDisabled(true);
       toast({
         title: error.response.data.error,
-        status: "error",
+        status: "info",
         duration: 3000,
         isClosable: true,
       });
