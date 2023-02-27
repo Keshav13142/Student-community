@@ -20,7 +20,7 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { RiEditBoxLine } from "react-icons/ri";
 import InstitutionAdminActions from "../AdminActions/insitution";
@@ -29,16 +29,19 @@ import InstitutionInfo from "./InstitutionInfo";
 import Members from "./InstitutionMembers";
 
 const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
-  const { data: institutionData } = useQuery(
-    ["aboutInstitution"],
-    fetchInstitutionData
-  );
-
-  const { data: inviteCodes } = useQuery(
-    ["institutionInviteCodes"],
-    getInstInviteCodes,
-    { enabled: Boolean(isAdmin) }
-  );
+  const [{ data: institutionData }, { data: inviteCodes }] = useQueries({
+    queries: [
+      {
+        queryKey: ["aboutInstitution"],
+        queryFn: fetchInstitutionData,
+      },
+      {
+        queryKey: ["institutionInviteCodes"],
+        queryFn: getInstInviteCodes,
+        enabled: Boolean(isAdmin),
+      },
+    ],
+  });
 
   const {
     isOpen: isActionsOpen,
@@ -75,13 +78,15 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
             display="flex"
             justifyContent="center">
             <span className="text-2xl">About institution</span>
-            <Tooltip label="Edit" placement="right">
-              <IconButton
-                icon={<RiEditBoxLine />}
-                bg="transparent"
-                onClick={() => setIsEditMode((prev) => !prev)}
-              />
-            </Tooltip>
+            {isAdmin && (
+              <Tooltip label="Edit" placement="right">
+                <IconButton
+                  icon={<RiEditBoxLine />}
+                  bg="transparent"
+                  onClick={() => setIsEditMode((prev) => !prev)}
+                />
+              </Tooltip>
+            )}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -99,6 +104,7 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
                     />
                   ) : (
                     <InstitutionInfo
+                      isAdmin={isAdmin}
                       data={institutionData}
                       inviteCodes={inviteCodes}
                     />
