@@ -1,5 +1,5 @@
 import { createUserProfile } from "@/src/utils/api-calls";
-import { newUserFormSchema } from "@/src/utils/zod_schemas";
+import { newUserFormSchema, parseZodErrors } from "@/src/utils/zod_schemas";
 import {
   Button,
   Flex,
@@ -91,18 +91,11 @@ const NewUserForm = () => {
     e.preventDefault();
 
     // Check the form inputs for error
-    let zodError = newUserFormSchema.safeParse(formValues);
+    let parsedInputs = newUserFormSchema.safeParse(formValues);
 
     // Map through the errors and get then in the right format
-    if (!zodError.success) {
-      let errors = {};
-
-      zodError.error.issues.forEach((e) => {
-        errors[e.path[0]] = e.message;
-      });
-
-      setFromErrors((p) => ({ ...p, ...errors }));
-
+    if (!parsedInputs.success) {
+      setFromErrors((p) => ({ ...p, ...parseZodErrors(parsedInputs) }));
       return;
     }
 

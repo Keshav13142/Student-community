@@ -1,5 +1,5 @@
 import { createCommunity } from "@/src/utils/api-calls";
-import { createCommunitySchema } from "@/src/utils/zod_schemas";
+import { createCommunitySchema, parseZodErrors } from "@/src/utils/zod_schemas";
 import {
   Button,
   Input,
@@ -78,18 +78,11 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
     e.preventDefault();
 
     // Check the form inputs for error
-    let zodError = createCommunitySchema.safeParse(details);
+    let parsedInputs = createCommunitySchema.safeParse(details);
 
     // Map through the errors and get then in the right format
-    if (!zodError.success) {
-      let errors = {};
-
-      zodError.error.issues.forEach((e) => {
-        errors[e.path[0]] = e.message;
-      });
-
-      setErrors((p) => ({ ...p, ...errors }));
-
+    if (!parsedInputs.success) {
+      setErrors((p) => ({ ...p, ...parseZodErrors(parsedInputs) }));
       return;
     }
 
