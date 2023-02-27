@@ -15,6 +15,17 @@ import { AiOutlineLink } from "react-icons/ai";
 import { BsFillImageFill } from "react-icons/bs";
 import { MdAlternateEmail } from "react-icons/md";
 
+const formFields = [
+  { name: "name", icon: null, placeholder: "Institution Name" },
+  { name: "website", icon: <AiOutlineLink />, placeholder: "Website link" },
+  {
+    name: "supportEmail",
+    icon: <MdAlternateEmail />,
+    placeholder: "Support email",
+  },
+  { name: "image", icon: <BsFillImageFill />, placeholder: "Image link" },
+];
+
 const initialErrors = {
   name: null,
   image: null,
@@ -74,55 +85,19 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
   return (
     <form onSubmit={onSubmit}>
       <Stack spacing={4}>
-        <InputGroup className="flex flex-col">
-          <Input
-            value={inputs.name}
-            name="name"
-            _placeholder={{ color: "#1a1b26" }}
-            placeholder="Institution Name"
-            onChange={handleInputChange}
-          />
-          <span className="text-red-400 mt-1">{errors.name}</span>
-        </InputGroup>
-        <InputGroup className="flex flex-col">
-          <Input
-            value={inputs.website}
-            name="website"
-            _placeholder={{ color: "#1a1b26" }}
-            onChange={handleInputChange}
-            placeholder="Website"
-          />
-          <InputRightElement>
-            <AiOutlineLink />
-          </InputRightElement>
-          <span className="text-red-400 mt-1">{errors.website}</span>
-        </InputGroup>
-        <InputGroup className="flex flex-col">
-          <Input
-            value={inputs.supportEmail}
-            name="supportEmail"
-            _placeholder={{ color: "#1a1b26" }}
-            onChange={handleInputChange}
-            placeholder="Support email"
-          />
-          <InputRightElement>
-            <MdAlternateEmail />
-          </InputRightElement>
-          <span className="text-red-400 mt-1">{errors.supportEmail}</span>
-        </InputGroup>
-        <InputGroup className="flex flex-col">
-          <Input
-            value={inputs.image}
-            name="image"
-            _placeholder={{ color: "#1a1b26" }}
-            onChange={handleInputChange}
-            placeholder="Image link"
-          />
-          <InputRightElement>
-            <BsFillImageFill />
-          </InputRightElement>
-          <span className="text-red-400 mt-1">{errors.image}</span>
-        </InputGroup>
+        {formFields.map((f, idx) => (
+          <InputGroup className="flex flex-col" key={idx}>
+            <Input
+              value={inputs[f.name]}
+              name={f.name}
+              _placeholder={{ color: "#1a1b26" }}
+              placeholder="Institution Name"
+              onChange={handleInputChange}
+            />
+            {f.icon && <InputRightElement>{f.icon}</InputRightElement>}
+            <span className="text-red-400 mt-1">{errors[f.name]}</span>
+          </InputGroup>
+        ))}
         <Flex alignSelf="center" gap={3}>
           <Button
             disabled={mutation.isLoading}

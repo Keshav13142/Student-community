@@ -59,7 +59,9 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
               <TabList mb="1em">
                 <Tab>Info</Tab>
                 <Tab>Members</Tab>
-                {data.isCurrentUserAdmin && <Tab>Requests</Tab>}
+                {data.isCurrentUserAdmin && data.type === "RESTRICTED" && (
+                  <Tab>Requests</Tab>
+                )}
               </TabList>
               <TabPanels>
                 <TabPanel>
