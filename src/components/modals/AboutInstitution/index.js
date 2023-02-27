@@ -4,6 +4,7 @@ import {
 } from "@/src/utils/api-calls";
 import {
   Button,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,11 +17,14 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { RiEditBoxLine } from "react-icons/ri";
 import InstitutionAdminActions from "../AdminActions/insitution";
+import EditInstitutionInfo from "./EditInstitutionInfo";
 import InstitutionInfo from "./InstitutionInfo";
 import Members from "./InstitutionMembers";
 
@@ -47,6 +51,8 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
     userId: "",
   });
 
+  const [isEditMode, setIsEditMode] = useState(false);
+
   return (
     <>
       <InstitutionAdminActions
@@ -63,22 +69,40 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
         scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader textAlign="center" fontSize="2xl">
-            About institution
+          <ModalHeader
+            alignItems="center"
+            gap={2}
+            display="flex"
+            justifyContent="center">
+            <span className="text-2xl">About institution</span>
+            <Tooltip label="Edit" placement="right">
+              <IconButton
+                icon={<RiEditBoxLine />}
+                bg="transparent"
+                onClick={() => setIsEditMode((prev) => !prev)}
+              />
+            </Tooltip>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Tabs isFitted variant="line" colorScheme="purple">
+            <Tabs isFitted variant="enclosed-colored" colorScheme="purple">
               <TabList mb="1em">
                 <Tab>Info</Tab>
                 <Tab>Members</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <InstitutionInfo
-                    data={institutionData}
-                    inviteCodes={inviteCodes}
-                  />
+                  {isEditMode ? (
+                    <EditInstitutionInfo
+                      data={institutionData}
+                      onCancel={() => setIsEditMode(false)}
+                    />
+                  ) : (
+                    <InstitutionInfo
+                      data={institutionData}
+                      inviteCodes={inviteCodes}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
                   <Members
@@ -93,11 +117,6 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
               </TabPanels>
             </Tabs>
           </ModalBody>
-          <ModalFooter className="flex gap-2">
-            <Button colorScheme="purple" mr={3} onClick={onClose}>
-              Close
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

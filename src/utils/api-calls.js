@@ -84,6 +84,11 @@ export const managePendingRequests = async (options) => {
   return data;
 };
 
+export const updateInstitutionInfo = async (options) => {
+  const { data } = await AxiosClient.patch(`/institution/manage`, options);
+  return data;
+};
+
 export const getInstInviteCodes = async () => {
   const { data } = await AxiosClient.get(`/institution/code`);
   return data;
