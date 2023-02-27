@@ -1,6 +1,5 @@
 import NewUserForm from "@/src/components/new-user/NewUserForm";
-import { Box, Center, Heading, Stack } from "@chakra-ui/react";
-import React from "react";
+import { Center, Heading, Stack } from "@chakra-ui/react";
 
 const NewUserProfile = () => {
   return (

@@ -3,13 +3,11 @@ import {
   getInstInviteCodes,
 } from "@/src/utils/api-calls";
 import {
-  Button,
   IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Tab,
@@ -20,7 +18,7 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { useState } from "react";
 import { RiEditBoxLine } from "react-icons/ri";
 import InstitutionAdminActions from "../AdminActions/insitution";

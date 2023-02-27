@@ -1,5 +1,4 @@
 import prisma from "@/lib/prisma";
-import { checkIfUserIsInstAdmin } from "@/src/utils/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 
