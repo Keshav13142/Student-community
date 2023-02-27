@@ -67,21 +67,9 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
             gap={2}
             display="flex"
             justifyContent="center">
-            <div className="text-2xl flex items-center gap-2">
-              <span>About</span>
+            <div className="text-2xl">
+              <span>About </span>
               <span className="text-purple-500">- {data.name}</span>
-              <Badge
-                className="text-base"
-                variant="outline"
-                color={
-                  data.type === "PUBLIC"
-                    ? "whatsapp.400"
-                    : data.type === "PRIVATE"
-                    ? "red.500"
-                    : "blue.300"
-                }>
-                {data.type}
-              </Badge>
             </div>
             {data.isCurrentUserAdmin && (
               <Tooltip label="Edit" placement="right">

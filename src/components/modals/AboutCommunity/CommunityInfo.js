@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Flex,
   IconButton,
@@ -44,6 +45,21 @@ const CommunityInfo = ({ data, code }) => {
         }
         alt="instituion image"
       />
+      <Box className="font-bold">
+        Type :
+        <Badge
+          className="text-base ml-2"
+          variant="outline"
+          color={
+            data.type === "PUBLIC"
+              ? "whatsapp.400"
+              : data.type === "PRIVATE"
+              ? "red.500"
+              : "blue.300"
+          }>
+          {data.type}
+        </Badge>
+      </Box>
       <Box className="font-bold">
         Description :
         <span className="font-normal"> {data?.desc || "Not provided"}</span>
