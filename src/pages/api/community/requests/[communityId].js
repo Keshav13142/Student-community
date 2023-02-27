@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { checkIfUserIsCommAdmin } from "@/src/utils/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 
@@ -12,14 +13,7 @@ export default async function handler(req, res) {
   }
 
   const { user } = session;
-
-  const { communityId } = req.body;
-
-  // Return error if user is not logged in
-  if (!communityId) {
-    res.status(401).json({ error: "Missing Fields!!" });
-    return;
-  }
+  const { communityId } = req.query;
 
   try {
     if (req.method === "POST") {
@@ -69,6 +63,68 @@ export default async function handler(req, res) {
         });
         return;
       }
+    }
+
+    if (!checkIfUserIsCommAdmin(user.id)) {
+      res
+        .status(500)
+        .json({ error: "Only community admins can perform this action!!" });
+      return;
+    }
+
+    // Get a list of all the pending Approvals for that community
+    if (req.method === "GET") {
+      res.json(
+        await prisma.pendingApprovals.findMany({
+          where: {
+            community: {
+              id: req.query.communityId,
+            },
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+                username: true,
+              },
+            },
+          },
+        })
+      );
+    }
+
+    // handle PUT request
+    if (req.method === "PATCH") {
+      const { approvalId, approvalStatus } = req.body;
+
+      const approval = await prisma.pendingApprovals.update({
+        where: {
+          id: approvalId,
+        },
+        data: {
+          status: approvalStatus ? "APPROVED" : "REJECTED",
+        },
+      });
+
+      // If the request is approved then add the user as a community member
+      if (approvalStatus) {
+        await prisma.community.update({
+          where: {
+            id: approval.communityId,
+          },
+          data: {
+            members: {
+              connect: {
+                id: approval.userId,
+              },
+            },
+          },
+        });
+      }
+
+      res.json(approval);
     }
   } catch (error) {
     console.log(error);
