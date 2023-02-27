@@ -11,8 +11,8 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
 import { BsFillPeopleFill } from "react-icons/bs";
+import { SlInfo } from "react-icons/sl";
 
 const DiscoverCommunities = () => {
   const {
@@ -57,6 +57,19 @@ const DiscoverCommunities = () => {
             <BsFillPeopleFill />
           </h1>
           <Stack spacing={3}>
+            {publicCommunities?.length === 0 && (
+              <Stack mt={2} alignItems="center">
+                <div className="text-xl border border-purple-400 px-4 py-2 rounded-xl flex gap-2 items-center">
+                  <SlInfo />
+                  <span>No public communities found</span>
+                </div>
+                <img
+                  className="animate-pulse w-[50%]"
+                  src="https://assets.materialup.com/uploads/8b0ec3cb-a32d-40bb-b17d-66b9fd744172/attachment.jpg"
+                  alt="empty"
+                />
+              </Stack>
+            )}
             {publicCommunities?.map((c) => (
               <Flex
                 className="border border-purple-500 rounded-md"

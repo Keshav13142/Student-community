@@ -24,11 +24,10 @@ import InstitutionAdminActions from "../AdminActions/insitution";
 import Members from "./InstitutionMembers";
 
 const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
-  const {
-    data: institutionData,
-    error,
-    isLoading,
-  } = useQuery(["aboutInstitution"], fetchInstitutionData);
+  const { data: institutionData } = useQuery(
+    ["aboutInstitution"],
+    fetchInstitutionData
+  );
 
   const {
     isOpen: isActionsOpen,
