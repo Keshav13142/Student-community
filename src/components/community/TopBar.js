@@ -71,7 +71,7 @@ const CommunityTopBar = ({ data, isDisabled }) => {
           {isDisabled && (
             <Button
               onClick={() => {
-                mutation.mutate({ communityId: data.id });
+                mutation.mutate(data.id);
               }}
               isLoading={mutation.isLoading}
               variant="outline"

@@ -66,7 +66,20 @@ export const updateCommunityRoles = async (options) => {
   return data;
 };
 
-export const requestToJoinCommunity = async (options) => {
-  const { data } = await AxiosClient.post(`/community/requests`, options);
+export const requestToJoinCommunity = async (communityId) => {
+  const { data } = await AxiosClient.post(`/community/requests/${communityId}`);
+  return data;
+};
+
+export const getPendingRequests = async (communityId) => {
+  const { data } = await AxiosClient.get(`/community/requests/${communityId}`);
+  return data;
+};
+
+export const managePendingRequests = async (options) => {
+  const { data } = await AxiosClient.patch(
+    `/community/requests/${options.communityId}`,
+    options
+  );
   return data;
 };

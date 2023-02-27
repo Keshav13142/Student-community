@@ -122,7 +122,6 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
                 name="desc"
                 _placeholder={{ color: "#1a1b26" }}
                 placeholder="Description"
-                as="textarea"
                 onChange={handleInputChange}
               />
               <InputGroup className="flex flex-col">
