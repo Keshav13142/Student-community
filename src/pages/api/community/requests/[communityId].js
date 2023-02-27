@@ -81,7 +81,9 @@ export default async function handler(req, res) {
               id: req.query.communityId,
             },
           },
-          include: {
+          select: {
+            id: true,
+            status: true,
             user: {
               select: {
                 id: true,
@@ -106,18 +108,30 @@ export default async function handler(req, res) {
         data: {
           status: approvalStatus ? "APPROVED" : "REJECTED",
         },
+        select: {
+          id: true,
+          status: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              username: true,
+            },
+          },
+        },
       });
 
       // If the request is approved then add the user as a community member
       if (approvalStatus) {
         await prisma.community.update({
           where: {
-            id: approval.communityId,
+            id: communityId,
           },
           data: {
             members: {
               connect: {
-                id: approval.userId,
+                id: approval.user.id,
               },
             },
           },

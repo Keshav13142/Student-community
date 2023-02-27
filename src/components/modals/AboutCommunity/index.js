@@ -17,14 +17,12 @@ import {
   Tabs,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import CommunityActions from "../AdminActions/community";
 import { default as CommunityMembers } from "./CommunityMembers";
+import CommunityRequests from "./CommunityRequests";
 
 const AboutCommunity = ({ isOpen, onClose, data }) => {
-  const session = useSession();
-
   const {
     isOpen: isActionsOpen,
     onClose: onActionsClose,
@@ -61,6 +59,7 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
               <TabList mb="1em">
                 <Tab>Info</Tab>
                 <Tab>Members</Tab>
+                {data.isCurrentUserAdmin && <Tab>Requests</Tab>}
               </TabList>
               <TabPanels>
                 <TabPanel>
@@ -91,6 +90,11 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
                     data={data}
                   />
                 </TabPanel>
+                {data.isCurrentUserAdmin && (
+                  <TabPanel>
+                    <CommunityRequests communityId={data.id} />
+                  </TabPanel>
+                )}
               </TabPanels>
             </Tabs>
           </ModalBody>
