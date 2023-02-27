@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
+import { getCommInviteCode } from "@/src/utils/api-calls";
 import {
-  Box,
-  Button,
-  Center,
+  Badge,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Tab,
@@ -15,14 +14,25 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { RiEditBoxLine } from "react-icons/ri";
 import CommunityActions from "../AdminActions/community";
+import CommunityInfo from "./CommunityInfo";
 import { default as CommunityMembers } from "./CommunityMembers";
 import CommunityRequests from "./CommunityRequests";
+import EditCommunityInfo from "./EditCommunityInfo";
 
 const AboutCommunity = ({ isOpen, onClose, data }) => {
+  const { data: codeData } = useQuery(
+    ["communityInviteCode", data?.id],
+    () => getCommInviteCode(data.id),
+    { enabled: Boolean(data.isCurrentUserAdmin) }
+  );
+
   const {
     isOpen: isActionsOpen,
     onClose: onActionsClose,
@@ -33,6 +43,8 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
     type: "",
     userId: "",
   });
+
+  const [isEditMode, setIsEditMode] = useState(false);
 
   return (
     <>
@@ -50,8 +62,36 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
         scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader textAlign="center" fontSize="2xl">
-            About Community
+          <ModalHeader
+            alignItems="center"
+            gap={2}
+            display="flex"
+            justifyContent="center">
+            <div className="text-2xl flex items-center gap-2">
+              <span>About</span>
+              <span className="text-purple-500">- {data.name}</span>
+              <Badge
+                className="text-base"
+                variant="outline"
+                color={
+                  data.type === "PUBLIC"
+                    ? "whatsapp.400"
+                    : data.type === "PRIVATE"
+                    ? "red.500"
+                    : "blue.300"
+                }>
+                {data.type}
+              </Badge>
+            </div>
+            {data.isCurrentUserAdmin && (
+              <Tooltip label="Edit" placement="right">
+                <IconButton
+                  icon={<RiEditBoxLine />}
+                  bg="transparent"
+                  onClick={() => setIsEditMode((prev) => !prev)}
+                />
+              </Tooltip>
+            )}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -65,23 +105,16 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <Center flexDirection="column" gap={5}>
-                    <img
-                      className="h-20 w-20"
-                      src={data?.image || require("/public/college.png")}
-                      alt="Community logo"
+                  {isEditMode ? (
+                    <EditCommunityInfo
+                      data={data}
+                      onCancel={() => {
+                        setIsEditMode(false);
+                      }}
                     />
-                    <Box>
-                      Name :
-                      <span className="text-xl font-bold">{data?.name}</span>
-                    </Box>
-                    <Box>
-                      Description :
-                      <span className="font-bold">
-                        {data?.desc || "Not provided"}
-                      </span>
-                    </Box>
-                  </Center>
+                  ) : (
+                    <CommunityInfo data={data} code={codeData?.code} />
+                  )}
                 </TabPanel>
                 <TabPanel>
                   <CommunityMembers
@@ -100,11 +133,6 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
               </TabPanels>
             </Tabs>
           </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="purple" mr={3} onClick={onClose}>
-              Close
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
