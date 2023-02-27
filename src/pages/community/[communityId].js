@@ -1,26 +1,14 @@
 import CommunityTopBar from "@/src/components/community/TopBar";
 import ScrollableMessageBox from "@/src/components/messages";
 import MessageInputBox from "@/src/components/messages/InputBox";
-import AboutCommunity from "@/src/components/modals/AboutCommunity";
 import { getCommunityInfo } from "@/src/utils/api-calls";
-import {
-  Avatar,
-  Box,
-  Button,
-  Flex,
-  IconButton,
-  Progress,
-  Stack,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Progress, Stack } from "@chakra-ui/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Pusher from "pusher-js";
 import { useEffect } from "react";
-import { FaChevronLeft } from "react-icons/fa";
-import { ImInfo } from "react-icons/im";
 
 const Community = () => {
   const router = useRouter();
