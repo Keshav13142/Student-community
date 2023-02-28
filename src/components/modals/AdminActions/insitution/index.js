@@ -1,4 +1,4 @@
-import { manageInstnAdmin } from "@/src/utils/api-calls";
+import { manageInstnAdmin } from "@/src/utils/api-calls/institution";
 import {
   Alert,
   AlertIcon,
@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useToast,
+  useToast
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

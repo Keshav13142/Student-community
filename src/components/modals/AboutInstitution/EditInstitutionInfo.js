@@ -1,4 +1,4 @@
-import { updateInstitutionInfo } from "@/src/utils/api-calls";
+import { updateInstitutionInfo } from "@/src/utils/api-calls/institution";
 import {
   parseZodErrors,
   updateInstitutionSchema,

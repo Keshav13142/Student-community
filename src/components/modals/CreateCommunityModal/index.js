@@ -1,4 +1,4 @@
-import { createCommunity } from "@/src/utils/api-calls";
+import { createCommunity } from "@/src/utils/api-calls/community";
 import { createCommunitySchema, parseZodErrors } from "@/src/utils/zod_schemas";
 import {
   Button,

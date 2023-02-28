@@ -1,4 +1,4 @@
-import { fetchPublicAndRestrictedCommunities } from "@/src/utils/api-calls";
+import { fetchPublicAndRestrictedCommunities } from "@/src/utils/api-calls/community";
 import {
   Avatar,
   Badge,

@@ -1,4 +1,4 @@
-import { updateCommunityRoles } from "@/src/utils/api-calls";
+import { updateCommunityRoles } from "@/src/utils/api-calls/community";
 import {
   Alert,
   AlertIcon,

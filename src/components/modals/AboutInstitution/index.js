@@ -1,7 +1,7 @@
 import {
   fetchInstitutionData,
   getInstInviteCodes,
-} from "@/src/utils/api-calls";
+} from "@/src/utils/api-calls/institution";
 import {
   IconButton,
   Modal,

@@ -1,4 +1,4 @@
-import { fetchCommunities } from "@/src/utils/api-calls";
+import { fetchCommunities } from "@/src/utils/api-calls/community";
 import {
   Button,
   Divider,

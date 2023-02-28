@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { getCommInviteCode } from "@/src/utils/api-calls";
+import { getCommInviteCode } from "@/src/utils/api-calls/community";
 import {
   Badge,
   IconButton,

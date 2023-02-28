@@ -1,4 +1,4 @@
-import { createUserProfile } from "@/src/utils/api-calls";
+import { createUserProfile } from "@/src/utils/api-calls/user";
 import { newUserFormSchema, parseZodErrors } from "@/src/utils/zod_schemas";
 import {
   Button,

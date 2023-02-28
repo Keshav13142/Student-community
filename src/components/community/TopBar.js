@@ -1,4 +1,4 @@
-import { requestToJoinCommunity } from "@/src/utils/api-calls";
+import { requestToJoinCommunity } from "@/src/utils/api-calls/community";
 import {
   Avatar,
   Button,

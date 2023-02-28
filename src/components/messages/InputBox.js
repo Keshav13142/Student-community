@@ -1,4 +1,4 @@
-import { sendMessage } from "@/src/utils/api-calls";
+import { sendMessage } from "@/src/utils/api-calls/messages";
 import { Flex, IconButton, Input, Tooltip, useToast } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";

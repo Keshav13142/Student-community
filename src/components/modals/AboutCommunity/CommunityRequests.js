@@ -1,7 +1,7 @@
 import {
   getPendingRequests,
   managePendingRequests,
-} from "@/src/utils/api-calls";
+} from "@/src/utils/api-calls/community";
 import {
   Avatar,
   Badge,

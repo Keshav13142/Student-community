@@ -1,4 +1,4 @@
-import { updateCommunityInfo } from "@/src/utils/api-calls";
+import { updateCommunityInfo } from "@/src/utils/api-calls/community";
 import { parseZodErrors, updateCommunitySchema } from "@/src/utils/zod_schemas";
 import {
   Button,

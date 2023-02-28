@@ -1,7 +1,7 @@
 import CommunityTopBar from "@/src/components/community/TopBar";
 import ScrollableMessageBox from "@/src/components/messages";
 import MessageInputBox from "@/src/components/messages/InputBox";
-import { getCommunityInfo } from "@/src/utils/api-calls";
+import { getCommunityInfo } from "@/src/utils/api-calls/community";
 import { Box, Progress, Stack } from "@chakra-ui/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";

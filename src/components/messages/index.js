@@ -1,4 +1,4 @@
-import { fetchMessages } from "@/src/utils/api-calls";
+import { fetchMessages } from "@/src/utils/api-calls/messages";
 import { Box } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";

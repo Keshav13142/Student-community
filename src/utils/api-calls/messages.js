@@ -1,0 +1,13 @@
+import { AxiosClient } from ".";
+
+export const sendMessage = async ({ content, communityId }) => {
+  const { data } = await AxiosClient.post(`/messages/${communityId}`, {
+    content,
+  });
+  return data;
+};
+
+export const fetchMessages = async (communityId) => {
+  const { data } = await AxiosClient.get(`/messages/${communityId}`);
+  return data;
+};
