@@ -52,10 +52,21 @@ const EditCommunityInfo = ({ data, onCancel }) => {
       });
     },
     onSuccess: (newData) => {
-      queryClient.setQueryData(["communityInfo", data?.id], (prev) => ({
+      queryClient.setQueryData(["communityInfo", newData.id], (prev) => ({
         ...prev,
         ...newData,
       }));
+      queryClient.setQueryData(["userCommunities"], (prev) =>
+        prev.map((comm) =>
+          comm.id === newData.id ? { ...comm, ...newData } : comm
+        )
+      );
+      toast({
+        title: "Updated info!!",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
       onCancel();
     },
   });
