@@ -17,27 +17,27 @@ const Community = () => {
   const { communityId } = router.query;
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (communityId) {
-      const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
-        cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
-      });
+  // useEffect(() => {
+  //   if (communityId) {
+  //     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+  //       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+  //     });
 
-      const channel = pusher.subscribe(`community-${communityId}`);
+  //     const channel = pusher.subscribe(`community-${communityId}`);
 
-      channel.bind("chat", function (data) {
-        queryClient.setQueryData(["messages", communityId], (prev) => [
-          ...prev,
-          data,
-        ]);
-      });
+  //     channel.bind("chat", function (data) {
+  //       queryClient.setQueryData(["messages", communityId], (prev) => [
+  //         ...prev,
+  //         data,
+  //       ]);
+  //     });
 
-      return () => {
-        pusher.unsubscribe(`community-${communityId}`);
-      };
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [communityId]);
+  //     return () => {
+  //       pusher.unsubscribe(`community-${communityId}`);
+  //     };
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [communityId]);
 
   const { data, isLoading } = useQuery(
     ["communityInfo", communityId],
