@@ -85,18 +85,20 @@ const EditCommunityInfo = ({ data, onCancel }) => {
     <form onSubmit={onSubmit}>
       <Stack spacing={4}>
         {formFields.map((f, idx) => (
-          <InputGroup className="flex flex-col" key={idx}>
+          <div key={idx} className="flex flex-col">
             <span className="mb-1 font-medium">{f.placeholder}</span>
-            <Input
-              value={inputs[f.name]}
-              name={f.name}
-              _placeholder={{ color: "#1a1b26" }}
-              placeholder={f.placeholder}
-              onChange={handleInputChange}
-            />
-            {f.icon && <InputRightElement>{f.icon}</InputRightElement>}
-            <span className="text-red-400 mt-1">{errors[f.name]}</span>
-          </InputGroup>
+            <InputGroup>
+              <Input
+                value={inputs[f.name]}
+                name={f.name}
+                _placeholder={{ color: "#1a1b26" }}
+                placeholder={f.placeholder}
+                onChange={handleInputChange}
+              />
+              {f.icon && <InputRightElement>{f.icon}</InputRightElement>}
+              <span className="text-red-400 mt-1">{errors[f.name]}</span>
+            </InputGroup>
+          </div>
         ))}
         <RadioGroup
           defaultValue={inputs.type}

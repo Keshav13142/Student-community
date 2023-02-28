@@ -85,20 +85,22 @@ const JoinCommunity = ({ isOpen, onClose }) => {
         <ModalBody>
           <form onSubmit={onSubmit}>
             <Stack spacing={4}>
-              <InputGroup className="flex flex-col">
+              <div className="flex flex-col">
                 <span className="mb-1 font-medium">Invite code</span>
-                <Input
-                  value={inviteCode}
-                  onChange={(e) => {
-                    setInviteCode(e.target.value);
-                    setError(null);
-                  }}
-                />
-                <InputRightElement>
-                  <MdVpnKey />
-                </InputRightElement>
-                <span className="text-red-400 mt-1">{error}</span>
-              </InputGroup>
+                <InputGroup>
+                  <Input
+                    value={inviteCode}
+                    onChange={(e) => {
+                      setInviteCode(e.target.value);
+                      setError(null);
+                    }}
+                  />
+                  <InputRightElement>
+                    <MdVpnKey />
+                  </InputRightElement>
+                  <span className="text-red-400 mt-1">{error}</span>
+                </InputGroup>
+              </div>
               <Flex alignSelf="center" gap={3}>
                 <Button
                   colorScheme="red"
