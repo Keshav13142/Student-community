@@ -29,6 +29,72 @@ import { GoMarkGithub } from "react-icons/go";
 import { GrLinkedin } from "react-icons/gr";
 import { ImWarning } from "react-icons/im";
 
+const formFields = [
+  {
+    name: "username",
+    rightElement: (
+      <Popover
+        placement="right-start"
+        trigger="hover"
+        openDelay={0}
+        closeDelay={700}>
+        <PopoverTrigger>
+          <IconButton
+            tabIndex="-1"
+            _hover={{ bg: "transparent" }}
+            icon={<ImWarning />}
+            rounded="full"
+            bg="transparent"
+          />
+        </PopoverTrigger>
+        <Portal>
+          <PopoverContent w="fit-content">
+            <PopoverArrow />
+            <PopoverHeader className="font-medium text-center">
+              Username requirements
+            </PopoverHeader>
+            <PopoverBody>
+              <Stack>
+                <Text>- Must be unique</Text>
+                <Text>- Lowercase Letters (a-z)</Text>
+                <Text>- Numbers (0-9)</Text>
+                <Text>- Dots (.)</Text>
+                <Text>- Underscores (_)</Text>
+              </Stack>
+            </PopoverBody>
+          </PopoverContent>
+        </Portal>
+      </Popover>
+    ),
+    placeholder: "Username",
+  },
+  { name: "bio", rightElement: null, placeholder: "Bio" },
+  {
+    name: "githubLink",
+    rightElement: <GoMarkGithub />,
+    placeholder: "Github link",
+  },
+  {
+    name: "linkedinLink",
+    rightElement: <GrLinkedin />,
+    placeholder: "LinkedIn link",
+  },
+  {
+    name: "institutionCode",
+    rightElement: (
+      <Tooltip
+        placement="right"
+        label="Enter the unique code of the institution you belong to!"
+        fontSize="md">
+        <span>
+          <AiOutlineInfoCircle />
+        </span>
+      </Tooltip>
+    ),
+    placeholder: "Institution code",
+  },
+];
+
 const reloadSession = () => {
   const event = new Event("visibilitychange");
   document.dispatchEvent(event);
@@ -107,113 +173,21 @@ const NewUserForm = () => {
 
   return (
     <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-      <InputGroup className="flex flex-col">
-        <Input
-          name="username"
-          isInvalid={formErrors.username}
-          errorBorderColor="red.200"
-          variant="filled"
-          placeholder="Username"
-          required
-          value={formValues.username}
-          onChange={handleInputChange}
-        />
-        <InputRightElement>
-          <Popover
-            placement="right-start"
-            trigger="hover"
-            openDelay={0}
-            closeDelay={700}>
-            <PopoverTrigger>
-              <IconButton
-                tabIndex="-1"
-                _hover={{ bg: "transparent" }}
-                icon={<ImWarning />}
-                rounded="full"
-                bg="transparent"
-              />
-            </PopoverTrigger>
-            <Portal>
-              <PopoverContent w="fit-content">
-                <PopoverArrow />
-                <PopoverHeader className="font-medium text-center">
-                  Username requirements
-                </PopoverHeader>
-                <PopoverBody>
-                  <Stack>
-                    <Text>- Must be unique</Text>
-                    <Text>- Lowercase Letters (a-z)</Text>
-                    <Text>- Numbers (0-9)</Text>
-                    <Text>- Dots (.)</Text>
-                    <Text>- Underscores (_)</Text>
-                  </Stack>
-                </PopoverBody>
-              </PopoverContent>
-            </Portal>
-          </Popover>
-        </InputRightElement>
-        <span className="text-red-400 mt-1">{formErrors.username}</span>
-      </InputGroup>
-      <Input
-        variant="filled"
-        placeholder="Bio"
-        value={formValues.bio}
-        onChange={handleInputChange}
-        name="bio"
-      />
-      <InputGroup className="flex flex-col">
-        <Input
-          variant="filled"
-          name="githubLink"
-          errorBorderColor="red.200"
-          isInvalid={formErrors.githubLink}
-          placeholder="GitHub link"
-          value={formValues.githubLink}
-          onChange={handleInputChange}
-        />
-        <InputRightElement>
-          <GoMarkGithub />
-        </InputRightElement>
-        <span className="text-red-400 mt-1">{formErrors.githubLink}</span>
-      </InputGroup>
-      <InputGroup className="flex flex-col">
-        <Input
-          errorBorderColor="red.200"
-          variant="filled"
-          isInvalid={formErrors.linkedinLink}
-          placeholder="LinkedIn link"
-          value={formValues.linkedinLink}
-          onChange={handleInputChange}
-          name="linkedinLink"
-        />
-        <InputRightElement>
-          <GrLinkedin />
-        </InputRightElement>
-        <span className="text-red-400 mt-1">{formErrors.linkedinLink}</span>
-      </InputGroup>
-      <InputGroup className="flex flex-col">
-        <Input
-          name="institutionCode"
-          isInvalid={formErrors.institutionCode}
-          errorBorderColor="red.200"
-          variant="filled"
-          placeholder="Institution code"
-          required
-          value={formValues.institutionCode}
-          onChange={handleInputChange}
-        />
-        <InputRightElement>
-          <Tooltip
-            placement="right"
-            label="Enter the unique code of the institution you belong to!"
-            fontSize="md">
-            <span>
-              <AiOutlineInfoCircle />
-            </span>
-          </Tooltip>
-        </InputRightElement>
-        <span className="text-red-400 mt-1">{formErrors.institutionCode}</span>
-      </InputGroup>
+      {formFields.map((f, idx) => (
+        <InputGroup key={idx} className="flex flex-col">
+          <Input
+            value={formValues[f.name]}
+            name={f.name}
+            _placeholder={{ color: "#1a1b26" }}
+            placeholder={f.placeholder}
+            onChange={handleInputChange}
+          />
+          {f.rightElement && (
+            <InputRightElement>{f.rightElement}</InputRightElement>
+          )}
+          <span className="text-red-400 mt-1">{formErrors[f.name]}</span>
+        </InputGroup>
+      ))}
       <Flex gap={10} alignItems="center">
         <span>Code Type</span>
         <RadioGroup
