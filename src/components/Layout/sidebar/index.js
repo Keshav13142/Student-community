@@ -12,9 +12,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { ImInfo } from "react-icons/im";
+import { RiUserAddLine } from "react-icons/ri";
 import { TbBrowserPlus } from "react-icons/tb";
 import AboutInstitution from "../../modals/AboutInstitution";
 import CreateCommunityModal from "../../modals/CreateCommunityModal";
+import JoinCommunity from "../../modals/JoinCommunity";
 import Loading from "./Loading";
 
 const SideBar = () => {
@@ -39,6 +41,12 @@ const SideBar = () => {
     onOpen: onCreateOpen,
   } = useDisclosure();
 
+  const {
+    isOpen: isJoinOpen,
+    onClose: onJoinClose,
+    onOpen: onJoinOpen,
+  } = useDisclosure();
+
   if (error) {
     toast({
       title: "Unable to fetch your communities!!",
@@ -59,6 +67,7 @@ const SideBar = () => {
         isOpen={isAboutOpen}
       />
       <CreateCommunityModal onClose={onCreateClose} isOpen={isCreateOpen} />
+      <JoinCommunity isOpen={isJoinOpen} onClose={onJoinClose} />
 
       <Stack
         className="border-r border-r-slate-200"
@@ -109,6 +118,14 @@ const SideBar = () => {
               Create new commuinity
             </Button>
           )}
+          <Button
+            w="full"
+            variant="outline"
+            colorScheme="purple"
+            onClick={onJoinOpen}
+            leftIcon={<RiUserAddLine />}>
+            Have an invite code?
+          </Button>
           <Button
             w="full"
             variant="outline"

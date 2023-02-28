@@ -99,7 +99,12 @@ export const getInstInviteCodes = async () => {
   return data;
 };
 
-export const getCommInviteCode = async () => {
-  const { data } = await AxiosClient.get(`/community/code`);
+export const getCommInviteCode = async (id) => {
+  const { data } = await AxiosClient.get(`/community/code/${id}`);
+  return data;
+};
+
+export const joinCommunityWithCode = async (options) => {
+  const { data } = await AxiosClient.post(`/community/join`, options);
   return data;
 };

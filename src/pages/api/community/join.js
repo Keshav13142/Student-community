@@ -1,13 +1,25 @@
 import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 // Handle request to join private communitites
 export default async function handler(req, res) {
-  const { communityCode, userId } = req.body;
+  if (req.method !== "POST") return;
 
-  // TODO => Get the logged in user details from the session instead of req body
+  const session = await getServerSession(req, res, authOptions);
 
   // Return error if user is not logged in
-  if (!communityCode || !userId) {
+  if (!session) {
+    res.status(401).json({ message: "You must be logged in." });
+    return;
+  }
+
+  const { user } = session;
+
+  const { inviteCode } = req.body;
+
+  // Return error if user is not logged in
+  if (!inviteCode) {
     res.status(500).json({ error: "Missing fields!!" });
     return;
   }
@@ -20,14 +32,14 @@ export default async function handler(req, res) {
           {
             members: {
               some: {
-                id: userId,
+                id: user.id,
               },
             },
           },
           {
             communities: {
               some: {
-                code: communityCode,
+                code: inviteCode,
               },
             },
           },
@@ -41,7 +53,7 @@ export default async function handler(req, res) {
     // Throw error if the code is invalid or the user does not belong to the institution
     if (!institution) {
       res.status(500).json({
-        error: `Invalid code, or the community does not exist within your institution!!`,
+        error: `Invalid code!!`,
       });
       return;
     }
@@ -49,34 +61,43 @@ export default async function handler(req, res) {
     // Check if user is already a member of the community
     const community = await prisma.community.findFirst({
       where: {
-        members: {
-          some: {
-            id: userId,
+        AND: [
+          {
+            members: {
+              some: {
+                id: user.id,
+              },
+            },
           },
-        },
+          {
+            code: inviteCode,
+          },
+        ],
       },
     });
 
     // Return if above case is true
     if (community) {
-      res.json(community);
+      res.json({ ...community, isExistingUser: true });
       return;
     }
 
     // Add the user as a member of the community
     const joinedCommunity = await prisma.community.update({
       where: {
-        code: communityCode,
+        code: inviteCode,
       },
       data: {
         members: {
           connect: {
-            id: userId,
+            id: user.id,
           },
         },
       },
-      include: {
-        messages: true,
+      select: {
+        name: true,
+        id: true,
+        image: true,
       },
     });
 
