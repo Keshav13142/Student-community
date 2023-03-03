@@ -70,6 +70,7 @@ export default async function handler(req, res) {
           communityId: true,
           content: true,
           createdAt: true,
+          flag: true,
           sender: {
             select: {
               id: true,
