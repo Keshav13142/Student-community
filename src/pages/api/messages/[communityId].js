@@ -65,6 +65,19 @@ export default async function handler(req, res) {
             id: communityId,
           },
         },
+        select: {
+          id: true,
+          communityId: true,
+          content: true,
+          createdAt: true,
+          sender: {
+            select: {
+              id: true,
+              username: true,
+              name: true,
+            },
+          },
+        },
       });
 
       res.json(messages);
