@@ -146,12 +146,13 @@ model PendingApprovals {
 }
 
 model Message {
-  id          String    @id @default(cuid())
+  id          String      @id @default(cuid())
   content     String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  sender      User      @relation(fields: [senderId], references: [id])
-  community   Community @relation(fields: [communityId], references: [id])
+  createdAt   DateTime    @default(now())
+  flag        MessageFlag @default(VISIBLE)
+  updatedAt   DateTime    @updatedAt
+  sender      User        @relation(fields: [senderId], references: [id])
+  community   Community   @relation(fields: [communityId], references: [id])
   senderId    String
   communityId String
   // TODO => add message replies
@@ -188,4 +189,9 @@ enum ApprovalStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum MessageFlag {
+  HIDDEN
+  VISIBLE
 }
