@@ -83,7 +83,10 @@ const Community = () => {
             isDisabled={isDisabled}
           />
 
-          <ScrollableMessageBox communityId={communityId} />
+          <ScrollableMessageBox
+            communityId={communityId}
+            isUserAdminOrMod={isCurrentUserMod || isCurrentUserAdmin}
+          />
 
           <MessageInputBox isDisabled={isDisabled} communityId={communityId} />
         </Stack>
