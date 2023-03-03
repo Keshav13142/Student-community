@@ -22,7 +22,7 @@ const ScrollableMessageBox = ({ communityId }) => {
   const session = useSession();
 
   // TODO Handle loading properly
-  const { data, isLoading } = useQuery(
+  const { data: messages, isLoading } = useQuery(
     ["messages", communityId],
     () => fetchMessages(communityId),
     { enabled: Boolean(communityId) }
@@ -31,10 +31,10 @@ const ScrollableMessageBox = ({ communityId }) => {
   return (
     // Fix this scrolling stuff later
     <ScrollableFeed className="flex flex-col py-2 px-10 gap-1 custom-scrollbar">
-      {data?.map((msg, idx) => {
+      {messages?.map((msg, idx) => {
         const isOwnMessage = session.data?.user?.id === msg.sender.id;
         const currentMsgTime = new Date(msg.createdAt);
-        const lastMsgTime = new Date(data[idx - 1]?.createdAt);
+        const lastMsgTime = new Date(messages[idx - 1]?.createdAt);
         const msgSentToday =
           new Date().toDateString() === currentMsgTime.toDateString();
         const isNewDateMsg =
@@ -61,7 +61,7 @@ const ScrollableMessageBox = ({ communityId }) => {
                 spacing={0.4}
                 cursor="pointer"
                 borderRadius={10}
-                bgColor={isOwnMessage ? "whatsapp.100" : "purple.100"}>
+                bgColor={isOwnMessage ? "whatsapp.50" : "purple.50"}>
                 {!isOwnMessage && (
                   <div className="text-purple-500 font-bold text-sm">
                     {msg.sender.username}
