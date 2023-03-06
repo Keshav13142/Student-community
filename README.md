@@ -18,5 +18,9 @@
 - [ ] Migrate to T3 stack
 - [ ] Check if user has admin/mod access in API before performing actions
 - [ ] Responsiveness of sidebar
+- [ ] Guest user login (have a default community)
+- [ ] Customize UI for clg
+- [ ] User profile
+- [ ] Show user info on hover in chat?
 
 <!-- ![mock](final-year-project-mock.png) -->
