@@ -20,7 +20,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id])
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId], name: "provider_providerAccountId")
   @@map("accounts")
@@ -31,7 +31,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
@@ -43,6 +43,7 @@ model User {
   emailVerified      DateTime?
   image              String?
   hasProfile         Boolean            @default(false)
+  enrollmentStatus   EnrollmentStatus   @default(PENDING)
   username           String?            @unique
   bio                String?
   githubLink         String?
@@ -54,9 +55,9 @@ model User {
   communityModerator Community[]        @relation("community_moderators")
   messages           Message[]
   posts              Post[]
-  institutionAdmin   Institution?       @relation("institution_admins", fields: [institutionAdminId], references: [id])
+  institutionAdmin   Institution?       @relation("institution_admins", fields: [institutionAdminId], references: [id], onDelete: SetNull)
   institutionAdminId String?
-  institution        Institution?       @relation("institution_members", fields: [institutionId], references: [id])
+  institution        Institution?       @relation("institution_members", fields: [institutionId], references: [id], onDelete: SetNull)
   institutionId      String?
   PendingApprovals   PendingApprovals[]
   postComments       PostComments[]
@@ -74,27 +75,17 @@ model VerificationToken {
   @@map("verificationtokens")
 }
 
-// model Profile {
-//   id           String  @id @unique @default(cuid())
-//   username     String  @unique
-//   bio          String?
-//   githubLink   String?
-//   linkedinLink String?
-//   user         User    @relation(fields: [userId], references: [id])
-//   userId       String  @unique
-// }
-
 model Post {
   id            String         @id @unique @default(cuid())
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   content       String
   published     Boolean
-  author        User           @relation(fields: [userId], references: [id])
+  author        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   title         String
   bannerImage   String?
   categories    Category[]
-  isntitution   Institution    @relation(fields: [institutionId], references: [id])
+  isntitution   Institution    @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   slug          String         @unique
   userId        String
   institutionId String
@@ -102,12 +93,12 @@ model Post {
 }
 
 model PostComments {
-  id      String @id @unique @default(cuid())
+  id      String  @id @unique @default(cuid())
   comment String
-  post    Post   @relation(fields: [postId], references: [id])
+  post    Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId  String
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId  String?
 }
 
 model Category {
@@ -128,18 +119,20 @@ model Community {
   moderators       User[]             @relation("community_moderators")
   image            String?
   code             String             @unique @default(cuid())
-  institution      Institution        @relation(fields: [institutionId], references: [id])
+  institution      Institution        @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   institutionId    String
   pendingApprovals PendingApprovals[]
 }
 
 model PendingApprovals {
-  id          String         @id @default(cuid())
-  status      ApprovalStatus @default(PENDING)
-  user        User           @relation(fields: [userId], references: [id])
-  userId      String
-  community   Community      @relation(fields: [communityId], references: [id])
-  communityId String
+  id            String         @id @default(cuid())
+  status        ApprovalStatus @default(PENDING)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  community     Community?     @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  communityId   String?
+  institution   Institution?   @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institutionId String?
 
   @@unique([userId, communityId])
 }
@@ -151,25 +144,26 @@ model Message {
   isDeleted   Boolean   @default(false)
   deletedBy   String?
   updatedAt   DateTime  @updatedAt
-  sender      User      @relation(fields: [senderId], references: [id])
-  community   Community @relation(fields: [communityId], references: [id])
-  senderId    String
+  sender      User?     @relation(fields: [senderId], references: [id], onDelete: SetNull)
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  senderId    String?
   communityId String
   // TODO => add message replies
 }
 
 model Institution {
-  id           String      @id @default(cuid())
-  name         String      @unique
-  memberCode   String      @unique @default(cuid())
-  adminCode    String      @unique @default(cuid())
-  image        String?
-  website      String?
-  supportEmail String?
-  communities  Community[]
-  members      User[]      @relation("institution_members")
-  admins       User[]      @relation("institution_admins")
-  posts        Post[]
+  id               String             @id @default(cuid())
+  name             String             @unique
+  memberCode       String             @unique @default(cuid())
+  adminCode        String             @unique @default(cuid())
+  image            String?
+  website          String?
+  supportEmail     String?
+  communities      Community[]
+  members          User[]             @relation("institution_members")
+  admins           User[]             @relation("institution_admins")
+  posts            Post[]
+  pendingApprovals PendingApprovals[]
 
   @@unique([adminCode, memberCode])
 }
@@ -186,6 +180,12 @@ enum UserType {
 }
 
 enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum EnrollmentStatus {
   PENDING
   APPROVED
   REJECTED
