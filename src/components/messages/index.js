@@ -3,21 +3,29 @@ import {
   hideOrShowMessage,
 } from "@/src/utils/api-calls/messages";
 import {
-  Avatar,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
+  Button,
   Flex,
   MenuItem,
   MenuList,
   Stack,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ContextMenu } from "chakra-ui-contextmenu";
 import { useSession } from "next-auth/react";
-import React, { forwardRef } from "react";
-import { BiShowAlt } from "react-icons/bi";
+import React, { forwardRef, useRef, useState } from "react";
+import { BiBlock, BiShowAlt } from "react-icons/bi";
 import { MdHideSource } from "react-icons/md";
 import { RxEyeClosed } from "react-icons/rx";
+import Linkify from "react-linkify";
 import ScrollableFeed from "react-scrollable-feed";
 
 const MsgDayInfo = ({ day }) => (
@@ -44,21 +52,35 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
         px={3}
         py={2}
         spacing={0.4}
-        cursor="pointer"
         borderRadius={10}
         bgColor={msg.isOwnMessage ? "whatsapp.50" : "purple.50"}>
-        {!msg.isOwnMessage && (
-          <div className="text-purple-500 font-bold text-sm">
-            {msg.sender.username}
-          </div>
+        {msg.isDeleted ? (
+          <Flex alignItems="center" gap={2} className="text-slate-400">
+            <BiBlock />
+            This message was deleted {msg.deletedBy && `by ${msg.deletedBy}`}
+          </Flex>
+        ) : (
+          <>
+            {!msg.isOwnMessage && (
+              <div className="text-purple-500 font-bold text-sm">
+                {msg.sender.username}
+              </div>
+            )}
+            <Linkify
+              properties={{
+                target: "_blank",
+                style: { color: "red", fontWeight: "bold" },
+              }}>
+              {msg.content}
+            </Linkify>
+            <span className={`text-sm self-end opacity-40`}>
+              {Intl.DateTimeFormat("en-us", {
+                timeStyle: "short",
+                hour12: false,
+              }).format(msg.currentMsgTime)}
+            </span>
+          </>
         )}
-        <div>{msg.content}</div>
-        <span className={`text-sm self-end opacity-40`}>
-          {Intl.DateTimeFormat("en-us", {
-            timeStyle: "short",
-            hour12: false,
-          }).format(msg.currentMsgTime)}
-        </span>
       </Stack>
     </Flex>
   );
@@ -68,6 +90,9 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod }) => {
   const session = useSession();
   const toast = useToast();
   const queryClient = useQueryClient();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
+  const [deleteMessageId, setDeleteMessageId] = useState(null);
 
   // TODO Handle loading properly
   const { data: messages, isLoading } = useQuery(
@@ -90,68 +115,96 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod }) => {
         prev.map((msg) => (msg.id === newData.id ? newData : msg))
       );
     },
+    onSettled: () => {
+      setDeleteMessageId(null);
+    },
   });
 
   return (
     // Fix this scrolling stuff later
-    <ScrollableFeed className="flex flex-col py-2 px-10 gap-1 custom-scrollbar">
-      {messages?.map((msg, idx) => {
-        msg.isOwnMessage = session.data?.user?.id === msg.sender.id;
-        msg.currentMsgTime = new Date(msg.createdAt);
-        msg.lastMsgTime = new Date(messages[idx - 1]?.createdAt);
-        msg.msgSentToday =
-          new Date().toDateString() === msg.currentMsgTime.toDateString();
-        msg.isNewDateMsg =
-          msg.currentMsgTime.toDateString() !== msg.lastMsgTime.toDateString();
+    <>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Message
+            </AlertDialogHeader>
 
-        return (
-          <React.Fragment key={idx}>
-            {msg.msgSentToday && msg.isNewDateMsg && <MsgDayInfo day="Today" />}
-            {msg.isNewDateMsg && !msg.msgSentToday && (
-              <MsgDayInfo
-                day={Intl.DateTimeFormat("en-us", {
-                  dateStyle: "medium",
-                }).format(msg.currentMsgTime)}
-              />
-            )}
-            {isUserAdminOrMod && !msg.isOwnMessage ? (
-              <ContextMenu
-                renderMenu={() => (
-                  <MenuList>
-                    {msg.flag !== "HIDDEN" ? (
+            <AlertDialogBody>
+              Are you sure? You cannot revert this action
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  mutation.mutate({
+                    communityId,
+                    messageId: deleteMessageId,
+                    deletedBy: session?.data?.user?.name,
+                  });
+                  onClose();
+                }}
+                ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+      <ScrollableFeed className="flex flex-col py-2 px-10 gap-1 custom-scrollbar">
+        {messages?.map((msg, idx) => {
+          msg.isOwnMessage = session.data?.user?.id === msg.sender.id;
+          msg.currentMsgTime = new Date(msg.createdAt);
+          msg.lastMsgTime = new Date(messages[idx - 1]?.createdAt);
+          msg.msgSentToday =
+            new Date().toDateString() === msg.currentMsgTime.toDateString();
+          msg.isNewDateMsg =
+            msg.currentMsgTime.toDateString() !==
+            msg.lastMsgTime.toDateString();
+
+          return (
+            <React.Fragment key={idx}>
+              {msg.msgSentToday && msg.isNewDateMsg && (
+                <MsgDayInfo day="Today" />
+              )}
+              {msg.isNewDateMsg && !msg.msgSentToday && (
+                <MsgDayInfo
+                  day={Intl.DateTimeFormat("en-us", {
+                    dateStyle: "medium",
+                  }).format(msg.currentMsgTime)}
+                />
+              )}
+              {isUserAdminOrMod && !msg.isOwnMessage && !msg.isDeleted ? (
+                <ContextMenu
+                  renderMenu={() => (
+                    <MenuList>
                       <MenuItem
                         onClick={() => {
-                          mutation.mutate({ communityId, action: "hide" });
+                          setDeleteMessageId(msg.id);
+                          onOpen();
                         }}>
                         <MdHideSource size={20} className="mr-2" color="red" />
-                        Hide message for everyone
+                        Delete message for everyone
                       </MenuItem>
-                    ) : (
-                      <>
-                        <MenuItem>
-                          <RxEyeClosed size={20} className="mr-2" />
-                          Show content
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            mutation.mutate({ communityId, action: "reveal" });
-                          }}>
-                          <BiShowAlt size={20} className="mr-2" />
-                          Un-hide message for everyone
-                        </MenuItem>
-                      </>
-                    )}
-                  </MenuList>
-                )}>
-                {(ref) => <MessageBubble msg={msg} ref={ref} />}
-              </ContextMenu>
-            ) : (
-              <MessageBubble msg={msg} />
-            )}
-          </React.Fragment>
-        );
-      })}
-    </ScrollableFeed>
+                    </MenuList>
+                  )}>
+                  {(ref) => <MessageBubble msg={msg} ref={ref} />}
+                </ContextMenu>
+              ) : (
+                <MessageBubble msg={msg} />
+              )}
+            </React.Fragment>
+          );
+        })}
+      </ScrollableFeed>
+    </>
   );
 };
 

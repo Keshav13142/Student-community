@@ -49,7 +49,8 @@ export default async function handler(req, res) {
           communityId: true,
           content: true,
           createdAt: true,
-          flag: true,
+          isDeleted: true,
+          deletedBy: true,
           sender: {
             select: {
               id: true,
@@ -81,7 +82,8 @@ export default async function handler(req, res) {
           communityId: true,
           content: true,
           createdAt: true,
-          flag: true,
+          deletedBy: true,
+          isDeleted: true,
           sender: {
             select: {
               id: true,
@@ -89,6 +91,9 @@ export default async function handler(req, res) {
               name: true,
             },
           },
+        },
+        orderBy: {
+          createdAt: "asc",
         },
       });
 

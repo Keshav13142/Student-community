@@ -16,9 +16,10 @@ export default async function handler(req, res) {
 
   const { user } = session;
 
-  const { communityId, messageId, action } = req.query;
+  const { communityId, deletedBy } = req.body;
+  const { messageId } = req.query;
 
-  if (!communityId || !action) {
+  if (!communityId || !messageId || !deletedBy) {
     res.status(401).json({ error: "Missing required fields!!" });
     return;
   }
@@ -33,13 +34,14 @@ export default async function handler(req, res) {
 
     const message = await prisma.message.update({
       where: { id: messageId },
-      data: { flag: action === "hide" ? "HIDDEN" : "VISIBLE" },
+      data: { isDeleted: true, content: null, deletedBy },
       select: {
         id: true,
         communityId: true,
         content: true,
         createdAt: true,
-        flag: true,
+        isDeleted: true,
+        deletedBy: true,
         sender: {
           select: {
             id: true,

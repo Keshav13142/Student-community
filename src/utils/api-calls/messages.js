@@ -13,6 +13,9 @@ export const fetchMessages = async (communityId) => {
 };
 
 export const hideOrShowMessage = async (options) => {
-  const { data } = await AxiosClient.patch(`/messages/action`, options);
+  const { data } = await AxiosClient.patch(
+    `/messages/delete?messageId=${options.messageId}`,
+    options
+  );
   return data;
 };
