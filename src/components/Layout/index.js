@@ -17,7 +17,7 @@ const Layout = ({ children }) => {
         <Flex className="h-full" direction="row" style={{ marginTop: "0px" }}>
           {/* Replace hide with hiding on smaller breakpoints  */}
           {/* Cause the hide comp unmounts the sidebar causing it to refetch */}
-          <Hide below="lg">
+          <Hide below="md">
             <SideBar />
           </Hide>
           {children}

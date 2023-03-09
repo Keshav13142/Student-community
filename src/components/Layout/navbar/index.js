@@ -6,6 +6,7 @@ import {
   Show,
   Stack,
 } from "@chakra-ui/react";
+import Link from "next/link";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import Profile from "./Profile";
 
@@ -30,10 +31,12 @@ const Navbar = () => {
       </Flex>
       <Flex gap={20}>
         <Show above="md">
-          <Stack direction="row" spacing="5">
-            <Button variant="link" color="purple.600">
-              Discover
-            </Button>
+          <Stack direction="row" spacing="5" alignItems="center">
+            <Link href="/home">
+              <Button variant="link" color="purple.600">
+                Discover
+              </Button>
+            </Link>
             <Button variant="link" color="purple.600">
               Blogs
             </Button>

@@ -61,7 +61,6 @@ model User {
   PendingApprovals   PendingApprovals[]
   postComments       PostComments[]
   type               UserType           @default(MEMBER)
-  // profile            Profile?
 
   @@map("users")
 }
@@ -147,8 +146,10 @@ model PendingApprovals {
 
 model Message {
   id          String    @id @default(cuid())
-  content     String
+  content     String?
   createdAt   DateTime  @default(now())
+  isDeleted   Boolean   @default(false)
+  deletedBy   String?
   updatedAt   DateTime  @updatedAt
   sender      User      @relation(fields: [senderId], references: [id])
   community   Community @relation(fields: [communityId], references: [id])
