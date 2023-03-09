@@ -7,7 +7,7 @@
 - [ ] automagically figure of code type while new-user registration
 - [x] Functional Chat messages UI
 - [ ] Delete/Hide messages
-- [ ] Don't send message content if they're hidden
+- [ ] Don't send message content if they're hidden (in requests)
 - [ ] HOC for protected API routes, managing req types.
 - [ ] use req.end() instead of return :)
 - [ ] Take a look at Taxonomy OSS repo
@@ -20,7 +20,9 @@
 - [ ] Responsiveness of sidebar
 - [ ] Guest user login (have a default community)
 - [ ] Customize UI for clg
-- [ ] User profile
+- [ ] User profile with their posts and restr. and pvt comms
 - [ ] Show user info on hover in chat?
+- [ ] Pending req for users joining pvt. communities
+- [ ] Pusher events for deletion
 
 <!-- ![mock](final-year-project-mock.png) -->
