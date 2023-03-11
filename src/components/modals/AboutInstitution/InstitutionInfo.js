@@ -36,6 +36,7 @@ const InviteCode = ({ code, title }) => {
 const InstitutionInfo = ({ data, inviteCodes, isAdmin }) => {
   return (
     <Stack flexDirection="column" gap={5} alignItems="center">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         className="w-36 h-36 rounded-xl"
         src={

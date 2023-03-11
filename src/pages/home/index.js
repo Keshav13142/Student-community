@@ -63,6 +63,7 @@ const DiscoverCommunities = () => {
                   <SlInfo />
                   <span>No public communities found</span>
                 </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   className="animate-pulse w-[50%]"
                   src="https://assets.materialup.com/uploads/8b0ec3cb-a32d-40bb-b17d-66b9fd744172/attachment.jpg"
