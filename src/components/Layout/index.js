@@ -4,7 +4,7 @@ import Navbar from "./navbar";
 import SideBar from "./sidebar";
 
 // Routes that need the Layout
-const routesWithLayout = ["/home", "/community", "/blog"];
+const routesWithLayout = ["/home", "/community"];
 
 const Layout = ({ children }) => {
   const router = useRouter();

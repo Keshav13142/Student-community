@@ -12,10 +12,7 @@ import Profile from "./Profile";
 
 const Navbar = () => {
   return (
-    <Flex
-      alignItems="center"
-      justifyContent="space-between"
-      className="py-2 px-6 shadow-md">
+    <nav className="flex py-2 px-6 shadow-md items-center justify-between">
       <Flex gap={2}>
         <Show below="lg">
           <IconButton
@@ -37,14 +34,16 @@ const Navbar = () => {
                 Discover
               </Button>
             </Link>
-            <Button variant="link" color="purple.600">
-              Blogs
-            </Button>
+            <Link href="/blog">
+              <Button variant="link" color="purple.600">
+                Blogs
+              </Button>
+            </Link>
           </Stack>
         </Show>
         <Profile />
       </Flex>
-    </Flex>
+    </nav>
   );
 };
 
