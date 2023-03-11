@@ -104,6 +104,6 @@ const DiscoverCommunities = () => {
 };
 
 // Protected route
-DiscoverCommunities.auth = true;
+DiscoverCommunities.withAuth = true;
 
 export default DiscoverCommunities;

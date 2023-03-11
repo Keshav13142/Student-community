@@ -19,12 +19,14 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useQueries } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { RiEditBoxLine } from "react-icons/ri";
 import InstitutionAdminActions from "../AdminActions/insitution";
 import EditInstitutionInfo from "./EditInstitutionInfo";
 import InstitutionInfo from "./InstitutionInfo";
 import Members from "./InstitutionMembers";
+import InstitutionRequests from "./InstitutionRequests";
 
 const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
   const [{ data: institutionData }, { data: inviteCodes }] = useQueries({
@@ -92,6 +94,7 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
               <TabList mb="1em">
                 <Tab>Info</Tab>
                 <Tab>Members</Tab>
+                {isAdmin && <Tab>Requests</Tab>}
               </TabList>
               <TabPanels>
                 <TabPanel>
@@ -114,10 +117,18 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
                       setAction(data);
                       onActionsOpen();
                     }}
-                    members={institutionData?.members}
+                    users={[
+                      ...(institutionData?.members ?? []),
+                      ...(institutionData?.admins ?? []),
+                    ]}
                     isAdmin={isAdmin}
                   />
                 </TabPanel>
+                {isAdmin && (
+                  <TabPanel>
+                    <InstitutionRequests institutionId={institutionData?.id} />
+                  </TabPanel>
+                )}
               </TabPanels>
             </Tabs>
           </ModalBody>

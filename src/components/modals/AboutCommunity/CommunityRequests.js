@@ -1,6 +1,6 @@
 import {
-  getPendingRequests,
-  managePendingRequests,
+  getPendingCommRequests,
+  managePendingCommRequests,
 } from "@/src/utils/api-calls/community";
 import {
   Avatar,
@@ -21,10 +21,10 @@ const CommunityRequests = ({ communityId }) => {
   const [showPendingOnly, setShowPendingOnly] = useState(true);
 
   const { data } = useQuery(["community_requests", communityId], () =>
-    getPendingRequests(communityId)
+    getPendingCommRequests(communityId)
   );
 
-  const mutation = useMutation(managePendingRequests, {
+  const mutation = useMutation(managePendingCommRequests, {
     onError: () => {
       toast({
         title: "Something went wrong!",

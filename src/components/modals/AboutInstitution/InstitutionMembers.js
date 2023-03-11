@@ -15,12 +15,12 @@ import { IoMdRemoveCircleOutline } from "react-icons/io";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { RxExternalLink } from "react-icons/rx";
 
-const InstitutionMembers = ({ members, isAdmin, doAction }) => {
+const InstitutionMembers = ({ users, isAdmin, doAction }) => {
   const session = useSession();
 
   return (
     <Stack spacing={3} alignItems="center">
-      {members.map((m) => {
+      {users.map((m) => {
         return (
           <Flex
             minW="sm"
