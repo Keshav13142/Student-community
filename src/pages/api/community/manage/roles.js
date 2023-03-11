@@ -72,6 +72,19 @@ export default async function handler(req, res) {
                   },
                 },
               }),
+          members: {
+            ...(action === "promote"
+              ? {
+                  disconnect: {
+                    id: userId,
+                  },
+                }
+              : {
+                  connect: {
+                    id: userId,
+                  },
+                }),
+          },
         },
         include: {
           members: {

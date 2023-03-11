@@ -2,6 +2,14 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 
+const userSelect = {
+  id: true,
+  name: true,
+  username: true,
+  image: true,
+  institutionAdminId: true,
+};
+
 // Check if user is institution admin.
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -30,13 +38,10 @@ export default async function handler(req, res) {
         supportEmail: true,
         image: true,
         members: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-            institutionAdminId: true,
-          },
+          select: userSelect,
+        },
+        admins: {
+          select: userSelect,
         },
       },
     });

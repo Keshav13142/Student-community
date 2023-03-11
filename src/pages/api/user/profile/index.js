@@ -56,7 +56,7 @@ export default async function handler(req, res) {
       if (codeType === "adminCode") {
         await prisma.institution.update({
           where: {
-            [codeType]: institutionCode,
+            adminCode: institutionCode,
           },
           data: {
             admins: {
@@ -66,50 +66,65 @@ export default async function handler(req, res) {
             },
           },
         });
+
+        const community = await prisma.community.findFirst({
+          where: {
+            default: true,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        // Add the user to the default community
+        await prisma.community.update({
+          where: {
+            id: community.id,
+          },
+          data: {
+            members: {
+              connect: {
+                id: user.id,
+              },
+            },
+            ...(codeType === "adminCode"
+              ? { admins: { connect: { id: user.id } } }
+              : {}),
+          },
+        });
       }
 
-      const community = await prisma.community.findFirst({
-        where: {
-          default: true,
-        },
-        select: {
-          id: true,
-        },
-      });
-
-      // Add the user  to the default community
-      await prisma.community.update({
-        where: {
-          id: community.id,
-        },
-        data: {
-          members: {
-            connect: {
-              id: user.id,
+      if (codeType === "memberCode") {
+        await prisma.pendingApprovals.create({
+          data: {
+            institution: {
+              connect: {
+                memberCode: institutionCode,
+              },
+            },
+            user: {
+              connect: {
+                id: user.id,
+              },
             },
           },
-          ...(codeType === "adminCode"
-            ? { admins: { connect: { id: user.id } } }
-            : {}),
-        },
-      });
+        });
+      }
 
       // Create the user's profile
       const updatedUser = await prisma.user.update({
         where: { id: user.id },
         data: {
           hasProfile: true,
+          enrollmentStatus: {
+            set: codeType === "adminCode" ? "APPROVED" : "PENDING",
+          },
           username,
           bio,
           githubLink,
           linkedinLink,
           type: {
             set: codeType === "adminCode" ? "ADMIN" : "MEMBER",
-          },
-          institution: {
-            connect: {
-              [codeType]: institutionCode,
-            },
           },
         },
       });
