@@ -11,7 +11,7 @@
 - [ ] HOC for protected API routes, managing req types.
 - [ ] use req.end() instead of return :)
 - [ ] Take a look at Taxonomy OSS repo
-- [ ] Add requests feature to join institution
+- [x] Add requests feature to join institution
 - [ ] Posts/Blog articles with comments
 - [x] ~~User onDelete cascade~~
 - [ ] Prisma transactions
@@ -26,5 +26,6 @@
 - [ ] Pusher events for deletion
 - [ ] Add email-pass login? (maybe)
 - [ ] Add relavent meta tags to pages
+- [ ] Use NextJs image tags with cloudinary for image storage?
 
 <!-- ![mock](final-year-project-mock.png) -->
