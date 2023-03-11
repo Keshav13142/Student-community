@@ -85,7 +85,7 @@ model Post {
   title         String
   bannerImage   String?
   categories    Category[]
-  isntitution   Institution    @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institution   Institution    @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   slug          String         @unique
   userId        String
   institutionId String
@@ -93,18 +93,20 @@ model Post {
 }
 
 model PostComments {
-  id      String  @id @unique @default(cuid())
-  comment String
-  post    Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId  String
-  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
-  userId  String?
+  id        String   @id @unique @default(cuid())
+  comment   String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId    String?
+  createdAt DateTime @default(now())
 }
 
 model Category {
   id    String @id @unique @default(cuid())
   name  String
   posts Post[]
+  // ?: Do we need to add a relation to institutions
 }
 
 model Community {
