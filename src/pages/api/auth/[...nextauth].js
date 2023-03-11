@@ -12,6 +12,7 @@ export const authOptions = {
         session.user.id = user.id;
         session.user.isAdmin = user.type === "ADMIN";
         session.user.hasProfile = user.hasProfile;
+        session.user.enrollmentStatus = user.enrollmentStatus;
       }
       return session;
     },
