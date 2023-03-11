@@ -7,16 +7,13 @@ import { useState } from "react";
 import AuthGuard from "../components/Auth";
 import Layout from "../components/Layout";
 
-export default function App({
-  Component,
-  pageProps: { session, ...pageProps },
-}) {
+export default function App({ Component, pageProps }) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
-        <SessionProvider session={session}>
+        <SessionProvider session={pageProps.session}>
           <Layout>
             {Component.withAuth ? (
               <AuthGuard>
