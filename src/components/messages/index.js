@@ -55,15 +55,18 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
         borderRadius={10}
         bgColor={msg.isOwnMessage ? "whatsapp.50" : "purple.50"}>
         {msg.isDeleted ? (
-          <Flex alignItems="center" gap={2} className="text-slate-400">
+          <Flex alignItems="center" gap={2} className="text-slate-500">
             <BiBlock />
             This message was deleted {msg.deletedBy && `by ${msg.deletedBy}`}
           </Flex>
         ) : (
           <>
             {!msg.isOwnMessage && (
-              <div className="text-purple-500 font-bold text-sm">
-                {msg.sender.username}
+              <div
+                className={`${
+                  msg.sender ? "text-purple-500" : "text-slate-400"
+                } font-bold text-sm`}>
+                {msg.sender ? msg.sender.username : "[deleted]"}
               </div>
             )}
             <Linkify
@@ -160,7 +163,7 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod }) => {
       </AlertDialog>
       <ScrollableFeed className="flex flex-col py-2 px-10 gap-1 custom-scrollbar">
         {messages?.map((msg, idx) => {
-          msg.isOwnMessage = session.data?.user?.id === msg.sender.id;
+          msg.isOwnMessage = session.data?.user?.id === msg.sender?.id;
           msg.currentMsgTime = new Date(msg.createdAt);
           msg.lastMsgTime = new Date(messages[idx - 1]?.createdAt);
           msg.msgSentToday =
