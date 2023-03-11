@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Loader from "./Loader";
 
 // Component that wraps the pages that need to be protected
-function Auth({ children }) {
+function AuthGuard({ children }) {
   const router = useRouter();
 
   // The required flag forces the session to have just 'loading' or 'authenticated' staus
@@ -16,18 +16,19 @@ function Auth({ children }) {
   });
 
   if (session?.status === "authenticated") {
-    // If the user has not created a profile, prompt them
-    if (
-      !session.data?.user.hasProfile &&
-      router.pathname !== "/auth/new-user"
-    ) {
+    const { user } = session.data;
+    if (user.hasProfile) {
+      if (
+        user.enrollmentStatus !== "APPROVED" &&
+        router.pathname !== "/enrollment-status"
+      )
+        router.push("/enrollment-status");
+    } else if (router.pathname !== "/auth/new-user")
       router.push("/auth/new-user");
-      return;
-    }
     return children;
   }
 
   return <Loader />;
 }
 
-export default Auth;
+export default AuthGuard;

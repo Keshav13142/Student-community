@@ -22,6 +22,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
@@ -124,7 +125,7 @@ const NewUserForm = () => {
     },
     onSuccess: () => {
       reloadSession();
-      router.push("/home");
+      router.push("/enrollment-status");
     },
   });
 
@@ -214,6 +215,15 @@ const NewUserForm = () => {
         colorScheme="purple"
         onClick={handleSubmit}>
         Join
+      </Button>
+      <Button
+        type="button"
+        variant="outline"
+        colorScheme="purple"
+        onClick={() => {
+          signOut({ redirect: false });
+        }}>
+        Logout
       </Button>
     </form>
   );
