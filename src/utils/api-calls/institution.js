@@ -20,3 +20,18 @@ export const getInstInviteCodes = async () => {
   const { data } = await AxiosClient.get(`/institution/code`);
   return data;
 };
+
+export const getPendingInstnRequests = async (institutionId) => {
+  const { data } = await AxiosClient.get(
+    `/institution/requests/${institutionId}`
+  );
+  return data;
+};
+
+export const managePendingInstnRequests = async (options) => {
+  const { data } = await AxiosClient.patch(
+    `/institution/requests/${options.institutionId}`,
+    options
+  );
+  return data;
+};

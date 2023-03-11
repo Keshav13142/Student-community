@@ -28,12 +28,12 @@ export const requestToJoinCommunity = async (communityId) => {
   return data;
 };
 
-export const getPendingRequests = async (communityId) => {
+export const getPendingCommRequests = async (communityId) => {
   const { data } = await AxiosClient.get(`/community/requests/${communityId}`);
   return data;
 };
 
-export const managePendingRequests = async (options) => {
+export const managePendingCommRequests = async (options) => {
   const { data } = await AxiosClient.patch(
     `/community/requests/${options.communityId}`,
     options
