@@ -81,9 +81,11 @@ const Blog = ({ posts, categories }) => {
         {/* md:flex-col justify-start */}
         <main className="flex lg:mx-5 gap-10 justify-center pt-10 px-5 sm:px-20 md:px-32 flex-col lg:flex-row">
           {/* md:order-2 */}
-          <div className="px-4 py-2 flex justify-between items-center border rounded-lg border-slate-300 gap-3 min-w-[50%] order-2 lg:order-1">
-            {posts.map((p) => (
-              <React.Fragment key={p.id}>
+          <div className="flex flex-col gap-3 min-w-[50%] order-2 lg:order-1">
+            {posts.map((p, idx) => (
+              <div
+                className="flex px-4 py-2 border rounded-lg border-slate-300 justify-between items-center"
+                key={idx}>
                 <div className="flex-grow">
                   <div className="flex gap-2 items-center mb-1">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -127,7 +129,7 @@ const Blog = ({ posts, categories }) => {
                     alt={p.title}
                   />
                 </Link>
-              </React.Fragment>
+              </div>
             ))}
           </div>
           {/* md:order-1 */}
