@@ -10,9 +10,11 @@ export const authOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        session.user.username = user.username;
         session.user.isAdmin = user.type === "ADMIN";
         session.user.hasProfile = user.hasProfile;
         session.user.enrollmentStatus = user.enrollmentStatus;
+        session.user.institutionId = user.institutionId;
       }
       return session;
     },

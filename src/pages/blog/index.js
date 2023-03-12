@@ -1,15 +1,19 @@
 import prisma from "@/lib/prisma";
-import { Stack } from "@chakra-ui/react";
+import { Button, IconButton, Stack } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { getServerSession } from "next-auth";
 import Head from "next/head";
 import Link from "next/link";
 import React from "react";
+import { BsNewspaper } from "react-icons/bs";
+import { MdClear } from "react-icons/md";
 import Navbar from "../../components/Layout/navbar";
 import { authOptions } from "../api/auth/[...nextauth]";
 
-export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions);
+export async function getServerSideProps({ req, res, query }) {
+  const session = await getServerSession(req, res, authOptions);
+
+  console.log(query);
 
   if (!session) {
     return {
@@ -35,6 +39,15 @@ export async function getServerSideProps(context) {
     where: {
       published: true,
       institution: institutionFilter,
+      ...(query.category
+        ? {
+            categories: {
+              some: {
+                name: query.category,
+              },
+            },
+          }
+        : {}),
     },
     select: {
       id: true,
@@ -134,9 +147,19 @@ const Blog = ({ posts, categories }) => {
           </div>
           {/* md:order-1 */}
           <div className="px-2 py-2 items-center flex flex-col gap-5 lg:sticky lg:top-24 h-fit order-1 lg:order-2">
-            <h2 className="text-xl font-medium text-slate-900 text-center">
-              Explore more posts by categories
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-medium text-slate-900">
+                Explore more posts by categories
+              </h2>
+              <Link href="/blog">
+                <IconButton
+                  icon={<MdClear />}
+                  size="xs"
+                  color="red"
+                  variant="outline"
+                />
+              </Link>
+            </div>
             <div className="flex gap-1 items-center flex-wrap justify-evenly">
               {categories.map((c) => (
                 <Link
@@ -147,6 +170,14 @@ const Blog = ({ posts, categories }) => {
                 </Link>
               ))}
             </div>
+            <Link href="/blog/new">
+              <Button
+                variant="outline"
+                colorScheme="purple"
+                leftIcon={<BsNewspaper />}>
+                Create a new post
+              </Button>
+            </Link>
           </div>
         </main>
       </div>

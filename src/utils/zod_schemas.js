@@ -47,7 +47,21 @@ export const updateCommunitySchema = z.object({
     .string({ required_error: "Name is required" })
     .min(1, { message: "Enter a valid name" }),
   desc: z.string().optional(),
+  categoryId: z.string().optional(),
+  newCategory: z.string().optional(),
   image: z
+    .string()
+    .url({ message: "Enter a valid URL" })
+    .optional()
+    .or(z.literal("")),
+});
+
+export const createPostSchema = z.object({
+  title: z
+    .string({ required_error: "Title is required" })
+    .min(1, { message: "Enter a valid title" }),
+  desc: z.string().optional(),
+  bannerImage: z
     .string()
     .url({ message: "Enter a valid URL" })
     .optional()
