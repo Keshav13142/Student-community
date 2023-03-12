@@ -14,8 +14,8 @@ export const createCommunity = async (comm) => {
   return data;
 };
 
-export const getCommunityInfo = async (id) => {
-  const { data } = await AxiosClient.get(`/community/${id}`);
+export const getCommunityInfo = async (slug) => {
+  const { data } = await AxiosClient.get(`/community/${slug}`);
   return data;
 };
 export const updateCommunityRoles = async (options) => {

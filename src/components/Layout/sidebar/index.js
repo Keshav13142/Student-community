@@ -88,7 +88,7 @@ const SideBar = () => {
                 <h2>Communities you join will show up here!</h2>
               ) : (
                 communities?.map((c, i) => (
-                  <Link key={c.id} href={`/community/${c.id}`}>
+                  <Link key={c.id} href={`/community/${c.slug}`}>
                     <Flex
                       paddingY={2}
                       display="flex"
