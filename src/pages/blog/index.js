@@ -79,13 +79,11 @@ const Blog = ({ posts, categories }) => {
       <div className="min-h-screen">
         <Navbar />
         {/* md:flex-col justify-start */}
-        <main className="flex sm:gap-10 xl:gap-20 justify-center pt-10 px-10">
+        <main className="flex lg:mx-5 gap-10 justify-center pt-10 px-5 sm:px-20 md:px-32 flex-col lg:flex-row">
           {/* md:order-2 */}
-          <div className="min-w-[45%] flex flex-col gap-5">
+          <div className="px-4 py-2 flex justify-between items-center border rounded-lg border-slate-300 gap-3 min-w-[50%] order-2 lg:order-1">
             {posts.map((p) => (
-              <div
-                className="px-4 py-2 flex justify-between items-center border rounded-lg border-slate-300 gap-3"
-                key={p.id}>
+              <React.Fragment key={p.id}>
                 <div className="flex-grow">
                   <div className="flex gap-2 items-center mb-1">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -98,8 +96,8 @@ const Blog = ({ posts, categories }) => {
                   </div>
                   <Link
                     href={`/blog/${p.slug}`}
-                    className="flex flex-col gap-3 mb-2">
-                    <h2 className="text-2xl font-medium text-slate-900">
+                    className="flex flex-col gap-1 md:gap-2 lg:gap-3 mb-2">
+                    <h2 className="text-lg md:text-2xl font-medium text-slate-900">
                       {p.title}
                     </h2>
                     <h3 className="text-base text-gray-500 max-w-sm line-clamp-2">
@@ -107,14 +105,14 @@ const Blog = ({ posts, categories }) => {
                     </h3>
                   </Link>
                   <div className="flex gap-2 items-center">
-                    <span className="text-gray-500 text-sm">
+                    <span className="text-gray-500 text-xs lg:text-sm">
                       {format(new Date(p.createdAt), "MMM d")}
                     </span>
-                    <div className="flex gap-2 items-center">
+                    <div className="flex gap-1 items-center">
                       {p.categories.slice(0, 2).map((c) => (
                         <div
                           key={c.id}
-                          className="px-2 py-0.5 bg-gray-100 rounded-xl text-sm text-violet-500 font-medium">
+                          className="px-2 py-0.5 bg-gray-100 rounded-xl text-xs lg:text-sm text-violet-500 font-medium">
                           {c.name}
                         </div>
                       ))}
@@ -125,24 +123,24 @@ const Blog = ({ posts, categories }) => {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={p.bannerImage}
-                    className="w-60 rounded-md object-cover aspect-video h-40"
+                    className="rounded-md object-cover aspect-video w-32 h-24 md:w-36 md:h-28 lg:w-40 lg:h-32"
                     alt={p.title}
                   />
                 </Link>
-              </div>
+              </React.Fragment>
             ))}
           </div>
           {/* md:order-1 */}
-          <div className="px-5 py-2 items-center flex flex-col gap-3 sticky top-24 h-fit">
-            <h2 className="text-xl font-medium text-slate-900">
+          <div className="px-2 py-2 items-center flex flex-col gap-5 lg:sticky lg:top-24 h-fit order-1 lg:order-2">
+            <h2 className="text-xl font-medium text-slate-900 text-center">
               Explore more posts by categories
             </h2>
-            <div className="flex gap-2 items-center flex-wrap justify-evenly">
+            <div className="flex gap-1 items-center flex-wrap justify-evenly">
               {categories.map((c) => (
                 <Link
                   href={`/blog?category=${c.name}`}
                   key={c.id}
-                  className="px-2 py-1 rounded-xl border border-purple-300 min-w-[30%] text-center">
+                  className="p-1 rounded-xl border border-purple-300 min-w-[30%] text-center">
                   {c.name}
                 </Link>
               ))}
