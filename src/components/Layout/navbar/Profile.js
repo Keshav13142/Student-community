@@ -1,5 +1,6 @@
 import { Avatar, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 const Profile = () => {
@@ -18,7 +19,9 @@ const Profile = () => {
         borderWidth="medium"
       />
       <MenuList>
-        <MenuItem>Edit Profile</MenuItem>
+        <Link href={`/user/@${session.data?.user?.username}`}>
+          <MenuItem>My Profile</MenuItem>
+        </Link>
         <MenuItem
           onClick={() => {
             signOut({ redirect: false });
