@@ -89,6 +89,7 @@ export default async function handler(req, res) {
           desc: true,
           image: true,
           type: true,
+          slug: true,
         },
       });
 

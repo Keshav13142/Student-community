@@ -24,7 +24,7 @@ const CommunityMembers = ({ data, doAction }) => {
 
   return (
     <Stack spacing={3} alignItems="center">
-      {data.members.map((m) => {
+      {[...data.members, ...data.admins, ...data.moderators].map((m) => {
         const isAdmin = m.communityAdmin.length > 0;
         const isMod = m.communityModerator.length > 0;
         const isCurrentUser = m.id === session?.data?.user?.id;

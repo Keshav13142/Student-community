@@ -11,9 +11,9 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { id } = req.query;
+  const { slug } = req.query;
 
-  if (!id) {
+  if (!slug) {
     res.status(401).json({ message: "Invalid community ID!!" });
     return;
   }
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   //   const { user } = session;
   if (req.method === "GET") {
     const comm = await prisma.community.findUnique({
-      where: { id },
+      where: { slug },
       select: {
         id: true,
         image: true,
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
                 id: true,
               },
               where: {
-                id,
+                slug,
               },
             },
             communityModerator: {
@@ -48,7 +48,55 @@ export default async function handler(req, res) {
                 id: true,
               },
               where: {
-                id,
+                slug,
+              },
+            },
+          },
+        },
+        admins: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            image: true,
+            communityAdmin: {
+              select: {
+                id: true,
+              },
+              where: {
+                slug,
+              },
+            },
+            communityModerator: {
+              select: {
+                id: true,
+              },
+              where: {
+                slug,
+              },
+            },
+          },
+        },
+        moderators: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            image: true,
+            communityAdmin: {
+              select: {
+                id: true,
+              },
+              where: {
+                slug,
+              },
+            },
+            communityModerator: {
+              select: {
+                id: true,
+              },
+              where: {
+                slug,
               },
             },
           },

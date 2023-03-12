@@ -83,7 +83,7 @@ const DiscoverCommunities = () => {
                   <Avatar src={c.image} name={c.name} />
                   <Stack>
                     <Link
-                      href={`/community/${c.id}`}
+                      href={`/community/${c.slug}`}
                       className="text-lg font-medium hover:underline hover:text-blue-700">
                       # {c.name}
                     </Link>

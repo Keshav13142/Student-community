@@ -27,5 +27,6 @@
 - [ ] Add email-pass login? (maybe)
 - [ ] Add relavent meta tags to pages
 - [ ] Use NextJs image tags with cloudinary for image storage?
+- [ ] Fix the community members modal code
 
 <!-- ![mock](final-year-project-mock.png) -->

@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import {
   checkIfUserIsInstAdmin,
   getCommunityWithName,
+  slugify,
 } from "@/src/utils/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
@@ -56,6 +57,13 @@ export default async function handler(req, res) {
             },
           ],
         },
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          desc: true,
+          image: true,
+        },
       })
     );
     return;
@@ -107,6 +115,7 @@ const handlePOST = async (req, res, userId, institution) => {
         desc,
         image,
         type,
+        slug: slugify(name),
         admins: {
           connect: {
             id: userId,

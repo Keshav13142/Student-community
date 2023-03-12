@@ -14,36 +14,36 @@ const Community = () => {
   const router = useRouter();
   const session = useSession();
   // Get the community id from the URL of the dynamic route in NextJS
-  const { communityId } = router.query;
+  const { slug } = router.query;
   const queryClient = useQueryClient();
 
   // useEffect(() => {
-  //   if (communityId) {
+  //   if (slug) {
   //     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
   //       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
   //     });
 
-  //     const channel = pusher.subscribe(`community-${communityId}`);
+  //     const channel = pusher.subscribe(`community-${slug}`);
 
   //     channel.bind("chat", function (data) {
-  //       queryClient.setQueryData(["messages", communityId], (prev) => [
+  //       queryClient.setQueryData(["messages", slug], (prev) => [
   //         ...prev,
   //         data,
   //       ]);
   //     });
 
   //     return () => {
-  //       pusher.unsubscribe(`community-${communityId}`);
+  //       pusher.unsubscribe(`community-${slug}`);
   //     };
   //   }
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [communityId]);
+  // }, [slug]);
 
   const { data, isLoading } = useQuery(
-    ["communityInfo", communityId],
-    () => getCommunityInfo(communityId),
+    ["communityInfo", slug],
+    () => getCommunityInfo(slug),
     {
-      enabled: Boolean(communityId),
+      enabled: Boolean(slug),
     }
   );
 
@@ -84,11 +84,11 @@ const Community = () => {
           />
 
           <ScrollableMessageBox
-            communityId={communityId}
+            slug={slug}
             isUserAdminOrMod={isCurrentUserMod || isCurrentUserAdmin}
           />
 
-          <MessageInputBox isDisabled={isDisabled} communityId={communityId} />
+          <MessageInputBox isDisabled={isDisabled} slug={slug} />
         </Stack>
       )}
     </>

@@ -113,6 +113,7 @@ model Community {
   id               String             @id @default(cuid())
   name             String             @unique
   desc             String?
+  slug             String             @unique
   type             CommunityType      @default(PUBLIC)
   default          Boolean            @default(false)
   members          User[]             @relation("community_members")
