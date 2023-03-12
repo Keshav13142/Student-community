@@ -21,6 +21,7 @@ export default async function handler(req, res) {
       githubLink,
       linkedinLink,
       codeType,
+      name,
       institutionCode,
     } = req.body;
 
@@ -121,6 +122,7 @@ export default async function handler(req, res) {
           },
           username,
           bio,
+          name,
           githubLink,
           linkedinLink,
           type: {

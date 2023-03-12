@@ -56,8 +56,6 @@ const EnrollmentStatus = () => {
     data: { user },
   } = useSession();
 
-  console.log(user);
-
   const content = info[user.enrollmentStatus];
 
   return (

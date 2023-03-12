@@ -7,6 +7,9 @@ export const newUserFormSchema = z.object({
   username: z
     .string({ required_error: "Username is required" })
     .min(1, { message: "Enter a valid username" }),
+  name: z
+    .string({ required_error: "Name is required" })
+    .min(1, { message: "Enter a valid name" }),
   githubLink: z
     .string()
     .url({ message: "Enter a valid URL" })

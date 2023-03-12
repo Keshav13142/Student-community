@@ -22,13 +22,14 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { GoMarkGithub } from "react-icons/go";
 import { GrLinkedin } from "react-icons/gr";
 import { ImWarning } from "react-icons/im";
+import { RiUser3Line } from "react-icons/ri";
 
 const formFields = [
   {
@@ -69,6 +70,7 @@ const formFields = [
     ),
     placeholder: "Username",
   },
+  { name: "name", rightElement: <RiUser3Line />, placeholder: "Name" },
   { name: "bio", rightElement: null, placeholder: "Bio" },
   {
     name: "githubLink",
@@ -103,8 +105,10 @@ const reloadSession = () => {
 
 const NewUserForm = () => {
   const toast = useToast();
-
   const router = useRouter();
+  const {
+    data: { user },
+  } = useSession();
 
   const mutation = useMutation(createUserProfile, {
     onError: ({
@@ -132,6 +136,7 @@ const NewUserForm = () => {
   const [codeType, setCodeType] = useState("memberCode");
 
   const [formValues, setFormValues] = useState({
+    name: user.name,
     username: "",
     bio: "",
     institutionCode: "",
@@ -140,6 +145,7 @@ const NewUserForm = () => {
   });
 
   const [formErrors, setFromErrors] = useState({
+    name: null,
     username: null,
     institutionCode: null,
     githubLink: null,
