@@ -148,8 +148,8 @@ const CreateNewPost = ({ allCategories }) => {
       </Head>
       <div className="min-h-screen">
         <Navbar />
-        <div className="flex py-10 justify-center gap-20 flex-col lg:flex-row items-center lg:items-start">
-          <div className="flex flex-col min-w-[55%] max-w-3xl lg:max-w-[60%] gap-10 order-2 lg:order-1">
+        <div className="flex flex-col items-center justify-center gap-20 py-10 lg:flex-row lg:items-start">
+          <div className="order-2 flex min-w-[55%] max-w-3xl flex-col gap-10 lg:order-1 lg:max-w-[60%]">
             {fields.map((f, idx) => (
               <InputGroup key={idx} className="flex flex-col">
                 <Input
@@ -163,7 +163,7 @@ const CreateNewPost = ({ allCategories }) => {
                 {f.rightElement && (
                   <InputRightElement>{f.rightElement}</InputRightElement>
                 )}
-                <span className="text-red-400 mt-1">{errors[f.name]}</span>
+                <span className="mt-1 text-red-400">{errors[f.name]}</span>
               </InputGroup>
             ))}
             <Tabs variant="line" colorScheme="purple">
@@ -221,8 +221,8 @@ const CreateNewPost = ({ allCategories }) => {
               </TabPanels>
             </Tabs>
           </div>
-          <div className="flex flex-col p-2 gap-5 lg:sticky lg:top-24 h-fit order-1 lg:order-2">
-            <h2 className="text-xl self-center">Post options</h2>
+          <div className="order-1 flex h-fit flex-col gap-5 p-2 lg:sticky lg:top-24 lg:order-2">
+            <h2 className="self-center text-xl">Post options</h2>
             <InputGroup className="flex flex-col">
               <Input
                 isDisabled={Boolean(inputs.categoryId)}
@@ -236,7 +236,7 @@ const CreateNewPost = ({ allCategories }) => {
               <InputRightElement>
                 <MdOutlineCategory />
               </InputRightElement>
-              <span className="text-red-400 mt-1">{errors.newCategory}</span>
+              <span className="mt-1 text-red-400">{errors.newCategory}</span>
             </InputGroup>
             <Select
               onChange={handleInputChange}

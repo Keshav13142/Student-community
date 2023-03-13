@@ -39,7 +39,7 @@ const CommunityInfo = ({ data, code }) => {
     <Stack flexDirection="column" gap={5} alignItems="center">
       {/*  eslint-disable-next-line @next/next/no-img-element */}
       <img
-        className="w-36 h-3w-36 rounded-xl"
+        className="h-3w-36 w-36 rounded-xl"
         src={
           data?.image ||
           "https://img-cdn.inc.com/image/upload/w_1920,h_1080,c_fill/images/panoramic/GettyImages-1011930076_460470_i7oi1u.jpg"
@@ -49,7 +49,7 @@ const CommunityInfo = ({ data, code }) => {
       <Box className="font-bold">
         Type :
         <Badge
-          className="text-base ml-2"
+          className="ml-2 text-base"
           variant="outline"
           color={
             data.type === "PUBLIC"

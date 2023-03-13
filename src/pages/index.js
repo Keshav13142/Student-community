@@ -37,14 +37,14 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <main className="h-screen w-screen flex flex-col max-w-3xl m-auto justify-center gap-5 items-center">
-        <h1 className="font-extrabold text-4xl">
+      <main className="m-auto flex h-screen w-screen max-w-3xl flex-col items-center justify-center gap-5">
+        <h1 className="text-4xl font-extrabold">
           Student <span className=" text-purple-600">Community</span> Platform
         </h1>
         <h2 className="text-2xl">
           Helping students stay connected within campus
         </h2>
-        <h3 className="text-xl mt-5 font-medium">Get started now..</h3>
+        <h3 className="mt-5 text-xl font-medium">Get started now..</h3>
         <div className="flex gap-5">
           <Button
             variant={"outline"}

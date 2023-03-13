@@ -52,20 +52,20 @@ const DiscoverCommunities = () => {
         </Box>
       ) : (
         <Stack align="center" w="100%" spacing={5} m={5}>
-          <h1 className="text-2xl font-medium flex gap-2 items-center text-indigo-900">
+          <h1 className="flex items-center gap-2 text-2xl font-medium text-indigo-900">
             Discover new Communities
             <BsFillPeopleFill />
           </h1>
           <Stack spacing={3}>
             {publicCommunities?.length === 0 && (
               <Stack mt={2} alignItems="center">
-                <div className="text-xl border border-purple-400 px-4 py-2 rounded-xl flex gap-2 items-center">
+                <div className="flex items-center gap-2 rounded-xl border border-purple-400 px-4 py-2 text-xl">
                   <SlInfo />
                   <span>No public communities found</span>
                 </div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  className="animate-pulse w-[50%]"
+                  className="w-[50%] animate-pulse"
                   src="https://assets.materialup.com/uploads/8b0ec3cb-a32d-40bb-b17d-66b9fd744172/attachment.jpg"
                   alt="empty"
                 />
@@ -73,7 +73,7 @@ const DiscoverCommunities = () => {
             )}
             {publicCommunities?.map((c) => (
               <Flex
-                className="border border-purple-500 rounded-md"
+                className="rounded-md border border-purple-500"
                 key={c.id}
                 alignItems="center"
                 justifyContent="space-between"
@@ -84,7 +84,7 @@ const DiscoverCommunities = () => {
                   <Stack>
                     <Link
                       href={`/community/${c.slug}`}
-                      className="text-lg font-medium hover:underline hover:text-blue-700">
+                      className="text-lg font-medium hover:text-blue-700 hover:underline">
                       # {c.name}
                     </Link>
                     <span>{c.desc}</span>

@@ -65,7 +65,7 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
               <div
                 className={`${
                   msg.sender ? "text-purple-500" : "text-slate-400"
-                } font-bold text-sm`}>
+                } text-sm font-bold`}>
                 {msg.sender ? msg.sender.username : "[deleted]"}
               </div>
             )}
@@ -76,7 +76,7 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
               }}>
               {msg.content}
             </Linkify>
-            <span className={`text-sm self-end opacity-40`}>
+            <span className={`self-end text-sm opacity-40`}>
               {Intl.DateTimeFormat("en-us", {
                 timeStyle: "short",
                 hour12: false,
@@ -161,7 +161,7 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod }) => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-      <ScrollableFeed className="flex flex-col py-2 px-10 gap-1 custom-scrollbar">
+      <ScrollableFeed className="custom-scrollbar flex flex-col gap-1 py-2 px-10">
         {messages?.map((msg, idx) => {
           msg.isOwnMessage = session.data?.user?.id === msg.sender?.id;
           msg.currentMsgTime = new Date(msg.createdAt);

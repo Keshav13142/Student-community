@@ -98,7 +98,7 @@ const JoinCommunity = ({ isOpen, onClose }) => {
                   <InputRightElement>
                     <MdVpnKey />
                   </InputRightElement>
-                  <span className="text-red-400 mt-1">{error}</span>
+                  <span className="mm-1 tt-1 text-re">{error}</span>
                 </InputGroup>
               </div>
               <Flex alignSelf="center" gap={3}>

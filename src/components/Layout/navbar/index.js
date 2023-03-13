@@ -12,7 +12,7 @@ import Profile from "./Profile";
 
 const Navbar = () => {
   return (
-    <nav className="flex py-2 px-6 shadow-md items-center justify-between">
+    <nav className="flex items-center justify-between py-2 px-6 shadow-md">
       <Flex gap={2}>
         <Show below="lg">
           <IconButton

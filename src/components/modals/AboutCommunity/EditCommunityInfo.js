@@ -107,7 +107,7 @@ const EditCommunityInfo = ({ data, onCancel }) => {
                 onChange={handleInputChange}
               />
               {f.icon && <InputRightElement>{f.icon}</InputRightElement>}
-              <span className="text-red-400 mt-1">{errors[f.name]}</span>
+              <span className="mt-1 text-red-400">{errors[f.name]}</span>
             </InputGroup>
           </div>
         ))}

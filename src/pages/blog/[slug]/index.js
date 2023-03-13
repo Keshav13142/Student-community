@@ -85,7 +85,7 @@ const SinglePost = ({ post }) => {
       </Head>
       <div className="min-h-screen min-w-full">
         <Navbar />
-        <div className="flex flex-col py-10 gap-10 px-10">
+        <div className="flex flex-col gap-10 p-10">
           <Button
             variant="link"
             leftIcon={<IoChevronBack />}
@@ -95,14 +95,14 @@ const SinglePost = ({ post }) => {
             }}>
             Go back
           </Button>
-          <div className="self-center min-w-[50%] flex flex-col gap-5 border-b-4 border-b-slate-300 pb-10">
+          <div className="flex min-w-[50%] flex-col gap-5 self-center border-b-4 border-b-slate-300 pb-10">
             <time
               dateTime={new Date(post.createdAt)}
-              className="text-slate-700 font-mono">
+              className="font-mono text-slate-700">
               {format(new Date(post.createdAt), "EEEE, LLLL d, yyyy")}
             </time>
             <h1 className="text-4xl font-medium">{post.title}</h1>
-            <div className="flex gap-3 items-center">
+            <div className="flex items-center gap-3">
               <Avatar src={post.author.image} name={post.author.name} />
               <div className="flex flex-col gap-1">
                 <p className="text-slate-900">{post.author.name}</p>
@@ -114,7 +114,7 @@ const SinglePost = ({ post }) => {
               </div>
             </div>
           </div>
-          <article className="prose self-center max-w-[22rem] sm:max-w-xl md:max-w-2xl">
+          <article className="prose max-w-[22rem] self-center sm:max-w-xl md:max-w-2xl">
             <ReactMarkdown
               rehypePlugins={[remarkGfm]}
               components={{

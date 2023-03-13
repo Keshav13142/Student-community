@@ -109,7 +109,7 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
                   placeholder="Community name"
                   onChange={handleInputChange}
                 />
-                <span className="text-red-400 mt-1">{errors.name}</span>
+                <span className="mt-1 text-red-400">{errors.name}</span>
               </InputGroup>
               <Input
                 name="desc"
@@ -127,7 +127,7 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
                 <InputRightElement>
                   <BsFillImageFill />
                 </InputRightElement>
-                <span className="text-red-400 mt-1">{errors.image}</span>
+                <span className="mt-1 text-red-400">{errors.image}</span>
               </InputGroup>
               <RadioGroup
                 defaultValue="PUBLIC"

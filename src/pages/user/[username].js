@@ -162,10 +162,10 @@ const UserProfile = ({ profile, ownProfile }) => {
       <div className="min-h-screen">
         <Navbar />
         {!profile ? (
-          <div className="flex flex-col items-center justify-center pt-10 px-10">
+          <div className="flex flex-col items-center justify-center px-10 pt-10">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              className="w-52 aspect-video h-48"
+              className="aspect-video h-48 w-52"
               src="https://cdn-icons-png.flaticon.com/512/5545/5545083.png"
               alt="not found"
             />
@@ -179,8 +179,8 @@ const UserProfile = ({ profile, ownProfile }) => {
             </Alert>
           </div>
         ) : (
-          <div className="flex gap-10 p-5 rounded-xl px-10 pt-10 justify-center">
-            <div className="min-w-[50%] max-w-4xl flex flex-col gap-5">
+          <div className="flex justify-center gap-10 rounded-xl p-5 px-10 pt-10">
+            <div className="flex min-w-[50%] max-w-4xl flex-col gap-5">
               <h1 className="text-2xl font-medium">{profile.name}</h1>
               <Tabs variant="line">
                 <TabList>
@@ -188,15 +188,15 @@ const UserProfile = ({ profile, ownProfile }) => {
                   <Tab>Communities</Tab>
                 </TabList>
                 <TabPanels>
-                  <TabPanel className="h-[60vh] overflow-y-auto flex flex-col gap-5">
+                  <TabPanel className="flex h-[60vh] flex-col gap-5 overflow-y-auto">
                     {profile.posts.length > 0 ? (
                       profile.posts.map((p, idx) => (
                         <div
-                          className="flex gap-3 px-4 py-2 border rounded-lg border-slate-300 justify-between items-center"
+                          className="flex items-center justify-between gap-3 rounded-lg border border-slate-300 px-4 py-2"
                           key={idx}>
-                          <div className="flex-grow">
-                            <div className="flex flex-col gap-1 md:gap-2 lg:gap-3 mb-2">
-                              <div className="flex gap-2 items-center">
+                          <div className="grow">
+                            <div className="mb-2 flex flex-col gap-1 md:gap-2 lg:gap-3">
+                              <div className="flex items-center gap-2">
                                 <Link
                                   href={
                                     p.published
@@ -224,12 +224,12 @@ const UserProfile = ({ profile, ownProfile }) => {
                                   )
                                 )}
                               </div>
-                              <h3 className="text-base text-gray-500 max-w-sm line-clamp-2">
+                              <h3 className="max-w-sm text-base text-gray-500 line-clamp-2">
                                 {p.content}
                               </h3>
                             </div>
-                            <div className="flex gap-2 items-center mt-2">
-                              <span className="text-gray-500 text-xs lg:text-sm">
+                            <div className="mt-2 flex items-center gap-2">
+                              <span className="text-xs text-gray-500 lg:text-sm">
                                 {format(new Date(p.createdAt), "MMM d")}
                               </span>
                             </div>
@@ -243,14 +243,14 @@ const UserProfile = ({ profile, ownProfile }) => {
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={p.bannerImage}
-                              className="rounded-md object-cover aspect-video w-32 h-24"
+                              className="aspect-video h-24 w-32 rounded-md object-cover"
                               alt={p.title}
                             />
                           </Link>
                         </div>
                       ))
                     ) : (
-                      <div className="flex flex-col gap-2 items-center">
+                      <div className="flex flex-col items-center gap-2">
                         <h2 className="text-xl">
                           {ownProfile ? "You have" : "This user has"} not
                           authored any posts
@@ -272,9 +272,9 @@ const UserProfile = ({ profile, ownProfile }) => {
                     ].map((c, idx) => (
                       <div
                         key={idx}
-                        className="border border-purple-400 rounded-lg">
+                        className="rounded-lg border border-purple-400">
                         <Link href={`/community/${c.slug}`}>
-                          <div className="flex gap-2 items-center p-2 rounded-xl">
+                          <div className="flex items-center gap-2 rounded-xl p-2">
                             <Avatar src={c.image} name={c.name} />
                             <div className="flex flex-col gap-2">
                               <h4 className="text-lg font-medium">{c.name}</h4>

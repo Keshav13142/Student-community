@@ -35,7 +35,7 @@ const CommunityMembers = ({ data, doAction }) => {
             minW="sm"
             key={m.id}
             p={2}
-            className="border border-purple-400 rounded-lg shadow-sm"
+            className="rounded-lg border border-purple-400 shadow-sm"
             justifyContent="space-between"
             alignItems="center">
             <Flex alignItems="center" gap={5}>
@@ -50,7 +50,7 @@ const CommunityMembers = ({ data, doAction }) => {
                     <span className="text-base font-medium">{m.name}</span>
                   )}
                 </span>
-                <span className="text-blue-700 cursor-pointer">{`@${m.username}`}</span>
+                <span className="cursor-pointer text-blue-700">{`@${m.username}`}</span>
               </Stack>
             </Flex>
             {isAdmin ? (

@@ -52,7 +52,7 @@ const formFields = [
         <Portal>
           <PopoverContent w="fit-content">
             <PopoverArrow />
-            <PopoverHeader className="font-medium text-center">
+            <PopoverHeader className="text-center font-medium">
               Username requirements
             </PopoverHeader>
             <PopoverBody>
@@ -192,7 +192,7 @@ const NewUserForm = () => {
           {f.rightElement && (
             <InputRightElement>{f.rightElement}</InputRightElement>
           )}
-          <span className="text-red-400 mt-1">{formErrors[f.name]}</span>
+          <span className="mt-1 text-red-400">{formErrors[f.name]}</span>
         </InputGroup>
       ))}
       <Flex gap={10} alignItems="center">

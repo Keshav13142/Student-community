@@ -56,7 +56,7 @@ const InstitutionRequests = ({ institutionId }) => {
       </Flex>
       <Stack spacing={3} alignItems="center">
         {showPendingOnly && pendingReqLength === 0 && (
-          <span className="text-lg mt-2 text-blue-600">
+          <span className="mt-2 text-lg text-blue-600">
             No pending requests
           </span>
         )}
@@ -67,14 +67,14 @@ const InstitutionRequests = ({ institutionId }) => {
               minW="sm"
               key={id}
               p={2}
-              className="border border-purple-400 rounded-lg shadow-sm"
+              className="rounded-lg border border-purple-400 shadow-sm"
               justifyContent="space-between"
               alignItems="center">
               <Flex alignItems="center" gap={5}>
                 <Avatar src={user.image} name={user.name} />
                 <Stack>
                   <span className="text-base font-medium">{user.name}</span>
-                  <span className="text-blue-700 cursor-pointer">{`@${user.username}`}</span>
+                  <span className="cursor-pointer text-blue-700">{`@${user.username}`}</span>
                 </Stack>
               </Flex>
               {status !== "PENDING" && (

@@ -38,7 +38,7 @@ const InstitutionInfo = ({ data, inviteCodes, isAdmin }) => {
     <Stack flexDirection="column" gap={5} alignItems="center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        className="w-36 h-36 rounded-xl"
+        className="h-36 w-36 rounded-xl"
         src={
           data?.image ||
           "http://vastusanskar.com/wp-content/uploads/2019/02/government-institution.jpg"
