@@ -115,7 +115,7 @@ const SideBar = () => {
               colorScheme="purple"
               onClick={onCreateOpen}
               leftIcon={<TbBrowserPlus fontSize={20} />}>
-              Create new commuinity
+              Create new community
             </Button>
           )}
           <Button
