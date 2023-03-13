@@ -60,7 +60,6 @@ export default function Home() {
             onClick={async () => {
               setIsGithubLoading(true);
               await signIn("github");
-              setIsGithubLoading(false);
             }}
           >
             Login with GitHub
@@ -75,7 +74,6 @@ export default function Home() {
             onClick={async () => {
               setIsDiscordLoading(true);
               await signIn("discord");
-              setIsDiscordLoading(false);
             }}
           >
             Login with Discord
