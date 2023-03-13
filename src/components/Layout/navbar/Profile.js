@@ -24,9 +24,11 @@ const Profile = () => {
         </Link>
         <MenuItem
           onClick={() => {
-            signOut({ redirect: false });
-            router.push("/");
-          }}>
+            signOut({
+              callbackUrl: `${window.location.origin}`,
+            });
+          }}
+        >
           Logout
         </MenuItem>
       </MenuList>
