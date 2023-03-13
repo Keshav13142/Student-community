@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 export default async function handler(req, res) {
   //Return error if admin secret is missing
   if (req.body.secret !== process.env.ADMIN_SECRET) {
-    res.status(500).json({ error: "Missing userId" });
+    res.status(400).json({ error: "Missing userId" });
     return;
   }
 
@@ -59,7 +59,7 @@ export default async function handler(req, res) {
       res.json({ message: "Successfully deleted institutions!!" });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ error: error.message });
+      res.status(422).json({ error: error.message });
     }
   }
 }
@@ -114,7 +114,6 @@ const handlePOST = async (name, image, res) => {
     res.json(institution);
   } catch (error) {
     console.log(error);
-
-    res.status(500).json({ error: error.message });
+    res.status(422).json({ error: error.message });
   }
 };

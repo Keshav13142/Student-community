@@ -65,6 +65,6 @@ export default async function handler(req, res) {
     res.json(institution);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error.message });
+    res.status(422).json({ error: error.message });
   }
 }
