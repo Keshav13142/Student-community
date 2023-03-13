@@ -53,7 +53,7 @@ export default function Home() {
           <Button
             variant={"outline"}
             colorScheme="purple"
-            isDisabled={isGithubLoading || isDiscordLoading}
+            isDisabled={isDiscordLoading}
             leftIcon={<GoMarkGithub size={20} />}
             size="lg"
             isLoading={isGithubLoading}
@@ -67,7 +67,7 @@ export default function Home() {
           <Button
             variant={"outline"}
             colorScheme="purple"
-            isDisabled={isGithubLoading || isDiscordLoading}
+            isDisabled={isGithubLoading}
             leftIcon={<SiDiscord />}
             size="lg"
             isLoading={isDiscordLoading}
