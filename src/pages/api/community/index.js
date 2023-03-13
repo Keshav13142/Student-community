@@ -121,11 +121,6 @@ const handlePOST = async (req, res, userId, institution) => {
             id: userId,
           },
         },
-        members: {
-          connect: {
-            id: userId,
-          },
-        },
         institution: {
           connect: {
             id: institution.id,
