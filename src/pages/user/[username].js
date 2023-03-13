@@ -36,16 +36,17 @@ export async function getServerSideProps({ req, res, query }) {
   if (!query.username.startsWith("@")) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/home",
         permanent: false,
       },
     };
   }
 
+  const username = query.username.split("@")[1];
   const { user } = session;
 
   const profile = await prisma.user.findUnique({
-    where: { username: query.username.split("@")[1] },
+    where: { username: username },
     select: {
       name: true,
       username: true,
@@ -55,6 +56,8 @@ export async function getServerSideProps({ req, res, query }) {
       email: true,
       bio: true,
       posts: {
+        // If the user is viewing their own page then show unpublished posts
+        ...(user.username !== username ? { where: { published: true } } : {}),
         select: {
           content: true,
           slug: true,
@@ -64,11 +67,15 @@ export async function getServerSideProps({ req, res, query }) {
         },
       },
       communities: {
-        where: {
-          type: {
-            not: "PRIVATE",
-          },
-        },
+        ...(user.username !== username
+          ? {
+              where: {
+                type: {
+                  not: "PRIVATE",
+                },
+              },
+            }
+          : {}),
         select: {
           name: true,
           image: true,
