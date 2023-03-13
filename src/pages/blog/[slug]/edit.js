@@ -1,6 +1,12 @@
+import prisma from "@/lib/prisma";
 import Navbar from "@/src/components/Layout/navbar";
 import { synthWave } from "@/src/theme";
-import { createNewPost, getAllCategories } from "@/src/utils/api-calls/posts";
+import {
+  createNewPost,
+  deletePost,
+  getAllCategories,
+  updatePost,
+} from "@/src/utils/api-calls/posts";
 import { createPostSchema, parseZodErrors } from "@/src/utils/zod_schemas";
 import {
   Button,
@@ -21,16 +27,67 @@ import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import CodeMirror from "@uiw/react-codemirror";
+import { getServerSession } from "next-auth";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
 import { HiOutlineUpload } from "react-icons/hi";
 import { IoSaveSharp } from "react-icons/io5";
-import { MdOutlineCategory, MdTitle } from "react-icons/md";
+import { MdDeleteForever, MdOutlineCategory, MdTitle } from "react-icons/md";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import remarkGfm from "remark-gfm";
+import { authOptions } from "../../api/auth/[...nextauth]";
+
+export async function getServerSideProps({ req, res, query }) {
+  const session = await getServerSession(req, res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  const { user } = session;
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id: query.slug,
+    },
+    select: {
+      id: true,
+      slug: true,
+      published: true,
+      bannerImage: true,
+      categories: true,
+      content: true,
+      title: true,
+      author: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
+  if (!post || post.author.id !== user.id) {
+    return {
+      redirect: {
+        destination: "/blog",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      post,
+    },
+  };
+}
 
 const fields = [
   {
@@ -45,17 +102,17 @@ const fields = [
   },
 ];
 
-const CreateNewPost = () => {
+const CreateNewPost = ({ post }) => {
   const toast = useToast();
   const router = useRouter();
 
   const [inputs, setInputs] = useState({
-    title: "",
-    bannerImage: "",
-    content: "",
-    categoryId: null,
+    title: post.title,
+    bannerImage: post.bannerImage,
+    content: post.content,
+    categoryId: post.categories.length !== 0 ? post.categories[0].id : "",
     newCategory: "",
-    publish: false,
+    publish: post.published,
   });
 
   const [errors, setErrors] = useState({
@@ -72,18 +129,45 @@ const CreateNewPost = () => {
     getAllCategories
   );
 
-  const mutation = useMutation(createNewPost, {
+  const updateMutation = useMutation(updatePost, {
     onError: (error) => {
       console.log(error);
       toast({
-        title: "Unable to create post",
+        title: "Unable to update post",
         status: "error",
         duration: 5000,
         isClosable: true,
       });
     },
-    onSuccess: ({ slug }) => {
-      router.push(`/blog/${slug}`);
+    onSuccess: ({ redirect, message }) => {
+      toast({
+        title: message,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      router.push(redirect);
+    },
+  });
+
+  const deleteMutation = useMutation(deletePost, {
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: "Unable to delete post",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+    onSuccess: ({ redirect, message }) => {
+      toast({
+        title: message,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      router.push(redirect);
     },
   });
 
@@ -106,13 +190,13 @@ const CreateNewPost = () => {
       return;
     }
 
-    mutation.mutate(inputs);
+    updateMutation.mutate({ ...inputs, postId: post.id });
   };
 
   return (
     <>
       <Head>
-        <title>Create a new Post</title>
+        <title>Edit Draft</title>
         <meta
           name="description"
           content="Platform for students within institutions to interact"
@@ -216,6 +300,7 @@ const CreateNewPost = () => {
               <Spinner alignSelf="center" />
             ) : (
               <Select
+                value={inputs.categoryId}
                 onChange={handleInputChange}
                 name="categoryId"
                 isDisabled={inputs.newCategory !== ""}
@@ -242,10 +327,20 @@ const CreateNewPost = () => {
             <Button
               variant="outline"
               colorScheme="purple"
-              isLoading={mutation.isLoading}
+              isLoading={updateMutation.isLoading}
               leftIcon={inputs.publish ? <HiOutlineUpload /> : <IoSaveSharp />}
               onClick={handleCreate}>
-              {inputs.publish ? "Publish" : "Save as draft"}
+              {inputs.publish ? "Publish" : "Save"}
+            </Button>
+            <Button
+              variant="outline"
+              colorScheme="red"
+              isLoading={deleteMutation.isLoading}
+              leftIcon={<MdDeleteForever />}
+              onClick={() => {
+                deleteMutation.mutate(post.id);
+              }}>
+              Delete
             </Button>
           </div>
         </div>

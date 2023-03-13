@@ -12,7 +12,7 @@ import { IoChevronBack } from "react-icons/io5";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import remarkGfm from "remark-gfm";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { authOptions } from "../../api/auth/[...nextauth]";
 
 export async function getServerSideProps({ req, res, query }) {
   const session = await getServerSession(req, res, authOptions);

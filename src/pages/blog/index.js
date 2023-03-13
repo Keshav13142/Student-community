@@ -13,8 +13,6 @@ import { authOptions } from "../api/auth/[...nextauth]";
 export async function getServerSideProps({ req, res, query }) {
   const session = await getServerSession(req, res, authOptions);
 
-  console.log(query);
-
   if (!session) {
     return {
       redirect: {
@@ -63,6 +61,9 @@ export async function getServerSideProps({ req, res, query }) {
           image: true,
         },
       },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 
