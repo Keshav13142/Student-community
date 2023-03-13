@@ -48,16 +48,18 @@ const Community = () => {
   );
 
   const isCurrentUserAdmin =
-    data?.members.find((m) => m.id === session?.data?.user?.id)?.communityAdmin
+    data?.admins.find((m) => m.id === session?.data?.user?.id)?.communityAdmin
       .length > 0;
 
   const isCurrentUserMod =
-    data?.members.find((m) => m.id === session?.data?.user?.id)
+    data?.moderators.find((m) => m.id === session?.data?.user?.id)
       ?.communityModerator.length > 0;
 
   const isDisabled =
     data?.type === "RESTRICTED" &&
-    !data?.members.find((m) => m.id === session?.data?.user.id);
+    ![...data?.members, ...data?.admins, ...data?.moderators].find(
+      (m) => m.id === session?.data?.user.id
+    );
 
   return (
     <>
