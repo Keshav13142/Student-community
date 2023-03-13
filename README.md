@@ -28,5 +28,6 @@
 - [ ] Add relavent meta tags to pages
 - [ ] Use NextJs image tags with cloudinary for image storage?
 - [ ] Fix the community members modal code
+- [ ] Query filter params in blog page (AI&ML not working , probably cause of `&` symbol?)
 
 <!-- ![mock](final-year-project-mock.png) -->
