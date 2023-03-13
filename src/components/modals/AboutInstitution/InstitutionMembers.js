@@ -10,6 +10,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { HiDotsVertical } from "react-icons/hi";
 import { IoMdRemoveCircleOutline } from "react-icons/io";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
@@ -57,10 +58,12 @@ const InstitutionMembers = ({ users, isAdmin, doAction }) => {
                 Actions
               </MenuButton>
               <MenuList>
-                <MenuItem>
-                  <RxExternalLink size={20} className="mr-3" />
-                  View Profile
-                </MenuItem>
+                <Link href={`/user/@${m.username}`}>
+                  <MenuItem>
+                    <RxExternalLink size={20} className="mr-3" />
+                    View Profile
+                  </MenuItem>
+                </Link>
                 {isAdmin && m.id !== session?.data?.user?.id ? (
                   <>
                     {m.institutionAdminId ? (
