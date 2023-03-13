@@ -85,7 +85,7 @@ const SinglePost = ({ post }) => {
       </Head>
       <div className="min-h-screen min-w-full">
         <Navbar />
-        <div className="flex flex-col pt-10 gap-10 px-10">
+        <div className="flex flex-col py-10 gap-10 px-10">
           <Button
             variant="link"
             leftIcon={<IoChevronBack />}

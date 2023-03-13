@@ -44,13 +44,15 @@ export default async function handler(req, res) {
       return;
     }
 
+    console.log(user);
+
     try {
       const post = await prisma.post.create({
         data: {
           title,
           content,
           published: publish,
-          slug: slugify(title),
+          slug: publish ? slugify(title) : null,
           bannerImage,
           institution: {
             connect: {
@@ -79,7 +81,12 @@ export default async function handler(req, res) {
         },
       });
 
-      res.json({ slug: post.slug });
+      res.json({
+        redirect: post.slug ? `/blog/${post.slug}` : `/user/@${user.username}`,
+        message: post.published
+          ? "Post published successfully"
+          : "You can find draft posts in your proile",
+      });
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: error.message });

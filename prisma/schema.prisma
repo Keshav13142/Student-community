@@ -77,6 +77,8 @@ model VerificationToken {
 
 model Post {
   id            String         @id @unique @default(cuid())
+  // Making this optional cause I want it have a slug only when it's published (use Id when is's a draft)
+  slug          String?        @unique
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   content       String
@@ -86,7 +88,6 @@ model Post {
   bannerImage   String?
   categories    Category[]
   institution   Institution    @relation(fields: [institutionId], references: [id], onDelete: Cascade)
-  slug          String         @unique
   userId        String
   institutionId String
   postComments  PostComments[]

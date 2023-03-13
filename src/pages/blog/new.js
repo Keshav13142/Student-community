@@ -82,8 +82,14 @@ const CreateNewPost = () => {
         isClosable: true,
       });
     },
-    onSuccess: ({ slug }) => {
-      router.push(`/blog/${slug}`);
+    onSuccess: ({ redirect, message }) => {
+      toast({
+        title: message,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      router.push(redirect);
     },
   });
 

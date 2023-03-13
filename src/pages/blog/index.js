@@ -92,7 +92,7 @@ const Blog = ({ posts, categories }) => {
       <div className="min-h-screen">
         <Navbar />
         {/* md:flex-col justify-start */}
-        <main className="flex lg:mx-5 gap-10 justify-center pt-10 px-5 sm:px-20 md:px-32 flex-col lg:flex-row">
+        <main className="flex lg:mx-5 gap-10 justify-center py-10 px-5 sm:px-20 md:px-32 flex-col lg:flex-row">
           {/* md:order-2 */}
           <div className="flex flex-col gap-3 min-w-[50%] order-2 lg:order-1">
             {posts.map((p, idx) => (
