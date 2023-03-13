@@ -9,7 +9,6 @@
 - [x] ~~Delete/Hide messages~~
 - [x] ~~Don't send message content if they're hidden (in requests)~~
 - [ ] HOC for protected API routes, managing req types.
-- [ ] use req.end() instead of return :)
 - [ ] Take a look at Taxonomy OSS repo
 - [x] Add requests feature to join institution
 - [ ] Posts/Blog articles with comments

@@ -1,22 +1,155 @@
+import prisma from "@/lib/prisma";
 import CommunityTopBar from "@/src/components/community/TopBar";
 import ScrollableMessageBox from "@/src/components/messages";
 import MessageInputBox from "@/src/components/messages/InputBox";
 import { getCommunityInfo } from "@/src/utils/api-calls/community";
 import { Box, Progress, Stack } from "@chakra-ui/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Pusher from "pusher-js";
 import { useEffect } from "react";
+import { authOptions } from "../api/auth/[...nextauth]";
 
-const Community = () => {
-  const router = useRouter();
-  const session = useSession();
-  // Get the community id from the URL of the dynamic route in NextJS
-  const { slug } = router.query;
-  const queryClient = useQueryClient();
+export async function getServerSideProps({ req, res, query }) {
+  const session = await getServerSession(req, res, authOptions);
 
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  const { user } = session;
+  const { slug } = query;
+
+  if (!slug) {
+    return {
+      redirect: {
+        destination: "/home",
+        permanent: false,
+      },
+    };
+  }
+
+  const community = await prisma.community.findUnique({
+    where: { slug },
+    select: {
+      id: true,
+      image: true,
+      desc: true,
+      type: true,
+      name: true,
+      messages: true,
+      members: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          image: true,
+          communityAdmin: {
+            select: {
+              id: true,
+            },
+            where: {
+              slug,
+            },
+          },
+          communityModerator: {
+            select: {
+              id: true,
+            },
+            where: {
+              slug,
+            },
+          },
+        },
+      },
+      admins: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          image: true,
+          communityAdmin: {
+            select: {
+              id: true,
+            },
+            where: {
+              slug,
+            },
+          },
+          communityModerator: {
+            select: {
+              id: true,
+            },
+            where: {
+              slug,
+            },
+          },
+        },
+      },
+      moderators: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          image: true,
+          communityAdmin: {
+            select: {
+              id: true,
+            },
+            where: {
+              slug,
+            },
+          },
+          communityModerator: {
+            select: {
+              id: true,
+            },
+            where: {
+              slug,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  community.isCurrentUserAdmin =
+    community.admins.find((m) => m.id === user.id)?.communityAdmin.length > 0;
+
+  community.isCurrentUserMod =
+    community.moderators.find((m) => m.id === user.id)?.communityModerator
+      .length > 0;
+
+  community.isDisabled =
+    community.type === "RESTRICTED" &&
+    ![...community.members, ...community.admins, ...community.moderators].find(
+      (m) => m.id === user.id
+    );
+
+  return {
+    props: {
+      community: {
+        ...community,
+        messages: community.messages.map((m) => ({
+          ...m,
+          createdAt: m.createdAt.toISOString(),
+          updatedAt: m.updatedAt.toISOString(),
+        })),
+      },
+      user,
+    },
+  };
+}
+
+const Community = ({ community, user }) => {
   // useEffect(() => {
   //   if (slug) {
   //     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
@@ -39,60 +172,32 @@ const Community = () => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [slug]);
 
-  const { data, isLoading } = useQuery(
-    ["communityInfo", slug],
-    () => getCommunityInfo(slug),
-    {
-      enabled: Boolean(slug),
-    }
-  );
-
-  const isCurrentUserAdmin =
-    data?.admins.find((m) => m.id === session?.data?.user?.id)?.communityAdmin
-      .length > 0;
-
-  const isCurrentUserMod =
-    data?.moderators.find((m) => m.id === session?.data?.user?.id)
-      ?.communityModerator.length > 0;
-
-  const isDisabled =
-    data?.type === "RESTRICTED" &&
-    ![...data?.members, ...data?.admins, ...data?.moderators].find(
-      (m) => m.id === session?.data?.user.id
-    );
-
   return (
     <>
       <Head>
-        <title>{data ? `Community | ${data.name}` : "Loading..."}</title>
+        <title>
+          {community ? `Community | ${community.name}` : "Loading..."}
+        </title>
         <meta name="description" content="Community description" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
+      <Stack w="full" spacing={3} maxH="93.3vh">
+        <CommunityTopBar data={community} isDisabled={community.isDisabled} />
 
-      {isLoading ? (
-        <Box w="full">
-          <Progress size="md" isIndeterminate colorScheme="purple" />
-        </Box>
-      ) : (
-        <Stack w="full" spacing={3} maxH="93.3vh">
-          <CommunityTopBar
-            data={{
-              ...data,
-              isCurrentUserMod,
-              isCurrentUserAdmin,
-            }}
-            isDisabled={isDisabled}
-          />
+        <ScrollableMessageBox
+          messages={community.messages}
+          communityId={community.id}
+          isUserAdminOrMod={
+            community.isCurrentUserMod || community.isCurrentUserAdmin
+          }
+        />
 
-          <ScrollableMessageBox
-            slug={slug}
-            isUserAdminOrMod={isCurrentUserMod || isCurrentUserAdmin}
-          />
-
-          <MessageInputBox isDisabled={isDisabled} slug={slug} />
-        </Stack>
-      )}
+        <MessageInputBox
+          isDisabled={community.isDisabled}
+          communityId={community.id}
+        />
+      </Stack>
     </>
   );
 };

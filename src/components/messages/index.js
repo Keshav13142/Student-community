@@ -1,7 +1,4 @@
-import {
-  fetchMessages,
-  hideOrShowMessage,
-} from "@/src/utils/api-calls/messages";
+import { hideOrShowMessage } from "@/src/utils/api-calls/messages";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -18,13 +15,12 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ContextMenu } from "chakra-ui-contextmenu";
 import { useSession } from "next-auth/react";
 import React, { forwardRef, useRef, useState } from "react";
-import { BiBlock, BiShowAlt } from "react-icons/bi";
+import { BiBlock } from "react-icons/bi";
 import { MdHideSource } from "react-icons/md";
-import { RxEyeClosed } from "react-icons/rx";
 import Linkify from "react-linkify";
 import ScrollableFeed from "react-scrollable-feed";
 
@@ -36,7 +32,8 @@ const MsgDayInfo = ({ day }) => (
     rounded="md"
     py={0.5}
     my={2}
-    fontSize="sm">
+    fontSize="sm"
+  >
     {day}
   </Box>
 );
@@ -46,14 +43,16 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
     <Flex
       alignSelf={msg.isOwnMessage ? "flex-end" : "flex-start"}
       maxW="45%"
-      ref={ref}>
+      ref={ref}
+    >
       <Stack
         w="full"
         px={3}
         py={2}
         spacing={0.4}
         borderRadius={10}
-        bgColor={msg.isOwnMessage ? "whatsapp.50" : "purple.50"}>
+        bgColor={msg.isOwnMessage ? "whatsapp.50" : "purple.50"}
+      >
         {msg.isDeleted ? (
           <Flex alignItems="center" gap={2} className="text-slate-500">
             <BiBlock />
@@ -65,7 +64,8 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
               <div
                 className={`${
                   msg.sender ? "text-purple-500" : "text-slate-400"
-                } text-sm font-bold`}>
+                } text-sm font-bold`}
+              >
                 {msg.sender ? msg.sender.username : "[deleted]"}
               </div>
             )}
@@ -73,7 +73,8 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
               properties={{
                 target: "_blank",
                 style: { color: "red", fontWeight: "bold" },
-              }}>
+              }}
+            >
               {msg.content}
             </Linkify>
             <span className={`self-end text-sm opacity-40`}>
@@ -89,20 +90,13 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
   );
 });
 
-const ScrollableMessageBox = ({ communityId, isUserAdminOrMod }) => {
+const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
   const session = useSession();
   const toast = useToast();
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const [deleteMessageId, setDeleteMessageId] = useState(null);
-
-  // TODO Handle loading properly
-  const { data: messages, isLoading } = useQuery(
-    ["messages", communityId],
-    () => fetchMessages(communityId),
-    { enabled: Boolean(communityId) }
-  );
 
   const mutation = useMutation(hideOrShowMessage, {
     onError: () => {
@@ -129,7 +123,8 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod }) => {
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
-        onClose={onClose}>
+        onClose={onClose}
+      >
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -154,7 +149,8 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod }) => {
                   });
                   onClose();
                 }}
-                ml={3}>
+                ml={3}
+              >
                 Delete
               </Button>
             </AlertDialogFooter>
@@ -192,12 +188,14 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod }) => {
                         onClick={() => {
                           setDeleteMessageId(msg.id);
                           onOpen();
-                        }}>
+                        }}
+                      >
                         <MdHideSource size={20} className="mr-2" color="red" />
                         Delete message for everyone
                       </MenuItem>
                     </MenuList>
-                  )}>
+                  )}
+                >
                   {(ref) => <MessageBubble msg={msg} ref={ref} />}
                 </ContextMenu>
               ) : (
