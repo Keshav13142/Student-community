@@ -1,7 +1,11 @@
 {
-  "name": "final-year-project",
+  "name": "student-community",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "author": {
+    "name": "Keshav S",
+    "url": "https://github.com/keshav13142"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
