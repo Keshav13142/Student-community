@@ -2,6 +2,7 @@ import { Button } from "@chakra-ui/react";
 import { getServerSession } from "next-auth/next";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
+import { useState } from "react";
 import { GoMarkGithub } from "react-icons/go";
 import { SiDiscord } from "react-icons/si";
 import { authOptions } from "./api/auth/[...nextauth]";
@@ -26,6 +27,9 @@ export async function getServerSideProps({ req, res }) {
 }
 
 export default function Home() {
+  const [isGithubLoading, setIsGithubLoading] = useState(false);
+  const [isDiscordLoading, setIsDiscordLoading] = useState(false);
+
   return (
     <>
       <Head>
@@ -49,21 +53,31 @@ export default function Home() {
           <Button
             variant={"outline"}
             colorScheme="purple"
+            isDisabled={isGithubLoading || isDiscordLoading}
             leftIcon={<GoMarkGithub size={20} />}
             size="lg"
+            isLoading={isGithubLoading}
             onClick={async () => {
+              setIsGithubLoading(true);
               await signIn("github");
-            }}>
+              setIsGithubLoading(false);
+            }}
+          >
             Login with GitHub
           </Button>
           <Button
             variant={"outline"}
             colorScheme="purple"
+            isDisabled={isGithubLoading || isDiscordLoading}
             leftIcon={<SiDiscord />}
             size="lg"
+            isLoading={isDiscordLoading}
             onClick={async () => {
+              setIsDiscordLoading(true);
               await signIn("discord");
-            }}>
+              setIsDiscordLoading(false);
+            }}
+          >
             Login with Discord
           </Button>
         </div>
