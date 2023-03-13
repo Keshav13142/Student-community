@@ -1,36 +1,37 @@
 import prisma from "@/lib/prisma";
 import Navbar from "@/src/components/Layout/navbar";
 import { synthWave } from "@/src/theme";
-import {
-  createNewPost,
-  deletePost,
-  getAllCategories,
-  updatePost,
-} from "@/src/utils/api-calls/posts";
+import { deletePost, updatePost } from "@/src/utils/api-calls/posts";
 import { createPostSchema, parseZodErrors } from "@/src/utils/zod_schemas";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Button,
   Input,
   InputGroup,
   InputRightElement,
   Select,
-  Spinner,
   Switch,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import CodeMirror from "@uiw/react-codemirror";
 import { getServerSession } from "next-auth";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
 import { HiOutlineUpload } from "react-icons/hi";
 import { IoSaveSharp } from "react-icons/io5";
@@ -52,6 +53,8 @@ export async function getServerSideProps({ req, res, query }) {
     };
   }
   const { user } = session;
+
+  const allCategories = await prisma.category.findMany({});
 
   const post = await prisma.post.findUnique({
     where: {
@@ -85,6 +88,7 @@ export async function getServerSideProps({ req, res, query }) {
   return {
     props: {
       post,
+      allCategories,
     },
   };
 }
@@ -102,9 +106,11 @@ const fields = [
   },
 ];
 
-const CreateNewPost = ({ post }) => {
+const CreateNewPost = ({ post, allCategories }) => {
   const toast = useToast();
   const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
 
   const [inputs, setInputs] = useState({
     title: post.title,
@@ -123,11 +129,6 @@ const CreateNewPost = ({ post }) => {
     newCategory: null,
     publish: null,
   });
-
-  const { data: categories, isLoading: isCategoriesLoading } = useQuery(
-    ["postCategories"],
-    getAllCategories
-  );
 
   const updateMutation = useMutation(updatePost, {
     onError: (error) => {
@@ -204,9 +205,40 @@ const CreateNewPost = ({ post }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Post
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can&apos;t undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                isLoading={deleteMutation.isLoading}
+                colorScheme="red"
+                onClick={() => {
+                  deleteMutation.mutate(post.id);
+                }}
+                ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
       <div className="min-h-screen">
         <Navbar />
-        <div className="flex py-10 justify-center gap-20 flex-col lg:flex-row items-center lg:items-start">
+        <main className="flex py-10 justify-center gap-20 flex-col lg:flex-row items-center lg:items-start">
           <div className="flex flex-col min-w-[55%] max-w-3xl lg:max-w-[60%] gap-10 order-2 lg:order-1">
             {fields.map((f, idx) => (
               <InputGroup key={idx} className="flex flex-col">
@@ -296,24 +328,20 @@ const CreateNewPost = ({ post }) => {
               </InputRightElement>
               <span className="text-red-400 mt-1">{errors.newCategory}</span>
             </InputGroup>
-            {isCategoriesLoading ? (
-              <Spinner alignSelf="center" />
-            ) : (
-              <Select
-                value={inputs.categoryId}
-                onChange={handleInputChange}
-                name="categoryId"
-                isDisabled={inputs.newCategory !== ""}
-                placeholder="Choose a category"
-                focusBorderColor="purple.400"
-                borderColor="purple.200">
-                {categories?.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </Select>
-            )}
+            <Select
+              value={inputs.categoryId}
+              onChange={handleInputChange}
+              name="categoryId"
+              isDisabled={inputs.newCategory !== ""}
+              placeholder="Choose a category"
+              focusBorderColor="purple.400"
+              borderColor="purple.200">
+              {allCategories?.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </Select>
             <div className="flex items-center gap-2">
               <span>Publish now</span>
               <Switch
@@ -335,15 +363,12 @@ const CreateNewPost = ({ post }) => {
             <Button
               variant="outline"
               colorScheme="red"
-              isLoading={deleteMutation.isLoading}
               leftIcon={<MdDeleteForever />}
-              onClick={() => {
-                deleteMutation.mutate(post.id);
-              }}>
+              onClick={onOpen}>
               Delete
             </Button>
           </div>
-        </div>
+        </main>
       </div>
     </>
   );

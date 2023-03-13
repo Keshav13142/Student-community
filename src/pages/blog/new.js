@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import Navbar from "@/src/components/Layout/navbar";
 import { synthWave } from "@/src/theme";
 import { createNewPost, getAllCategories } from "@/src/utils/api-calls/posts";
@@ -21,6 +22,7 @@ import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import CodeMirror from "@uiw/react-codemirror";
+import { getServerSession } from "next-auth";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -31,6 +33,29 @@ import { MdOutlineCategory, MdTitle } from "react-icons/md";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import remarkGfm from "remark-gfm";
+import { authOptions } from "../api/auth/[...nextauth]";
+
+export async function getServerSideProps({ req, res }) {
+  const session = await getServerSession(req, res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  const { user } = session;
+
+  const allCategories = await prisma.category.findMany({});
+
+  return {
+    props: {
+      allCategories,
+    },
+  };
+}
 
 const fields = [
   {
@@ -45,7 +70,7 @@ const fields = [
   },
 ];
 
-const CreateNewPost = () => {
+const CreateNewPost = ({ allCategories }) => {
   const toast = useToast();
   const router = useRouter();
 
@@ -66,11 +91,6 @@ const CreateNewPost = () => {
     newCategory: null,
     publish: null,
   });
-
-  const { data: categories, isLoading: isCategoriesLoading } = useQuery(
-    ["postCategories"],
-    getAllCategories
-  );
 
   const mutation = useMutation(createNewPost, {
     onError: (error) => {
@@ -218,23 +238,20 @@ const CreateNewPost = () => {
               </InputRightElement>
               <span className="text-red-400 mt-1">{errors.newCategory}</span>
             </InputGroup>
-            {isCategoriesLoading ? (
-              <Spinner alignSelf="center" />
-            ) : (
-              <Select
-                onChange={handleInputChange}
-                name="categoryId"
-                isDisabled={inputs.newCategory !== ""}
-                placeholder="Choose a category"
-                focusBorderColor="purple.400"
-                borderColor="purple.200">
-                {categories?.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </Select>
-            )}
+            <Select
+              onChange={handleInputChange}
+              name="categoryId"
+              isDisabled={inputs.newCategory !== ""}
+              placeholder="Choose a category"
+              focusBorderColor="purple.400"
+              borderColor="purple.200">
+              {allCategories?.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </Select>
+
             <div className="flex items-center gap-2">
               <span>Publish now</span>
               <Switch
