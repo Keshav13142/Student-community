@@ -34,6 +34,13 @@ export default async function handler(req, res) {
                   },
                 },
               },
+              {
+                moderators: {
+                  some: {
+                    id: user.id,
+                  },
+                },
+              },
             ],
           },
           select: {
