@@ -37,25 +37,26 @@ model Session {
 }
 
 model User {
-  id                String             @id @default(cuid())
-  name              String
-  email             String             @unique
-  emailVerified     DateTime?
-  image             String?
-  hasProfile        Boolean            @default(false)
-  enrollmentStatus  EnrollmentStatus   @default(PENDING)
-  username          String?            @unique
-  bio               String?
-  githubLink        String?
-  linkedinLink      String?
-  accounts          Account[]
-  sessions          Session[]
-  messages          Message[]
-  posts             Post[]
-  PendingApprovals  PendingApprovals[]
-  postComments      PostComments[]
-  communityMember   CommunityMember[]
-  institutionMember InstitutionMember?
+  id                 String             @id @default(cuid())
+  name               String
+  email              String             @unique
+  emailVerified      DateTime?
+  image              String?
+  hasProfile         Boolean            @default(false)
+  isInstitutionAdmin Boolean            @default(false)
+  enrollmentStatus   EnrollmentStatus   @default(PENDING)
+  username           String?            @unique
+  bio                String?
+  githubLink         String?
+  linkedinLink       String?
+  accounts           Account[]
+  sessions           Session[]
+  messages           Message[]
+  posts              Post[]
+  PendingApprovals   PendingApprovals[]
+  postComments       PostComments[]
+  communityMember    CommunityMember[]
+  institutionMember  InstitutionMember?
 
   @@map("users")
 }
@@ -195,7 +196,7 @@ enum InstitutionMemberType {
 enum CommunityMemberType {
   ADMIN
   MEMBER
-  MODERATORS
+  MODERATOR
 }
 
 enum ApprovalStatus {
