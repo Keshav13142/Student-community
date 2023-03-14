@@ -6,6 +6,7 @@ import { SessionProvider } from "next-auth/react";
 import { useState } from "react";
 import AuthGuard from "../components/Auth";
 import Layout from "../components/Layout";
+import { TailwindIndicator } from "../components/tailwindcss-indicator";
 
 export default function App({ Component, pageProps }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -24,6 +25,7 @@ export default function App({ Component, pageProps }) {
             )}
           </Layout>
           <ReactQueryDevtools />
+          <TailwindIndicator />
         </SessionProvider>
       </ChakraProvider>
     </QueryClientProvider>

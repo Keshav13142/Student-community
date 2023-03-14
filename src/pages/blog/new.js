@@ -148,7 +148,7 @@ const CreateNewPost = ({ allCategories }) => {
       <div className="min-h-screen">
         <Navbar />
         <div className="flex flex-col items-center justify-center gap-20 py-10 lg:flex-row lg:items-start">
-          <div className="order-2 flex min-w-[55%] max-w-3xl flex-col gap-10 lg:order-1 lg:max-w-[60%]">
+          <div className="order-2 flex max-w-3xl flex-col gap-10 lg:order-1">
             {fields.map((f, idx) => (
               <InputGroup key={idx} className="flex flex-col">
                 <Input
@@ -174,9 +174,8 @@ const CreateNewPost = ({ allCategories }) => {
                 <TabPanel>
                   <CodeMirror
                     value={inputs.content}
-                    width="100%"
                     minHeight="50vh"
-                    minWidth="100%"
+                    maxWidth="80vw"
                     extensions={[
                       markdown({
                         base: markdownLanguage,
@@ -223,7 +222,7 @@ const CreateNewPost = ({ allCategories }) => {
             </Tabs>
           </div>
           <div className="order-1 flex h-fit flex-col gap-5 p-2 lg:sticky lg:top-24 lg:order-2">
-            <h2 className="self-center text-xl">Post options</h2>
+            <h2 className="self-center text-xl">Options</h2>
             <InputGroup className="flex flex-col">
               <Input
                 isDisabled={Boolean(inputs.categoryId)}
