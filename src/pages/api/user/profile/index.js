@@ -60,9 +60,14 @@ export default async function handler(req, res) {
             adminCode: institutionCode,
           },
           data: {
-            admins: {
-              connect: {
-                id: user.id,
+            members: {
+              create: {
+                user: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: codeType === "adminCode" ? "ADMIN" : "MEMBER",
               },
             },
           },
@@ -84,13 +89,15 @@ export default async function handler(req, res) {
           },
           data: {
             members: {
-              connect: {
-                id: user.id,
+              create: {
+                user: {
+                  connect: {
+                    id: user.id,
+                  },
+                },
+                type: codeType === "adminCode" ? "ADMIN" : "MEMBER",
               },
             },
-            ...(codeType === "adminCode"
-              ? { admins: { connect: { id: user.id } } }
-              : {}),
           },
         });
       }
@@ -125,9 +132,6 @@ export default async function handler(req, res) {
           name,
           githubLink,
           linkedinLink,
-          type: {
-            set: codeType === "adminCode" ? "ADMIN" : "MEMBER",
-          },
         },
       });
 

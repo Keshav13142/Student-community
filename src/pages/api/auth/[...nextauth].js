@@ -11,10 +11,9 @@ export const authOptions = {
       if (session.user) {
         session.user.id = user.id;
         session.user.username = user.username;
-        session.user.isAdmin = user.type === "ADMIN";
         session.user.hasProfile = user.hasProfile;
         session.user.enrollmentStatus = user.enrollmentStatus;
-        session.user.institutionId = user.institutionId;
+        session.user.isInstitutionAdmin = user.isInstitutionAdmin;
       }
       return session;
     },
@@ -32,7 +31,7 @@ export const authOptions = {
   ],
   // What pages should the user be redirected to after the respective actions
   pages: {
-    signIn: "/home",
+    signIn: "/community/discover",
     signOut: "/",
     error: "/", // Error code passed in query string as ?error=
     newUser: "/auth/new-user", // New users will be directed here on first sign in

@@ -90,7 +90,7 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
   );
 });
 
-const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
+const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
   const session = useSession();
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -108,7 +108,7 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
       });
     },
     onSuccess: (newData) => {
-      queryClient.setQueryData(["messages", communityId], (prev) =>
+      queryClient.setQueryData(["messages", slug], (prev) =>
         prev.map((msg) => (msg.id === newData.id ? newData : msg))
       );
     },
@@ -143,7 +143,7 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
                 colorScheme="red"
                 onClick={() => {
                   mutation.mutate({
-                    communityId,
+                    slug,
                     messageId: deleteMessageId,
                     deletedBy: session?.data?.user?.name,
                   });

@@ -25,10 +25,10 @@ const CommunityMembers = ({ data, doAction }) => {
 
   return (
     <Stack spacing={3} alignItems="center">
-      {[...data.members, ...data.admins, ...data.moderators].map((m) => {
-        const isAdmin = m.communityAdmin.length > 0;
-        const isMod = m.communityModerator.length > 0;
-        const isCurrentUser = m.id === session?.data?.user?.id;
+      {data?.members.map((m) => {
+        const isCurrentUser = m.user.id === session.data?.user.id;
+        const isAdmin = m.type === "ADMIN";
+        const isMod = m.type === "MODERATOR";
 
         return (
           <Flex
@@ -37,20 +37,21 @@ const CommunityMembers = ({ data, doAction }) => {
             p={2}
             className="rounded-lg border border-purple-400 shadow-sm"
             justifyContent="space-between"
-            alignItems="center">
+            alignItems="center"
+          >
             <Flex alignItems="center" gap={5}>
-              <Avatar src={m.image} name={m.name} />
+              <Avatar src={m.user.image} name={m.user.name} />
               <Stack>
                 <span className="text-base font-medium">
-                  {m.id === session?.data?.user?.id ? (
+                  {isCurrentUser ? (
                     <Badge variant="outline" colorScheme="green">
                       You
                     </Badge>
                   ) : (
-                    <span className="text-base font-medium">{m.name}</span>
+                    <span className="text-base font-medium">{m.user.name}</span>
                   )}
                 </span>
-                <span className="cursor-pointer text-blue-700">{`@${m.username}`}</span>
+                <span className="cursor-pointer text-blue-700">{`@${m.user.username}`}</span>
               </Stack>
             </Flex>
             {isAdmin ? (
@@ -67,11 +68,12 @@ const CommunityMembers = ({ data, doAction }) => {
               <MenuButton
                 as={IconButton}
                 icon={<HiDotsVertical />}
-                bg="transparent">
+                bg="transparent"
+              >
                 Actions
               </MenuButton>
               <MenuList>
-                <Link href={`/user/@${m.username}`}>
+                <Link href={`/user/@${m.user.username}`}>
                   <MenuItem>
                     <RxExternalLink size={20} className="mr-3" />
                     View Profile
@@ -84,12 +86,13 @@ const CommunityMembers = ({ data, doAction }) => {
                         color={isAdmin ? "red.500" : "blue.500"}
                         onClick={() => {
                           doAction({
-                            userId: m.id,
+                            memberId: m.id,
                             type: isAdmin
                               ? "remove-from-admin"
                               : "promote-to-admin",
                           });
-                        }}>
+                        }}
+                      >
                         {isAdmin ? (
                           <IoMdRemoveCircleOutline size={20} className="mr-3" />
                         ) : (
@@ -106,10 +109,11 @@ const CommunityMembers = ({ data, doAction }) => {
                         color={isMod ? "red.500" : "blue.500"}
                         onClick={() => {
                           doAction({
-                            userId: m.id,
+                            memberId: m.id,
                             type: isMod ? "remove-from-mod" : "promote-to-mod",
                           });
-                        }}>
+                        }}
+                      >
                         {isMod ? (
                           <MdRemoveModerator size={20} className="mr-3" />
                         ) : (

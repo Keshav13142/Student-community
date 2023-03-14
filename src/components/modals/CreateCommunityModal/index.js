@@ -19,18 +19,19 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
 
 const CreateCommunityModal = ({ isOpen, onClose }) => {
   const queryClient = useQueryClient();
-
+  const router = useRouter();
   const toast = useToast();
 
   const mutation = useMutation(createCommunity, {
     onError: ({
       response: {
-        data: { error, ref },
+        data: { error },
       },
     }) => {
       toast({
@@ -41,7 +42,7 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
         isClosable: true,
       });
     },
-    onSuccess: () => {
+    onSuccess: ({ redirect }) => {
       queryClient.invalidateQueries({ queryKey: ["userCommunities"] });
       queryClient.invalidateQueries({ queryKey: ["publicCommunities"] });
       onClose();
@@ -51,6 +52,7 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
         duration: 3000,
         isClosable: true,
       });
+      router.push(redirect);
     },
   });
 
@@ -94,7 +96,8 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
       blockScrollOnMount={false}
       isOpen={isOpen}
       onClose={onClose}
-      size="2xl">
+      size="2xl"
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Create a new Community</ModalHeader>
@@ -134,7 +137,8 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
                 name="type"
                 onChange={(v) => {
                   setDetails((p) => ({ ...p, type: v }));
-                }}>
+                }}
+              >
                 <Stack spacing={3}>
                   <Text className="font-medium">Community type</Text>
                   <Radio value="PUBLIC">Public</Radio>
@@ -150,13 +154,15 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
             colorScheme="purple"
             mr={3}
             variant="outline"
-            onClick={onClose}>
+            onClick={onClose}
+          >
             Cancel
           </Button>
           <Button
             isLoading={mutation.isLoading}
             onClick={onSubmit}
-            colorScheme="purple">
+            colorScheme="purple"
+          >
             Create Community
           </Button>
         </ModalFooter>

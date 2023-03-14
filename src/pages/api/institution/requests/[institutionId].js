@@ -1,5 +1,8 @@
 import prisma from "@/lib/prisma";
-import { checkIfUserIsCommAdmin } from "@/src/utils/server";
+import {
+  checkIfUserIsCommAdmin,
+  checkIfUserIsInstAdmin,
+} from "@/src/utils/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 
@@ -16,9 +19,9 @@ export default async function handler(req, res) {
   const { institutionId } = req.query;
 
   try {
-    if (!user.type === "ADMIN") {
+    if (!(await checkIfUserIsInstAdmin(user.id, institutionId))) {
       res
-        .status(500)
+        .status(401)
         .json({ error: "Only community admins can perform this action!!" });
       return;
     }
@@ -29,7 +32,7 @@ export default async function handler(req, res) {
         await prisma.pendingApprovals.findMany({
           where: {
             institution: {
-              id: req.query.institutionId,
+              id: institutionId,
             },
           },
           select: {
@@ -91,8 +94,12 @@ export default async function handler(req, res) {
           },
           data: {
             members: {
-              connect: {
-                id: approval.user.id,
+              create: {
+                user: {
+                  connect: {
+                    id: approval.user.id,
+                  },
+                },
               },
             },
           },
@@ -115,8 +122,12 @@ export default async function handler(req, res) {
           },
           data: {
             members: {
-              connect: {
-                id: approval.user.id,
+              create: {
+                user: {
+                  connect: {
+                    id: approval.user.id,
+                  },
+                },
               },
             },
           },

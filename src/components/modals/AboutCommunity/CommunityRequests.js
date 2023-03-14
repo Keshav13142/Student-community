@@ -68,19 +68,21 @@ const CommunityRequests = ({ communityId }) => {
               p={2}
               className="rounded-lg border border-purple-400 shadow-sm"
               justifyContent="space-between"
-              alignItems="center">
+              alignItems="center"
+            >
               <Flex alignItems="center" gap={5}>
-                <Avatar src={user.image} name={user.name} />
+                <Avatar src={user?.image} name={user?.name} />
                 <Stack>
-                  <span className="text-base font-medium">{user.name}</span>
-                  <span className="cursor-pointer text-blue-700">{`@${user.username}`}</span>
+                  <span className="text-base font-medium">{user?.name}</span>
+                  <span className="cursor-pointer text-blue-700">{`@${user?.username}`}</span>
                 </Stack>
               </Flex>
               {status !== "PENDING" && (
                 <Badge
                   className="mr-2"
                   variant="outline"
-                  colorScheme={status === "REJECTED" ? "red" : "green"}>
+                  colorScheme={status === "REJECTED" ? "red" : "green"}
+                >
                   {status}
                 </Badge>
               )}

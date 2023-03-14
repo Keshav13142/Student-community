@@ -61,14 +61,11 @@ const SideBar = () => {
 
   return (
     <>
-      <AboutInstitution
-        isAdmin={session.data?.user?.isAdmin}
-        onClose={onAboutClose}
-        isOpen={isAboutOpen}
-      />
-      <CreateCommunityModal onClose={onCreateClose} isOpen={isCreateOpen} />
+      <AboutInstitution onClose={onAboutClose} isOpen={isAboutOpen} />
+      {session.data?.user?.isInstitutionAdmin && (
+        <CreateCommunityModal onClose={onCreateClose} isOpen={isCreateOpen} />
+      )}
       <JoinCommunity isOpen={isJoinOpen} onClose={onJoinClose} />
-
       <Stack
         className="border-r border-r-slate-200"
         maxW="md"
@@ -76,7 +73,8 @@ const SideBar = () => {
         alignItems="center"
         justifyContent="space-between"
         height="full"
-        p={3}>
+        p={3}
+      >
         <Stack spacing={2} w="full" alignItems="center">
           <Text className="text-2xl font-medium">Your communities</Text>
           <Divider />
@@ -97,7 +95,8 @@ const SideBar = () => {
                       gap={2}
                       alignItems="center"
                       w="full"
-                      textColor="purple.600">
+                      textColor="purple.600"
+                    >
                       <span className="font-medium ">{`# ${c.name}`}</span>
                     </Flex>
                     {i !== communities.length - 1 && <Divider />}
@@ -108,13 +107,14 @@ const SideBar = () => {
           )}
         </Stack>
         <Stack w="full" spacing={3}>
-          {session.data?.user?.isAdmin && (
+          {session.data?.user?.isInstitutionAdmin && (
             <Button
               w="full"
               variant="outline"
               colorScheme="purple"
               onClick={onCreateOpen}
-              leftIcon={<TbBrowserPlus fontSize={20} />}>
+              leftIcon={<TbBrowserPlus fontSize={20} />}
+            >
               Create new community
             </Button>
           )}
@@ -123,7 +123,8 @@ const SideBar = () => {
             variant="outline"
             colorScheme="purple"
             onClick={onJoinOpen}
-            leftIcon={<RiUserAddLine />}>
+            leftIcon={<RiUserAddLine />}
+          >
             Have an invite code?
           </Button>
           <Button
@@ -131,7 +132,8 @@ const SideBar = () => {
             variant="outline"
             colorScheme="purple"
             onClick={onAboutOpen}
-            leftIcon={<ImInfo />}>
+            leftIcon={<ImInfo />}
+          >
             About Institution
           </Button>
         </Stack>

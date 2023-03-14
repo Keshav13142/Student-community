@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   const { user } = session;
   const { communityId } = req.query;
 
-  if (!checkIfUserIsCommAdmin(user.id, communityId)) {
+  if (!(await checkIfUserIsCommAdmin(user.id, communityId))) {
     res.status(401).json({ message: "You must a admin of the community!!" });
     return;
   }

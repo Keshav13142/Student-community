@@ -1,7 +1,4 @@
-import {
-  fetchInstitutionData,
-  getInstInviteCodes,
-} from "@/src/utils/api-calls/institution";
+import { fetchInstitutionData } from "@/src/utils/api-calls/institution";
 import {
   IconButton,
   Modal,
@@ -18,7 +15,7 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { RiEditBoxLine } from "react-icons/ri";
@@ -28,20 +25,14 @@ import InstitutionInfo from "./InstitutionInfo";
 import Members from "./InstitutionMembers";
 import InstitutionRequests from "./InstitutionRequests";
 
-const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
-  const [{ data: institutionData }, { data: inviteCodes }] = useQueries({
-    queries: [
-      {
-        queryKey: ["aboutInstitution"],
-        queryFn: fetchInstitutionData,
-      },
-      {
-        queryKey: ["institutionInviteCodes"],
-        queryFn: getInstInviteCodes,
-        enabled: Boolean(isAdmin),
-      },
-    ],
-  });
+const AboutInstitution = ({ isOpen, onClose }) => {
+  const { data: institutionData } = useQuery(
+    ["aboutInstitution"],
+    fetchInstitutionData
+  );
+
+  const session = useSession();
+  const isCurrentUserAdmin = session.data?.user.isInstitutionAdmin;
 
   const {
     isOpen: isActionsOpen,
@@ -58,27 +49,31 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
 
   return (
     <>
-      <InstitutionAdminActions
-        institutionId={institutionData?.id}
-        action={action}
-        onClose={onActionsClose}
-        isOpen={isActionsOpen}
-      />
+      {isCurrentUserAdmin && (
+        <InstitutionAdminActions
+          institutionId={institutionData?.id}
+          action={action}
+          onClose={onActionsClose}
+          isOpen={isActionsOpen}
+        />
+      )}
       <Modal
         blockScrollOnMount={false}
         isOpen={isOpen}
         onClose={onClose}
         size="2xl"
-        scrollBehavior="inside">
+        scrollBehavior="inside"
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
             alignItems="center"
             gap={2}
             display="flex"
-            justifyContent="center">
+            justifyContent="center"
+          >
             <span className="text-2xl">About institution</span>
-            {isAdmin && (
+            {isCurrentUserAdmin && (
               <Tooltip label="Edit" placement="right">
                 <IconButton
                   icon={<RiEditBoxLine />}
@@ -94,7 +89,7 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
               <TabList mb="1em">
                 <Tab>Info</Tab>
                 <Tab>Members</Tab>
-                {isAdmin && <Tab>Requests</Tab>}
+                {isCurrentUserAdmin && <Tab>Requests</Tab>}
               </TabList>
               <TabPanels>
                 <TabPanel>
@@ -104,11 +99,7 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
                       onCancel={() => setIsEditMode(false)}
                     />
                   ) : (
-                    <InstitutionInfo
-                      isAdmin={isAdmin}
-                      data={institutionData}
-                      inviteCodes={inviteCodes}
-                    />
+                    <InstitutionInfo data={institutionData} />
                   )}
                 </TabPanel>
                 <TabPanel>
@@ -117,14 +108,10 @@ const AboutInstitution = ({ isOpen, onClose, isAdmin }) => {
                       setAction(data);
                       onActionsOpen();
                     }}
-                    users={[
-                      ...(institutionData?.members ?? []),
-                      ...(institutionData?.admins ?? []),
-                    ]}
-                    isAdmin={isAdmin}
+                    members={institutionData?.members}
                   />
                 </TabPanel>
-                {isAdmin && (
+                {isCurrentUserAdmin && (
                   <TabPanel>
                     <InstitutionRequests institutionId={institutionData?.id} />
                   </TabPanel>

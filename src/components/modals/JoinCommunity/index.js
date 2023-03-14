@@ -49,7 +49,7 @@ const JoinCommunity = ({ isOpen, onClose }) => {
       } else {
         queryClient.setQueryData(["userCommunities"], (prev) => [
           ...prev,
-          data,
+          data.data,
         ]);
         toast({
           title: `Welcome to ${data.name}`,
@@ -57,7 +57,10 @@ const JoinCommunity = ({ isOpen, onClose }) => {
           duration: 2500,
           isClosable: true,
         });
+        router.push(data.redirect);
       }
+    },
+    onSettled: () => {
       onClose();
       setInviteCode("");
     },
@@ -110,13 +113,15 @@ const JoinCommunity = ({ isOpen, onClose }) => {
                     onClose();
                     setInviteCode("");
                   }}
-                  type="button">
+                  type="button"
+                >
                   Close
                 </Button>
                 <Button
                   colorScheme="purple"
                   type="submit"
-                  isLoading={mutation.isLoading}>
+                  isLoading={mutation.isLoading}
+                >
                   Join
                 </Button>
               </Flex>

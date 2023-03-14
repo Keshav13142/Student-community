@@ -28,5 +28,7 @@
 - [ ] Use NextJs image tags with cloudinary for image storage?
 - [x] ~~Fix the community members modal code
 - [ ] Query filter params in blog page (AI&ML not working , probably cause of `&` symbol?)
+- [ ] User pending request screen
+- [ ] Return 404 if resource is null
 
 <!-- ![mock](final-year-project-mock.png) -->

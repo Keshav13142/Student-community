@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { BiSend } from "react-icons/bi";
 
-const MessageInputBox = ({ isDisabled, communityId }) => {
+const MessageInputBox = ({ isDisabled, slug }) => {
   const [input, setInput] = useState("");
   const toast = useToast();
 
@@ -25,7 +25,7 @@ const MessageInputBox = ({ isDisabled, communityId }) => {
   const handleMessageSend = async (e) => {
     e.preventDefault();
     if (input.trim() !== "") {
-      mutation.mutate({ communityId, content: input });
+      mutation.mutate({ slug, content: input });
     }
   };
 
@@ -36,7 +36,8 @@ const MessageInputBox = ({ isDisabled, communityId }) => {
         label={
           "You have to be a member to send messages in RESTRICTED communities"
         }
-        hasArrow>
+        hasArrow
+      >
         <Flex gap={5} p={3}>
           <Input
             disabled={isDisabled}

@@ -16,7 +16,8 @@ const Logout = () => (
     colorScheme="blue"
     onClick={() => {
       signOut({ redirect: false });
-    }}>
+    }}
+  >
     Logout
   </Button>
 );
@@ -33,11 +34,11 @@ const info = {
     image: null,
     status: "success",
     title: "Your request to join was approved.",
-    desc: "You can go to the home screen to explore communities",
+    desc: "You can explore the communities",
     action: (
-      <Link href="/home">
+      <Link href="/community/discover">
         <Button variant="outline" colorScheme="purple">
-          Go to home screen
+          Go to Discover screen
         </Button>
       </Link>
     ),
@@ -77,7 +78,8 @@ const EnrollmentStatus = () => {
         justifyContent="center"
         textAlign="center"
         minH="2xs"
-        mb={3}>
+        mb={3}
+      >
         <AlertIcon boxSize="40px" mr={0} />
         <AlertTitle mt={4} mb={1} fontSize="lg">
           {content.title}

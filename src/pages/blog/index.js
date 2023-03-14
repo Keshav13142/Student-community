@@ -24,19 +24,20 @@ export async function getServerSideProps({ req, res, query }) {
 
   const { user } = session;
 
-  const institutionFilter = {
-    OR: [
-      { members: { some: { id: user.id } } },
-      { admins: { some: { id: user.id } } },
-    ],
-  };
-
   const categories = await prisma.category.findMany({});
 
   const posts = await prisma.post.findMany({
     where: {
       published: true,
-      institution: institutionFilter,
+      institution: {
+        members: {
+          some: {
+            user: {
+              id: user.id,
+            },
+          },
+        },
+      },
       ...(query.category
         ? {
             categories: {
@@ -99,7 +100,8 @@ const Blog = ({ posts, categories }) => {
             {posts.map((p, idx) => (
               <div
                 className="flex items-center justify-between rounded-lg border border-slate-300 px-4 py-2"
-                key={idx}>
+                key={idx}
+              >
                 <div className="grow">
                   <div className="mb-1 flex items-center gap-2">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -112,7 +114,8 @@ const Blog = ({ posts, categories }) => {
                   </div>
                   <Link
                     href={`/blog/${p.slug}`}
-                    className="mb-2 flex flex-col gap-1 md:gap-2 lg:gap-3">
+                    className="mb-2 flex flex-col gap-1 md:gap-2 lg:gap-3"
+                  >
                     <h2 className="text-lg font-medium text-slate-900 md:text-2xl">
                       {p.title}
                     </h2>
@@ -128,7 +131,8 @@ const Blog = ({ posts, categories }) => {
                       {p.categories.slice(0, 2).map((c) => (
                         <div
                           key={c.id}
-                          className="rounded-xl bg-gray-100 px-2 py-0.5 text-xs font-medium text-violet-500 lg:text-sm">
+                          className="rounded-xl bg-gray-100 px-2 py-0.5 text-xs font-medium text-violet-500 lg:text-sm"
+                        >
                           {c.name}
                         </div>
                       ))}
@@ -166,7 +170,8 @@ const Blog = ({ posts, categories }) => {
                 <Link
                   href={`/blog?category=${c.name}`}
                   key={c.id}
-                  className="min-w-[30%] rounded-xl border border-purple-300 p-1 text-center">
+                  className="min-w-[30%] rounded-xl border border-purple-300 p-1 text-center"
+                >
                   {c.name}
                 </Link>
               ))}
@@ -175,7 +180,8 @@ const Blog = ({ posts, categories }) => {
               <Button
                 variant="outline"
                 colorScheme="purple"
-                leftIcon={<BsNewspaper />}>
+                leftIcon={<BsNewspaper />}
+              >
                 Create a new post
               </Button>
             </Link>

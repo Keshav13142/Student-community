@@ -29,7 +29,7 @@ const Navbar = () => {
       <Flex gap={20}>
         <Show above="md">
           <Stack direction="row" spacing="5" alignItems="center">
-            <Link href="/home">
+            <Link href="/community/discover">
               <Button variant="link" color="purple.600">
                 Discover
               </Button>

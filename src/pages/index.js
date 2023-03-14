@@ -13,7 +13,7 @@ export async function getServerSideProps({ req, res }) {
   if (session?.user) {
     return {
       redirect: {
-        destination: "/home",
+        destination: "/community/discover",
         permanent: false,
       },
     };
@@ -26,7 +26,7 @@ export async function getServerSideProps({ req, res }) {
   };
 }
 
-export default function Home() {
+export default function DiscoverCommunities() {
   const [isGithubLoading, setIsGithubLoading] = useState(false);
   const [isDiscordLoading, setIsDiscordLoading] = useState(false);
 

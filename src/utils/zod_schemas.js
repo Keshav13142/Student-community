@@ -59,7 +59,7 @@ export const createPostSchema = z.object({
     .string({ required_error: "Title is required" })
     .min(1, { message: "Enter a valid title" }),
   desc: z.string().optional(),
-  categoryId: z.string().optional(),
+  categoryId: z.string().optional().or(z.null()),
   newCategory: z.string().optional(),
   bannerImage: z
     .string()

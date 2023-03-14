@@ -40,7 +40,7 @@ export async function getServerSideProps({ req, res, query }) {
   if (!query.username.startsWith("@")) {
     return {
       redirect: {
-        destination: "/home",
+        destination: "/community/discover",
         permanent: false,
       },
     };
@@ -75,57 +75,24 @@ export async function getServerSideProps({ req, res, query }) {
           createdAt: "desc",
         },
       },
-      communities: {
-        ...(user.username !== username
-          ? {
-              where: {
-                type: {
-                  not: "PRIVATE",
-                },
-              },
-            }
-          : {}),
-        select: {
-          slug: true,
-          name: true,
-          image: true,
-          desc: true,
-        },
-      },
-      communityAdmin: {
-        ...(user.username !== username
-          ? {
-              where: {
-                type: {
-                  not: "PRIVATE",
-                },
-              },
-            }
-          : {}),
-        select: {
-          slug: true,
-          name: true,
-          image: true,
-          desc: true,
-        },
-      },
-      communityModerator: {
-        ...(user.username !== username
-          ? {
-              where: {
-                type: {
-                  not: "PRIVATE",
-                },
-              },
-            }
-          : {}),
-        select: {
-          name: true,
-          slug: true,
-          image: true,
-          desc: true,
-        },
-      },
+    },
+  });
+
+  const communities = await prisma.community.findMany({
+    where: {
+      ...(user.username !== username
+        ? {
+            type: {
+              not: "PRIVATE",
+            },
+          }
+        : {}),
+    },
+    select: {
+      slug: true,
+      name: true,
+      image: true,
+      desc: true,
     },
   });
 
@@ -141,12 +108,13 @@ export async function getServerSideProps({ req, res, query }) {
             })),
           }
         : profile,
+      communities,
       ownProfile: profile.username === user.username,
     },
   };
 }
 
-const UserProfile = ({ profile, ownProfile }) => {
+const UserProfile = ({ profile, communities, ownProfile }) => {
   const router = useRouter();
   return (
     <>
@@ -173,7 +141,8 @@ const UserProfile = ({ profile, ownProfile }) => {
               status="warning"
               variant="left-accent"
               maxW="sm"
-              colorScheme="purple">
+              colorScheme="purple"
+            >
               <AlertIcon />
               User not found
             </Alert>
@@ -193,7 +162,8 @@ const UserProfile = ({ profile, ownProfile }) => {
                       profile.posts.map((p, idx) => (
                         <div
                           className="flex items-center justify-between gap-3 rounded-lg border border-slate-300 px-4 py-2"
-                          key={idx}>
+                          key={idx}
+                        >
                           <div className="grow">
                             <div className="mb-2 flex flex-col gap-1 md:gap-2 lg:gap-3">
                               <div className="flex items-center gap-2">
@@ -203,7 +173,8 @@ const UserProfile = ({ profile, ownProfile }) => {
                                       ? `/blog/${p.slug}`
                                       : `/blog/${p.id}/edit`
                                   }
-                                  className="hover:underline">
+                                  className="hover:underline"
+                                >
                                   <h2 className="text-lg font-medium text-slate-900">
                                     {p.title}
                                   </h2>
@@ -239,7 +210,8 @@ const UserProfile = ({ profile, ownProfile }) => {
                               p.published
                                 ? `/blog/${p.slug}`
                                 : `/blog/${p.id}/edit`
-                            }>
+                            }
+                          >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={p.bannerImage}
@@ -265,14 +237,11 @@ const UserProfile = ({ profile, ownProfile }) => {
                     )}
                   </TabPanel>
                   <TabPanel className="flex flex-col gap-3">
-                    {[
-                      ...profile.communities,
-                      ...profile.communityAdmin,
-                      ...profile.communityModerator,
-                    ].map((c, idx) => (
+                    {communities.map((c, idx) => (
                       <div
                         key={idx}
-                        className="rounded-lg border border-purple-400">
+                        className="rounded-lg border border-purple-400"
+                      >
                         <Link href={`/community/${c.slug}`}>
                           <div className="flex items-center gap-2 rounded-xl p-2">
                             <Avatar src={c.image} name={c.name} />

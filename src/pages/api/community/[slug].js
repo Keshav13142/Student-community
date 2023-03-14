@@ -28,81 +28,31 @@ export default async function handler(req, res) {
         desc: true,
         type: true,
         name: true,
-        messages: true,
         members: {
           select: {
             id: true,
-            name: true,
-            username: true,
-            image: true,
-            communityAdmin: {
+            user: {
               select: {
                 id: true,
-              },
-              where: {
-                slug,
-              },
-            },
-            communityModerator: {
-              select: {
-                id: true,
-              },
-              where: {
-                slug,
+                name: true,
+                username: true,
+                image: true,
               },
             },
-          },
-        },
-        admins: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-            communityAdmin: {
-              select: {
-                id: true,
-              },
-              where: {
-                slug,
-              },
-            },
-            communityModerator: {
-              select: {
-                id: true,
-              },
-              where: {
-                slug,
-              },
-            },
-          },
-        },
-        moderators: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-            communityAdmin: {
-              select: {
-                id: true,
-              },
-              where: {
-                slug,
-              },
-            },
-            communityModerator: {
-              select: {
-                id: true,
-              },
-              where: {
-                slug,
-              },
-            },
+            type: true,
           },
         },
       },
     });
+
+    if (!comm) {
+      res.status(404).json({
+        message: "Community does not exist",
+        redirect: "/community/discover",
+      });
+      return;
+    }
+
     res.json(comm);
   }
 }

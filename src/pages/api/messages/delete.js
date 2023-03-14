@@ -16,16 +16,16 @@ export default async function handler(req, res) {
 
   const { user } = session;
 
-  const { communityId, deletedBy } = req.body;
+  const { slug, deletedBy } = req.body;
   const { messageId } = req.query;
 
-  if (!communityId || !messageId || !deletedBy) {
+  if (!slug || !messageId || !deletedBy) {
     res.status(401).json({ error: "Missing required fields!!" });
     return;
   }
 
   try {
-    if (!checkIfUserIsCommAdminOrMod(user.id, communityId)) {
+    if (!(await checkIfUserIsCommAdminOrMod(user.id, slug))) {
       res
         .status(401)
         .json({ error: "Only admins or mods can perform this action!!" });
@@ -37,9 +37,9 @@ export default async function handler(req, res) {
       data: { isDeleted: true, content: null, deletedBy },
       select: {
         id: true,
-        communityId: true,
         content: true,
         createdAt: true,
+        updatedAt: true,
         isDeleted: true,
         deletedBy: true,
         sender: {

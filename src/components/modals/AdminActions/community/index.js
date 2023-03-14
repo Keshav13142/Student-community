@@ -58,7 +58,7 @@ const CommunityActions = ({
   isOpen,
   onClose,
   communityId,
-  action: { type, userId },
+  action: { type, memberId },
 }) => {
   const queryClient = useQueryClient();
   const toast = useToast();
@@ -73,7 +73,7 @@ const CommunityActions = ({
   });
 
   const handleAction = () => {
-    mutation.mutate({ userId, communityId, ...getRoleAction(type) });
+    mutation.mutate({ memberId, communityId, ...getRoleAction(type) });
     onClose();
   };
 
@@ -83,7 +83,8 @@ const CommunityActions = ({
       isOpen={isOpen}
       onClose={onClose}
       size="md"
-      isCentered>
+      isCentered
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader textAlign="center" fontSize="2xl">
@@ -110,7 +111,8 @@ const CommunityActions = ({
             colorScheme="red"
             variant={"outline"}
             mr={3}
-            onClick={handleAction}>
+            onClick={handleAction}
+          >
             Proceed
           </Button>
         </ModalFooter>
