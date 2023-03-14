@@ -148,8 +148,8 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
             </Alert>
           </div>
         ) : (
-          <div className="flex justify-center gap-10 rounded-xl p-5 px-10 pt-10">
-            <div className="flex min-w-[50%] max-w-4xl flex-col gap-5">
+          <div className="flex flex-col items-center gap-10 rounded-xl p-5 pt-10 lg:flex-row lg:items-start lg:justify-center lg:px-10">
+            <div className="order-2 flex min-w-[50%] max-w-4xl flex-col gap-5 lg:order-1">
               <h1 className="text-2xl font-medium">{profile.name}</h1>
               <Tabs variant="line">
                 <TabList>
@@ -175,7 +175,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                                   }
                                   className="hover:underline"
                                 >
-                                  <h2 className="text-lg font-medium text-slate-900">
+                                  <h2 className="text-base font-medium text-slate-900 lg:text-lg">
                                     {p.title}
                                   </h2>
                                 </Link>
@@ -195,7 +195,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                                   )
                                 )}
                               </div>
-                              <h3 className="max-w-sm text-base text-gray-500 line-clamp-2">
+                              <h3 className="max-w-sm text-sm text-gray-500 line-clamp-2 lg:text-base">
                                 {p.content}
                               </h3>
                             </div>
@@ -246,8 +246,12 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                           <div className="flex items-center gap-2 rounded-xl p-2">
                             <Avatar src={c.image} name={c.name} />
                             <div className="flex flex-col gap-2">
-                              <h4 className="text-lg font-medium">{c.name}</h4>
-                              <span>{c.desc}</span>
+                              <h4 className="text-base font-medium lg:text-lg">
+                                {c.name}
+                              </h4>
+                              <span className="text-sm lg:text-base">
+                                {c.desc}
+                              </span>
                             </div>
                           </div>
                         </Link>
@@ -257,7 +261,44 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                 </TabPanels>
               </Tabs>
             </div>
-            <div className="max-w-xl">hello</div>
+            <div className="order-1 h-fit max-w-xl rounded-md border-2 border-purple-300 px-3 py-2 lg:order-2">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <Avatar src={profile.image} name={profile.name} size="xl" />
+                  <div>
+                    <h3 className="text-xl font-medium">{profile.name}</h3>
+                    <h4 className="text-purple-500">@{profile.username}</h4>
+                  </div>
+                </div>
+                <p>{profile.bio}</p>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <GoMarkGithub size={20} />
+                    <a
+                      className="text-blue-500 hover:underline"
+                      target="_blank"
+                      href={profile.githubLink}
+                    >
+                      {profile.githubLink}
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <GrLinkedin size={20} />
+                    {profile.linkedinLink ? (
+                      <a
+                        className="text-blue-500 hover:underline"
+                        target="_blank"
+                        href={profile.linkedinLink}
+                      >
+                        {profile.linkedinLink}
+                      </a>
+                    ) : (
+                      "Not updated"
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
