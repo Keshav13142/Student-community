@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    if (!checkIfUserIsCommAdminOrMod(user.id, communityId)) {
+    if (!(await checkIfUserIsCommAdminOrMod(user.id, communityId))) {
       res
         .status(401)
         .json({ error: "Only admins or mods can perform this action!!" });

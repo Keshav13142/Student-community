@@ -1,31 +1,39 @@
 import prisma from "@/lib/prisma";
 
 // Get community with unique name within the same inst
-export const getCommunityWithName = async (name, userId, commId) => {
+export const getCommunityWithName = async (name, institutionId) => {
   return await prisma.community.findFirst({
     where: {
-      id: { not: commId },
-      name,
-      institution: {
-        admins: {
-          some: {
-            id: userId,
-          },
-        },
-      },
+      AND: [{ name }, { institution: { id: institutionId } }],
     },
   });
 };
 
 // Check if user is an admin of the institutions
-export const checkIfUserIsInstAdmin = async (id) => {
+export const checkIfUserIsInstAdmin = async (userId, instId) => {
   return await prisma.institution.findFirst({
     where: {
-      admins: {
-        some: {
-          id,
+      AND: [
+        {
+          id: instId,
         },
-      },
+        {
+          members: {
+            some: {
+              AND: [
+                {
+                  user: {
+                    id: userId,
+                  },
+                },
+                {
+                  type: "ADMIN",
+                },
+              ],
+            },
+          },
+        },
+      ],
     },
   });
 };
@@ -34,7 +42,12 @@ export const checkIfUserIsInstAdmin = async (id) => {
 export const checkIfUserIsCommAdmin = async (userId, communityId) => {
   return await prisma.community.findFirst({
     where: {
-      AND: [{ id: communityId }, { admins: { some: { id: userId } } }],
+      AND: [
+        { id: communityId },
+        {
+          members: { some: { AND: [{ user: { id: userId }, type: "ADMIN" }] } },
+        },
+      ],
     },
   });
 };
@@ -46,10 +59,16 @@ export const checkIfUserIsCommAdminOrMod = async (userId, communityId) => {
       AND: [
         { id: communityId },
         {
-          OR: [
-            { admins: { some: { id: userId } } },
-            { members: { some: { id: userId } } },
-          ],
+          members: {
+            some: {
+              user: {
+                id: userId,
+              },
+              type: {
+                in: ["MEMBER", "MODERATORS"],
+              },
+            },
+          },
         },
       ],
     },
