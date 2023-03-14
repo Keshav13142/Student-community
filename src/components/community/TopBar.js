@@ -55,13 +55,14 @@ const CommunityTopBar = ({ data, isDisabled }) => {
         py={2}
         alignItems="center"
         justifyContent="space-between"
-        className="shadow-sm">
+        className="shadow-sm"
+      >
         <Flex gap={4} align="center">
           <IconButton
             bg="transparent"
             icon={<FaChevronLeft />}
             onClick={() => {
-              router.push("/home");
+              router.push("/community/discover");
             }}
           />
           <Avatar src={data?.image} />
@@ -77,7 +78,8 @@ const CommunityTopBar = ({ data, isDisabled }) => {
               variant="outline"
               colorScheme="purple"
               size="sm"
-              isDisabled={isRequestDisabled}>
+              isDisabled={isRequestDisabled}
+            >
               Request to join
             </Button>
           )}

@@ -1,3 +1,4 @@
+import { getInstInviteCodes } from "@/src/utils/api-calls/institution";
 import {
   Box,
   Flex,
@@ -6,6 +7,8 @@ import {
   Stack,
   useToast,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { FiCopy } from "react-icons/fi";
 
@@ -33,7 +36,16 @@ const InviteCode = ({ code, title }) => {
   );
 };
 
-const InstitutionInfo = ({ data, inviteCodes, isAdmin }) => {
+const InstitutionInfo = ({ data }) => {
+  const { data: inviteCodes } = useQuery(
+    ["institutionInviteCodes"],
+    getInstInviteCodes,
+    {
+      enabled: Boolean(data?.isCurrentUserAdmin),
+    }
+  );
+
+  const session = useSession();
   return (
     <Stack flexDirection="column" gap={5} alignItems="center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -60,7 +72,7 @@ const InstitutionInfo = ({ data, inviteCodes, isAdmin }) => {
           {data?.supportEmail || "Not provided"}
         </span>
       </Box>
-      {isAdmin && (
+      {session?.data?.user?.isInstitutionAdmin && (
         <>
           <InviteCode code={inviteCodes?.adminCode} title="Admin" />
           <InviteCode code={inviteCodes?.memberCode} title="Member" />

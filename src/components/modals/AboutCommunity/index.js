@@ -48,25 +48,29 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
 
   return (
     <>
-      <CommunityActions
-        communityId={data?.id}
-        action={action}
-        onClose={onActionsClose}
-        isOpen={isActionsOpen}
-      />
+      {data?.isCurrentUserAdmin && (
+        <CommunityActions
+          communityId={data?.id}
+          action={action}
+          onClose={onActionsClose}
+          isOpen={isActionsOpen}
+        />
+      )}
       <Modal
         blockScrollOnMount={false}
         isOpen={isOpen}
         onClose={onClose}
         size="2xl"
-        scrollBehavior="inside">
+        scrollBehavior="inside"
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
             alignItems="center"
             gap={2}
             display="flex"
-            justifyContent="center">
+            justifyContent="center"
+          >
             <div className="text-2xl">
               <span>About </span>
               <span className="text-purple-500">- {data.name}</span>
