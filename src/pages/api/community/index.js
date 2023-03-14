@@ -28,7 +28,9 @@ export default async function handler(req, res) {
               institution: {
                 members: {
                   some: {
-                    id: user.id,
+                    user: {
+                      id: user.id,
+                    },
                   },
                 },
               },
@@ -41,17 +43,9 @@ export default async function handler(req, res) {
             {
               members: {
                 none: {
-                  id: user.id,
-                },
-              },
-              admins: {
-                none: {
-                  id: user.id,
-                },
-              },
-              moderators: {
-                none: {
-                  id: user.id,
+                  user: {
+                    id: user.id,
+                  },
                 },
               },
             },
@@ -69,80 +63,68 @@ export default async function handler(req, res) {
     return;
   }
 
-  // Return error if user is not an admin of the institution
   try {
-    const institution = await checkIfUserIsInstAdmin(user.id);
-
-    if (!institution) {
-      res.status(500).json({
-        error: "Only admins of institutions can  create communities!!",
-      });
-      return;
-    }
-
-    // Handle POST request => Create a new Community
     if (req.method === "POST") {
-      await handlePOST(req, res, user.id, institution);
+      const { name, image, desc, type } = req.body;
+      const { institutionId } = req.query;
+
+      // Return error if user is not an admin of the institution
+      if (!(await checkIfUserIsInstAdmin(user.id, institutionId))) {
+        res.status(401).json({
+          error: "Only admins of institutions can  create communities!!",
+        });
+        return;
+      }
+
+      if (!name) {
+        res.status(400).json({ error: "Community name is required!!" });
+        return;
+      }
+
+      // Check if a community with the name already exists
+      if (await getCommunityWithName(name, institutionId)) {
+        res
+          .status(500)
+          .json({ error: "Community with this name already exists!!" });
+        return;
+      }
+
+      const community = await prisma.community.create({
+        data: {
+          name,
+          desc,
+          image,
+          type,
+          slug: slugify(name),
+          admins: {
+            connect: {
+              id: user.id,
+            },
+          },
+          institution: {
+            connect: {
+              id: institution.id,
+            },
+          },
+        },
+        include: {
+          admins: {
+            select: {
+              name: true,
+            },
+          },
+          members: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+
+      res.json(community);
     }
   } catch (error) {
     console.log(error);
     res.status(422).json({ error: error.message });
   }
 }
-
-// Create a new Community
-const handlePOST = async (req, res, userId, institution) => {
-  const { name, image, desc, type } = req.body;
-
-  if (!name) {
-    res.status(500).json({ error: "Community name is required!!" });
-    return;
-  }
-
-  // Check if a community with the name already exists
-  try {
-    if (await getCommunityWithName(name)) {
-      res
-        .status(500)
-        .json({ error: "Community with this name already exists!!" });
-      return;
-    }
-
-    const community = await prisma.community.create({
-      data: {
-        name,
-        desc,
-        image,
-        type,
-        slug: slugify(name),
-        admins: {
-          connect: {
-            id: userId,
-          },
-        },
-        institution: {
-          connect: {
-            id: institution.id,
-          },
-        },
-      },
-      include: {
-        admins: {
-          select: {
-            name: true,
-          },
-        },
-        members: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
-
-    res.json(community);
-  } catch (error) {
-    console.log(error);
-    res.status(422).json({ error: error.message });
-  }
-};

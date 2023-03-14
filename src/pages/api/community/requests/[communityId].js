@@ -22,20 +22,22 @@ export default async function handler(req, res) {
           where: {
             AND: [
               {
-                members: {
-                  some: {
-                    id: user.id,
-                  },
-                },
+                id: communityId,
               },
               {
-                id: communityId,
+                members: {
+                  some: {
+                    user: {
+                      id: user.id,
+                    },
+                  },
+                },
               },
             ],
           },
         })
       ) {
-        res.status(500).json({
+        res.status(406).json({
           error: `You are already a member!!`,
         });
         return;
@@ -58,16 +60,16 @@ export default async function handler(req, res) {
         });
         res.json(approval);
       } catch (error) {
-        res.status(500).json({
+        res.status(400).json({
           error: `Request is being processed by Community admins!`,
         });
         return;
       }
     }
 
-    if (!checkIfUserIsCommAdmin(user.id)) {
+    if (!(await checkIfUserIsCommAdmin(user.id, communityId))) {
       res
-        .status(500)
+        .status(401)
         .json({ error: "Only community admins can perform this action!!" });
       return;
     }
@@ -111,14 +113,7 @@ export default async function handler(req, res) {
         select: {
           id: true,
           status: true,
-          user: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-              username: true,
-            },
-          },
+          user: approvalStatus,
         },
       });
 
@@ -130,8 +125,13 @@ export default async function handler(req, res) {
           },
           data: {
             members: {
-              connect: {
-                id: approval.user.id,
+              create: {
+                user: {
+                  connect: {
+                    id: approval.user.id,
+                  },
+                },
+                type: "MEMBER",
               },
             },
           },

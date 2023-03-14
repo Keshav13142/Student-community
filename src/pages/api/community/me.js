@@ -19,29 +19,13 @@ export default async function handler(req, res) {
       res.json(
         await prisma.community.findMany({
           where: {
-            OR: [
-              {
-                members: {
-                  some: {
-                    id: user.id,
-                  },
+            members: {
+              some: {
+                user: {
+                  id: user.id,
                 },
               },
-              {
-                admins: {
-                  some: {
-                    id: user.id,
-                  },
-                },
-              },
-              {
-                moderators: {
-                  some: {
-                    id: user.id,
-                  },
-                },
-              },
-            ],
+            },
           },
           select: {
             id: true,

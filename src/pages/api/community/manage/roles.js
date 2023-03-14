@@ -16,16 +16,16 @@ export default async function handler(req, res) {
 
   try {
     // Check if the user is an admin of the community
-    if (!checkIfUserIsCommAdmin(user.id)) {
+    const { userId, action, role, communityId } = req.body;
+
+    if (!(await checkIfUserIsCommAdmin(user.id, communityId))) {
       res
-        .status(500)
+        .status(401)
         .json({ error: "Only community admins can perform this action!!" });
       return;
     }
 
     if (req.method === "PATCH") {
-      const { userId, action, role, communityId } = req.body;
-
       const community = await prisma.community.update({
         where: {
           id: communityId,

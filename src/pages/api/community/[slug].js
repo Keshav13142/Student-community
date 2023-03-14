@@ -32,73 +32,13 @@ export default async function handler(req, res) {
         members: {
           select: {
             id: true,
-            name: true,
-            username: true,
-            image: true,
-            communityAdmin: {
-              select: {
-                id: true,
-              },
-              where: {
-                slug,
-              },
+            user: {
+              id: true,
+              name: true,
+              username: true,
+              image: true,
             },
-            communityModerator: {
-              select: {
-                id: true,
-              },
-              where: {
-                slug,
-              },
-            },
-          },
-        },
-        admins: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-            communityAdmin: {
-              select: {
-                id: true,
-              },
-              where: {
-                slug,
-              },
-            },
-            communityModerator: {
-              select: {
-                id: true,
-              },
-              where: {
-                slug,
-              },
-            },
-          },
-        },
-        moderators: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-            communityAdmin: {
-              select: {
-                id: true,
-              },
-              where: {
-                slug,
-              },
-            },
-            communityModerator: {
-              select: {
-                id: true,
-              },
-              where: {
-                slug,
-              },
-            },
+            type: true,
           },
         },
       },

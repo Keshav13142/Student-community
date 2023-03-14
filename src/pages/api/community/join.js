@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
   // Return error if user is not logged in
   if (!inviteCode) {
-    res.status(500).json({ error: "Missing fields!!" });
+    res.status(400).json({ error: "Missing fields!!" });
     return;
   }
 
@@ -32,7 +32,9 @@ export default async function handler(req, res) {
           {
             members: {
               some: {
-                id: user.id,
+                user: {
+                  id: user.id,
+                },
               },
             },
           },
@@ -52,7 +54,7 @@ export default async function handler(req, res) {
 
     // Throw error if the code is invalid or the user does not belong to the institution
     if (!institution) {
-      res.status(500).json({
+      res.status(400).json({
         error: `Invalid code!!`,
       });
       return;
@@ -65,7 +67,9 @@ export default async function handler(req, res) {
           {
             members: {
               some: {
-                id: user.id,
+                user: {
+                  id: user.id,
+                },
               },
             },
           },
@@ -89,14 +93,19 @@ export default async function handler(req, res) {
       },
       data: {
         members: {
-          connect: {
-            id: user.id,
+          create: {
+            user: {
+              connect: {
+                id: user.id,
+              },
+            },
+            type: "MEMBER",
           },
         },
       },
       select: {
-        name: true,
         id: true,
+        name: true,
         image: true,
       },
     });

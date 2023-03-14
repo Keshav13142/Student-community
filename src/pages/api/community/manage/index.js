@@ -18,45 +18,17 @@ export default async function handler(req, res) {
 
   const { user } = session;
 
-  // Return all the communitites the user is admin of
-  if (req.method === "GET") {
-    res.json(
-      await prisma.community.findMany({
-        where: {
-          admins: {
-            some: {
-              id: user.id,
-            },
-          },
-        },
-        include: {
-          admins: {
-            select: {
-              id: true,
-              email: true,
-            },
-          },
-          members: {
-            select: {
-              id: true,
-              email: true,
-            },
-          },
-        },
-      })
-    );
-  }
-
   if (req.method === "PATCH") {
     const { name, desc, image, communityId, type } = req.body;
+    const { institutionId } = req.query;
 
-    if (!name || !communityId || !type) {
-      res.status(500).json({ error: "Missing required fields!!" });
+    if (!name || !communityId || !type || !institutionId) {
+      res.status(400).json({ error: "Missing required fields!!" });
       return;
     }
 
     // Check if user is an admin of the institutions
-    if (!(await checkIfUserIsCommAdmin(user.id))) {
+    if (!(await checkIfUserIsCommAdmin(user.id, communityId))) {
       res
         .status(500)
         .json({ error: "Only community admin can perform this action!!" });
@@ -64,7 +36,7 @@ export default async function handler(req, res) {
     }
 
     // Check if a community with the name already exists
-    if (await getCommunityWithName(name, user.id, communityId)) {
+    if (await getCommunityWithName(name, institutionId)) {
       res
         .status(500)
         .json({ error: "Community with this name already exists!!" });
