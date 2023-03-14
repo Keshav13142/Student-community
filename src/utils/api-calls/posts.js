@@ -22,3 +22,8 @@ export const getAllCategories = async () => {
   const { data } = await AxiosClient.get(`/posts/categories`);
   return data;
 };
+
+export const sendComment = async (content) => {
+  const { data } = await AxiosClient.post(`/posts/comment`, content);
+  return data;
+};

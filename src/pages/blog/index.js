@@ -94,67 +94,88 @@ const Blog = ({ posts, categories }) => {
       <div className="min-h-screen">
         <Navbar />
         {/* md:flex-col justify-start */}
-        <main className="flex flex-col justify-center gap-10 py-10 px-5 sm:px-20 md:px-32 lg:mx-5 lg:flex-row">
+        <main className="flex flex-col justify-center gap-10 py-10 px-5 sm:px-20 md:px-32 lg:flex-row lg:px-40">
           {/* md:order-2 */}
-          <div className="order-2 flex min-w-[50%] flex-col gap-3 lg:order-1">
-            {posts.map((p, idx) => (
-              <div
-                className="flex items-center justify-between rounded-lg border border-slate-300 px-4 py-2"
-                key={idx}
-              >
-                <div className="grow">
-                  <div className="mb-1 flex items-center gap-2">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={p.author.image}
-                      alt={p.author.image}
-                      className="h-5 w-5 rounded-full"
-                    />
-                    <span className="">{p.author.name}</span>
-                  </div>
-                  <Link
-                    href={`/blog/${p.slug}`}
-                    className="mb-2 flex flex-col gap-1 md:gap-2 lg:gap-3"
-                  >
-                    <h2 className="text-lg font-medium text-slate-900 md:text-2xl">
-                      {p.title}
-                    </h2>
-                    <h3 className="max-w-sm text-base text-gray-500 line-clamp-2">
-                      {p.content}
-                    </h3>
-                  </Link>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500 lg:text-sm">
-                      {format(new Date(p.createdAt), "MMM d")}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      {p.categories.slice(0, 2).map((c) => (
-                        <div
-                          key={c.id}
-                          className="rounded-xl bg-gray-100 px-2 py-0.5 text-xs font-medium text-violet-500 lg:text-sm"
-                        >
-                          {c.name}
-                        </div>
-                      ))}
+          <div className="order-2 flex min-w-[80%] flex-col gap-3 md:min-w-[65%] lg:order-1 lg:min-w-[75%] xl:min-w-[60%]">
+            {posts.length > 0 ? (
+              posts.map((p, idx) => (
+                <div
+                  className="flex items-center justify-between gap-2 rounded-lg border border-slate-300 px-4 py-2"
+                  key={idx}
+                >
+                  <div className="max-w-[60%] grow md:max-w-[70%]">
+                    <div className="mb-1 flex items-center gap-2">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={p.author.image}
+                        alt={p.author.image}
+                        className="h-5 w-5 rounded-full"
+                      />
+                      <span className="">{p.author.name}</span>
+                    </div>
+                    <Link
+                      href={`/blog/${p.slug}`}
+                      className="mb-2 flex flex-col gap-1 md:gap-2 lg:gap-3"
+                    >
+                      <h2 className="text-lg font-medium text-slate-900 md:text-xl lg:text-2xl">
+                        {p.title}
+                      </h2>
+                      <h3 className="text-sm text-gray-500 line-clamp-2 md:max-w-xs xl:text-base">
+                        {p.content}
+                      </h3>
+                    </Link>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-500 lg:text-sm">
+                        {format(new Date(p.createdAt), "MMM d")}
+                      </span>
+                      <div className="flex items-center gap-1">
+                        {p.categories.slice(0, 2).map((c) => (
+                          <div
+                            key={c.id}
+                            className="rounded-xl bg-gray-100 px-2 py-0.5 text-xs font-medium text-violet-500 lg:text-sm"
+                          >
+                            {c.name}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
+                  <Link href={`/blog/${p.slug}`}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={p.bannerImage}
+                      className="aspect-video h-24 w-32 rounded-md object-cover md:h-28 md:w-36 lg:h-32 lg:w-40"
+                      alt={p.title}
+                    />
+                  </Link>
                 </div>
-                <Link href={`/blog/${p.slug}`}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={p.bannerImage}
-                    className="aspect-video h-24 w-32 rounded-md object-cover md:h-28 md:w-36 lg:h-32 lg:w-40"
-                    alt={p.title}
-                  />
+              ))
+            ) : (
+              <div className="flex flex-col items-center gap-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/2680/2680927.png"
+                  className="max-w-[20%]"
+                  alt="no posts"
+                />
+                <h2 className="text-2xl font-medium">No posts found</h2>
+                <Link href="/blog/new">
+                  <Button
+                    variant="outline"
+                    colorScheme="purple"
+                    leftIcon={<BsNewspaper />}
+                  >
+                    Create a new post
+                  </Button>
                 </Link>
               </div>
-            ))}
+            )}
           </div>
           {/* md:order-1 */}
-          <div className="order-1 flex h-fit flex-col items-center gap-5 p-2 lg:sticky lg:top-24 lg:order-2">
+          <div className="order-1 flex h-fit min-w-[35%] flex-col items-center gap-5 p-2 lg:sticky lg:top-24 lg:order-2">
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-medium text-slate-900">
-                Explore more posts by categories
+                Discover by categories
               </h2>
               <Link href="/blog">
                 <IconButton
@@ -165,7 +186,7 @@ const Blog = ({ posts, categories }) => {
                 />
               </Link>
             </div>
-            <div className="flex flex-wrap items-center justify-evenly gap-1">
+            <div className="flex flex-wrap items-center justify-evenly gap-1 gap-y-2">
               {categories.map((c) => (
                 <Link
                   href={`/blog?category=${c.name}`}

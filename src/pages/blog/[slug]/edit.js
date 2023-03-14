@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
+import MarkdownEditor from "@/src/components/editor";
 import Navbar from "@/src/components/Layout/navbar";
-import { synthWave } from "@/src/theme";
+import RenderMarkdown from "@/src/components/render-markdown";
 import { deletePost, updatePost } from "@/src/utils/api-calls/posts";
 import { createPostSchema, parseZodErrors } from "@/src/utils/zod_schemas";
 import {
@@ -24,10 +25,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
-import { languages } from "@codemirror/language-data";
 import { useMutation } from "@tanstack/react-query";
-import CodeMirror from "@uiw/react-codemirror";
 import { getServerSession } from "next-auth";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -36,9 +34,6 @@ import { BsFillImageFill } from "react-icons/bs";
 import { HiOutlineUpload } from "react-icons/hi";
 import { IoSaveSharp } from "react-icons/io5";
 import { MdDeleteForever, MdOutlineCategory, MdTitle } from "react-icons/md";
-import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import remarkGfm from "remark-gfm";
 import { authOptions } from "../../api/auth/[...nextauth]";
 
 export async function getServerSideProps({ req, res, query }) {
@@ -265,50 +260,16 @@ const CreateNewPost = ({ post, allCategories }) => {
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <CodeMirror
+                  <MarkdownEditor
                     value={inputs.content}
-                    maxWidth="80vw"
-                    minHeight="50vh"
-                    extensions={[
-                      markdown({
-                        base: markdownLanguage,
-                        codeLanguages: languages,
-                      }),
-                    ]}
                     onChange={(value) =>
                       setInputs((prev) => ({ ...prev, content: value }))
                     }
-                    className="border border-gray-300"
                   />
                 </TabPanel>
                 <TabPanel>
                   <article className="prose">
-                    <ReactMarkdown
-                      rehypePlugins={[remarkGfm]}
-                      components={{
-                        code({ node, inline, className, children, ...props }) {
-                          const match = /language-(\w+)/.exec(className || "");
-                          return !inline && match ? (
-                            <SyntaxHighlighter
-                              wrapLines
-                              style={synthWave}
-                              showLineNumbers
-                              language={match[1]}
-                              PreTag="div"
-                              {...props}
-                            >
-                              {String(children).replace(/\n$/, "")}
-                            </SyntaxHighlighter>
-                          ) : (
-                            <code className={className} {...props}>
-                              {children}
-                            </code>
-                          );
-                        },
-                      }}
-                    >
-                      {inputs.content}
-                    </ReactMarkdown>
+                    <RenderMarkdown content={inputs.content} />
                   </article>
                 </TabPanel>
               </TabPanels>

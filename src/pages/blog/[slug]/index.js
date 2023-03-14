@@ -1,17 +1,17 @@
 import prisma from "@/lib/prisma";
 import Navbar from "@/src/components/Layout/navbar";
-import { synthWave } from "@/src/theme";
-import { Avatar, Button } from "@chakra-ui/react";
+import RenderMarkdown from "@/src/components/render-markdown";
+import { sendComment } from "@/src/utils/api-calls/posts";
+import { Avatar, Button, IconButton, Input, useToast } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { getServerSession } from "next-auth";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import { useState } from "react";
+import { BiSend } from "react-icons/bi";
 import { IoChevronBack } from "react-icons/io5";
-import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import remarkGfm from "remark-gfm";
 import { authOptions } from "../../api/auth/[...nextauth]";
 
 export async function getServerSideProps({ req, res, query }) {
@@ -39,12 +39,13 @@ export async function getServerSideProps({ req, res, query }) {
       title: true,
       postComments: {
         select: {
+          id: true,
           comment: true,
           createdAt: true,
           user: {
             select: {
-              name: true,
-              image: true,
+              id: true,
+              username: true,
             },
           },
         },
@@ -58,6 +59,15 @@ export async function getServerSideProps({ req, res, query }) {
       },
     },
   });
+
+  if (!post) {
+    return {
+      redirect: {
+        destination: "/blog",
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {
@@ -75,6 +85,40 @@ export async function getServerSideProps({ req, res, query }) {
 
 const SinglePost = ({ post }) => {
   const router = useRouter();
+  const [input, setInput] = useState("");
+  const toast = useToast();
+  const [comments, setComments] = useState(post.postComments);
+
+  const mutation = useMutation(sendComment, {
+    onError: () => {
+      toast({
+        title: "Failed to send message😢",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      setInput("");
+      toast({
+        title: "Comment sent",
+        status: "success",
+        duration: 1200,
+        isClosable: true,
+      });
+      setComments((p) => [...p, data]);
+    },
+  });
+
+  const handleSendComment = async (e) => {
+    e.preventDefault();
+    if (mutation.isLoading) return;
+    if (input.trim() !== "") {
+      mutation.mutate({ slug: post.slug, comment: input });
+    }
+  };
+
   return (
     <>
       <Head>
@@ -85,23 +129,27 @@ const SinglePost = ({ post }) => {
       </Head>
       <div className="min-h-screen min-w-full">
         <Navbar />
-        <div className="flex flex-col gap-10 p-10">
+        <div className="flex flex-col gap-10 p-5 xl:p-10">
           <Button
             variant="link"
             leftIcon={<IoChevronBack />}
             className="w-fit"
             onClick={() => {
-              router.back();
-            }}>
-            Go back
+              router.push("/blog");
+            }}
+          >
+            All posts
           </Button>
-          <div className="flex min-w-[50%] flex-col gap-5 self-center border-b-4 border-b-slate-300 pb-10">
+          <div className="flex w-[90%] flex-col gap-5 self-center sm:w-[80%] lg:w-[55%]">
             <time
               dateTime={new Date(post.createdAt)}
-              className="font-mono text-slate-700">
+              className="font-mono text-slate-700"
+            >
               {format(new Date(post.createdAt), "EEEE, LLLL d, yyyy")}
             </time>
-            <h1 className="text-4xl font-medium">{post.title}</h1>
+            <h1 className="text-xl font-medium lg:text-2xl xl:text-4xl">
+              {post.title}
+            </h1>
             <div className="flex items-center gap-3">
               <Avatar src={post.author.image} name={post.author.name} />
               <div className="flex flex-col gap-1">
@@ -114,32 +162,47 @@ const SinglePost = ({ post }) => {
               </div>
             </div>
           </div>
-          <article className="prose max-w-[22rem] self-center sm:max-w-xl md:max-w-2xl">
-            <ReactMarkdown
-              rehypePlugins={[remarkGfm]}
-              components={{
-                code({ node, inline, className, children, ...props }) {
-                  const match = /language-(\w+)/.exec(className || "");
-                  return !inline && match ? (
-                    <SyntaxHighlighter
-                      wrapLines
-                      style={synthWave}
-                      showLineNumbers
-                      language={match[1]}
-                      PreTag="div"
-                      {...props}>
-                      {String(children).replace(/\n$/, "")}
-                    </SyntaxHighlighter>
-                  ) : (
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  );
-                },
-              }}>
-              {post.content}
-            </ReactMarkdown>
+          <div className="w-[95%] self-center rounded-lg border-2 border-gray-200 sm:w-[80%] lg:w-[55%]" />
+          <article className="prose w-[95%] self-center sm:w-[80%] lg:w-[55%]">
+            <RenderMarkdown content={post.content} />
           </article>
+          <div className="w-[95%] self-center rounded-lg border-2 border-gray-200 sm:w-[80%] lg:w-[55%]" />
+          <div className="flex  w-[100%] flex-col gap-5 self-center sm:w-[70%] lg:w-[55%]">
+            <h2 className="text-2xl font-medium underline">Comments</h2>
+            <div className="flex max-h-[20vh] flex-col gap-2 overflow-y-auto">
+              {comments.map((m) => (
+                <div
+                  key={m.id}
+                  className="flex w-fit min-w-[20%] flex-col rounded-lg bg-gray-200 px-2 py-1"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-blue-500">
+                      {m.user.username}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {format(new Date(m.createdAt), "do MMMM")}
+                    </span>
+                  </div>
+                  <span>{m.comment}</span>
+                </div>
+              ))}
+            </div>
+            <form className="flex gap-3" onSubmit={handleSendComment}>
+              <Input
+                value={input}
+                placeholder="Send a message"
+                borderWidth={2}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                }}
+              />
+              <IconButton
+                isDisabled={mutation.isLoading}
+                icon={<BiSend />}
+                type="submit"
+              />
+            </form>
+          </div>
         </div>
       </div>
     </>
