@@ -46,7 +46,6 @@ export async function getServerSideProps({ req, res }) {
       },
     };
   }
-  const { user } = session;
 
   const allCategories = await prisma.category.findMany({});
 
@@ -184,9 +183,9 @@ const CreateNewPost = ({ allCategories }) => {
                         codeLanguages: languages,
                       }),
                     ]}
-                    onChange={(value) =>
-                      setInputs((prev) => ({ ...prev, content: value }))
-                    }
+                    onChange={(value) => {
+                      setInputs((prev) => ({ ...prev, content: value }));
+                    }}
                     className="border border-gray-300"
                   />
                 </TabPanel>
@@ -204,7 +203,8 @@ const CreateNewPost = ({ allCategories }) => {
                               showLineNumbers
                               language={match[1]}
                               PreTag="div"
-                              {...props}>
+                              {...props}
+                            >
                               {String(children).replace(/\n$/, "")}
                             </SyntaxHighlighter>
                           ) : (
@@ -213,7 +213,8 @@ const CreateNewPost = ({ allCategories }) => {
                             </code>
                           );
                         },
-                      }}>
+                      }}
+                    >
                       {inputs.content}
                     </ReactMarkdown>
                   </article>
@@ -244,7 +245,8 @@ const CreateNewPost = ({ allCategories }) => {
               isDisabled={inputs.newCategory !== ""}
               placeholder="Choose a category"
               focusBorderColor="purple.400"
-              borderColor="purple.200">
+              borderColor="purple.200"
+            >
               {allCategories?.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
@@ -267,7 +269,8 @@ const CreateNewPost = ({ allCategories }) => {
               colorScheme="purple"
               isLoading={mutation.isLoading}
               leftIcon={inputs.publish ? <HiOutlineUpload /> : <IoSaveSharp />}
-              onClick={handleCreate}>
+              onClick={handleCreate}
+            >
               {inputs.publish ? "Publish" : "Save as draft"}
             </Button>
           </div>

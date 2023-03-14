@@ -78,13 +78,15 @@ const DiscoverCommunities = () => {
                 alignItems="center"
                 justifyContent="space-between"
                 p={3}
-                minW="lg">
+                minW="lg"
+              >
                 <Flex gap={5} alignItems="center">
                   <Avatar src={c.image} name={c.name} />
                   <Stack>
                     <Link
                       href={`/community/${c.slug}`}
-                      className="text-lg font-medium hover:text-blue-700 hover:underline">
+                      className="text-lg font-medium hover:text-blue-700 hover:underline"
+                    >
                       # {c.name}
                     </Link>
                     <span>{c.desc}</span>
@@ -92,7 +94,8 @@ const DiscoverCommunities = () => {
                 </Flex>
                 <Badge
                   variant="outline"
-                  color={c.type === "PUBLIC" ? "whatsapp.400" : "blue.300"}>
+                  color={c.type === "PUBLIC" ? "whatsapp.400" : "blue.300"}
+                >
                   {c.type}
                 </Badge>
               </Flex>
