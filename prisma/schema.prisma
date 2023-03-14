@@ -37,31 +37,25 @@ model Session {
 }
 
 model User {
-  id                 String             @id @default(cuid())
-  name               String
-  email              String             @unique
-  emailVerified      DateTime?
-  image              String?
-  hasProfile         Boolean            @default(false)
-  enrollmentStatus   EnrollmentStatus   @default(PENDING)
-  username           String?            @unique
-  bio                String?
-  githubLink         String?
-  linkedinLink       String?
-  accounts           Account[]
-  sessions           Session[]
-  communities        Community[]        @relation("community_members")
-  communityAdmin     Community[]        @relation("community_admins")
-  communityModerator Community[]        @relation("community_moderators")
-  messages           Message[]
-  posts              Post[]
-  institutionAdmin   Institution?       @relation("institution_admins", fields: [institutionAdminId], references: [id], onDelete: SetNull)
-  institutionAdminId String?
-  institution        Institution?       @relation("institution_members", fields: [institutionId], references: [id], onDelete: SetNull)
-  institutionId      String?
-  PendingApprovals   PendingApprovals[]
-  postComments       PostComments[]
-  type               UserType           @default(MEMBER)
+  id                String             @id @default(cuid())
+  name              String
+  email             String             @unique
+  emailVerified     DateTime?
+  image             String?
+  hasProfile        Boolean            @default(false)
+  enrollmentStatus  EnrollmentStatus   @default(PENDING)
+  username          String?            @unique
+  bio               String?
+  githubLink        String?
+  linkedinLink      String?
+  accounts          Account[]
+  sessions          Session[]
+  messages          Message[]
+  posts             Post[]
+  PendingApprovals  PendingApprovals[]
+  postComments      PostComments[]
+  communityMember   CommunityMember[]
+  institutionMember InstitutionMember?
 
   @@map("users")
 }
@@ -117,10 +111,8 @@ model Community {
   slug             String             @unique
   type             CommunityType      @default(PUBLIC)
   default          Boolean            @default(false)
-  members          User[]             @relation("community_members")
-  admins           User[]             @relation("community_admins")
+  members          CommunityMember[]
   messages         Message[]
-  moderators       User[]             @relation("community_moderators")
   image            String?
   code             String             @unique @default(cuid())
   institution      Institution        @relation(fields: [institutionId], references: [id], onDelete: Cascade)
@@ -141,6 +133,15 @@ model PendingApprovals {
   @@unique([userId, communityId])
 }
 
+model CommunityMember {
+  id          String              @id @default(cuid())
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        CommunityMemberType @default(MEMBER)
+  Community   Community?          @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  userId      String
+  communityId String
+}
+
 model Message {
   id          String    @id @default(cuid())
   content     String?
@@ -156,20 +157,28 @@ model Message {
 }
 
 model Institution {
-  id               String             @id @default(cuid())
-  name             String             @unique
-  memberCode       String             @unique @default(cuid())
-  adminCode        String             @unique @default(cuid())
+  id               String              @id @default(cuid())
+  name             String              @unique
+  memberCode       String              @unique @default(cuid())
+  adminCode        String              @unique @default(cuid())
   image            String?
   website          String?
   supportEmail     String?
+  members          InstitutionMember[]
   communities      Community[]
-  members          User[]             @relation("institution_members")
-  admins           User[]             @relation("institution_admins")
   posts            Post[]
   pendingApprovals PendingApprovals[]
 
   @@unique([adminCode, memberCode])
+}
+
+model InstitutionMember {
+  id            String                @id @default(cuid())
+  user          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          InstitutionMemberType @default(MEMBER)
+  Institution   Institution           @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  userId        String                @unique
+  institutionId String
 }
 
 enum CommunityType {
@@ -178,9 +187,15 @@ enum CommunityType {
   RESTRICTED //Anyone can view, but must request access from admin to become member and send msg
 }
 
-enum UserType {
+enum InstitutionMemberType {
   ADMIN // Can create communtities and appoint other admins.
   MEMBER // Members can also be appointed as moderators, with elevated priviledges
+}
+
+enum CommunityMemberType {
+  ADMIN
+  MEMBER
+  MODERATORS
 }
 
 enum ApprovalStatus {
