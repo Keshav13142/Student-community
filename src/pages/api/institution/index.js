@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   const { user } = session;
 
   if (req.method === "GET") {
-    const institution = await prisma.institution.findFirst({
+    let institution = await prisma.institution.findFirst({
       where: {
         members: {
           some: {
@@ -39,7 +39,6 @@ export default async function handler(req, res) {
               select: {
                 id: true,
                 name: true,
-                user: true,
                 image: true,
               },
             },

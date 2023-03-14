@@ -53,11 +53,11 @@ export const checkIfUserIsCommAdmin = async (userId, communityId) => {
 };
 
 // Check if user is an admin of the community
-export const checkIfUserIsCommAdminOrMod = async (userId, communityId) => {
+export const checkIfUserIsCommAdminOrMod = async (userId, slug) => {
   return await prisma.community.findFirst({
     where: {
       AND: [
-        { id: communityId },
+        { slug },
         {
           members: {
             some: {
@@ -65,7 +65,7 @@ export const checkIfUserIsCommAdminOrMod = async (userId, communityId) => {
                 id: userId,
               },
               type: {
-                in: ["MEMBER", "MODERATORS"],
+                in: ["ADMIN", "MODERATOR"],
               },
             },
           },

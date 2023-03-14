@@ -28,21 +28,31 @@ export default async function handler(req, res) {
         desc: true,
         type: true,
         name: true,
-        messages: true,
         members: {
           select: {
             id: true,
             user: {
-              id: true,
-              name: true,
-              username: true,
-              image: true,
+              select: {
+                id: true,
+                name: true,
+                username: true,
+                image: true,
+              },
             },
             type: true,
           },
         },
       },
     });
+
+    if (!comm) {
+      res.status(404).json({
+        message: "Community does not exist",
+        redirect: "/community/discover",
+      });
+      return;
+    }
+
     res.json(comm);
   }
 }

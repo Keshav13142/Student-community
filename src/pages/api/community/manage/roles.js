@@ -3,6 +3,11 @@ import { checkIfUserIsCommAdmin } from "@/src/utils/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 
+const actions = {
+  admin: "ADMIN",
+  mod: "MODERATOR",
+};
+
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
 
@@ -16,7 +21,7 @@ export default async function handler(req, res) {
 
   try {
     // Check if the user is an admin of the community
-    const { userId, action, role, communityId } = req.body;
+    const { memberId, action, role, communityId } = req.body;
 
     if (!(await checkIfUserIsCommAdmin(user.id, communityId))) {
       res
@@ -31,82 +36,28 @@ export default async function handler(req, res) {
           id: communityId,
         },
         data: {
-          ...(role === "admin"
-            ? {
-                admins: {
-                  ...(action === "promote"
-                    ? {
-                        connect: {
-                          id: userId,
-                        },
-                      }
-                    : {
-                        disconnect: {
-                          id: userId,
-                        },
-                      }),
-                },
-                moderators: {
-                  disconnect: {
-                    id: userId,
-                  },
-                },
-              }
-            : {
-                moderators: {
-                  ...(action === "promote"
-                    ? {
-                        connect: {
-                          id: userId,
-                        },
-                      }
-                    : {
-                        disconnect: {
-                          id: userId,
-                        },
-                      }),
-                },
-                admins: {
-                  disconnect: {
-                    id: userId,
-                  },
-                },
-              }),
           members: {
-            ...(action === "promote"
-              ? {
-                  disconnect: {
-                    id: userId,
-                  },
-                }
-              : {
-                  connect: {
-                    id: userId,
-                  },
-                }),
+            update: {
+              where: {
+                id: memberId,
+              },
+              data: {
+                type: action === "promote" ? actions[role] : "MEMBER",
+              },
+            },
           },
         },
         include: {
           members: {
             select: {
               id: true,
-              name: true,
-              username: true,
-              image: true,
-              communityAdmin: {
+              type: true,
+              user: {
                 select: {
                   id: true,
-                },
-                where: {
-                  id: communityId,
-                },
-              },
-              communityModerator: {
-                select: {
-                  id: true,
-                },
-                where: {
-                  id: communityId,
+                  name: true,
+                  username: true,
+                  image: true,
                 },
               },
             },

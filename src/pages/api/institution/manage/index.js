@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { checkIfUserIsInstAdmin } from "@/src/utils/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 
@@ -54,10 +55,12 @@ export default async function handler(req, res) {
           select: {
             id: true,
             user: {
-              id: true,
-              name: true,
-              username: true,
-              image: true,
+              select: {
+                id: true,
+                name: true,
+                username: true,
+                image: true,
+              },
             },
             type: true,
           },

@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { slugify } from "@/src/utils/server";
 
 export default async function handler(req, res) {
   //Return error if admin secret is missing
@@ -94,6 +95,8 @@ const handlePOST = async (name, image, res) => {
       },
     });
 
+    const communityName = `Welcome to ${name}`;
+
     await prisma.community.create({
       data: {
         name: `Welcome to ${name}`,
@@ -105,6 +108,7 @@ const handlePOST = async (name, image, res) => {
           },
         },
         default: true,
+        slug: slugify(communityName),
       },
     });
 

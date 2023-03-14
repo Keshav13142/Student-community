@@ -66,10 +66,18 @@ export default async function handler(req, res) {
   try {
     if (req.method === "POST") {
       const { name, image, desc, type } = req.body;
-      const { institutionId } = req.query;
+
+      const institution = await prisma.institution.findFirst({
+        where: {
+          members: {
+            some: { user: { id: user.id } },
+          },
+        },
+        select: { id: true },
+      });
 
       // Return error if user is not an admin of the institution
-      if (!(await checkIfUserIsInstAdmin(user.id, institutionId))) {
+      if (!(await checkIfUserIsInstAdmin(user.id, institution.id))) {
         res.status(401).json({
           error: "Only admins of institutions can  create communities!!",
         });
@@ -82,7 +90,7 @@ export default async function handler(req, res) {
       }
 
       // Check if a community with the name already exists
-      if (await getCommunityWithName(name, institutionId)) {
+      if (await getCommunityWithName(name, institution.id)) {
         res
           .status(500)
           .json({ error: "Community with this name already exists!!" });
@@ -96,9 +104,14 @@ export default async function handler(req, res) {
           image,
           type,
           slug: slugify(name),
-          admins: {
-            connect: {
-              id: user.id,
+          members: {
+            create: {
+              user: {
+                connect: {
+                  id: user.id,
+                },
+              },
+              type: "ADMIN",
             },
           },
           institution: {
@@ -107,21 +120,12 @@ export default async function handler(req, res) {
             },
           },
         },
-        include: {
-          admins: {
-            select: {
-              name: true,
-            },
-          },
-          members: {
-            select: {
-              name: true,
-            },
-          },
+        select: {
+          slug: true,
         },
       });
 
-      res.json(community);
+      res.json({ redirect: `/community/${community.slug}` });
     }
   } catch (error) {
     console.log(error);

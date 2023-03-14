@@ -14,15 +14,18 @@ export default async function handler(req, res) {
 
   const { user } = session;
 
+  console.log(user);
+
   if (req.method === "GET") {
     try {
       const posts = await prisma.post.findMany({
         where: {
           institution: {
-            OR: [
-              { members: { some: { id: user.id } } },
-              { admins: { some: { id: user.id } } },
-            ],
+            members: {
+              some: {
+                user: user.id,
+              },
+            },
           },
         },
       });
@@ -43,6 +46,15 @@ export default async function handler(req, res) {
       return;
     }
 
+    const institution = await prisma.institution.findFirst({
+      where: {
+        members: {
+          some: { user: { id: user.id } },
+        },
+      },
+      select: { id: true },
+    });
+
     try {
       const post = await prisma.post.create({
         data: {
@@ -53,7 +65,7 @@ export default async function handler(req, res) {
           bannerImage,
           institution: {
             connect: {
-              id: user.institutionId,
+              id: institution.id,
             },
           },
           author: {

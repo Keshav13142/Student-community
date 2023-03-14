@@ -107,10 +107,11 @@ export default async function handler(req, res) {
         id: true,
         name: true,
         image: true,
+        slug: true,
       },
     });
 
-    res.json(joinedCommunity);
+    res.json({ redirect: `/community/${community.slug}`, data });
   } catch (error) {
     res.status(422).json({ error: error.message });
   }

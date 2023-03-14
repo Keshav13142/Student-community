@@ -17,8 +17,8 @@ export default async function handler(req, res) {
     res.json(
       await prisma.institution.findFirst({
         where: {
-          admins: {
-            some: { id: user.id },
+          members: {
+            some: { user: { id: user.id } },
           },
         },
         select: {

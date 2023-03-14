@@ -3,6 +3,22 @@ import pusher from "@/lib/pusher";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 
+const messageSelect = {
+  id: true,
+  communityId: true,
+  content: true,
+  createdAt: true,
+  deletedBy: true,
+  isDeleted: true,
+  sender: {
+    select: {
+      id: true,
+      username: true,
+      name: true,
+    },
+  },
+};
+
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
 
@@ -13,11 +29,10 @@ export default async function handler(req, res) {
   }
 
   const { user } = session;
+  const { communitySlug } = req.query;
 
-  const { communityId } = req.query;
-
-  if (!communityId) {
-    res.status(401).json({ error: "Community ID not provided!!" });
+  if (!communitySlug) {
+    res.status(401).json({ error: "Community slug not provided!!" });
     return;
   }
 
@@ -40,28 +55,14 @@ export default async function handler(req, res) {
           },
           community: {
             connect: {
-              id: communityId,
+              slug: communitySlug,
             },
           },
         },
-        select: {
-          id: true,
-          communityId: true,
-          content: true,
-          createdAt: true,
-          isDeleted: true,
-          deletedBy: true,
-          sender: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-            },
-          },
-        },
+        select: messageSelect,
       });
 
-      await pusher.trigger(`community-${communityId}`, "chat", message);
+      await pusher.trigger(`community-${communitySlug}`, "chat", message);
       res.status(201).json(message);
     } catch (error) {
       console.log(error);
@@ -74,24 +75,10 @@ export default async function handler(req, res) {
       const messages = await prisma.message.findMany({
         where: {
           community: {
-            id: communityId,
+            slug: communitySlug,
           },
         },
-        select: {
-          id: true,
-          communityId: true,
-          content: true,
-          createdAt: true,
-          deletedBy: true,
-          isDeleted: true,
-          sender: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-            },
-          },
-        },
+        select: messageSelect,
         orderBy: {
           createdAt: "asc",
         },
