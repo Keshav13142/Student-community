@@ -19,6 +19,13 @@ export default async function handler(req, res) {
     return;
   }
 
+  if (!(await checkIfUserIsInstAdmin(user.id, institutionId))) {
+    res
+      .status(401)
+      .json({ error: "You don't have permission to perform this action!!" });
+    return;
+  }
+
   // Adding user's as institution admins
   try {
     if (req.method === "PATCH") {

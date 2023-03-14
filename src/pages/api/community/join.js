@@ -111,7 +111,10 @@ export default async function handler(req, res) {
       },
     });
 
-    res.json({ redirect: `/community/${community.slug}`, data });
+    res.json({
+      redirect: `/community/${community.slug}`,
+      data: joinedCommunity,
+    });
   } catch (error) {
     res.status(422).json({ error: error.message });
   }

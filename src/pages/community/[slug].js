@@ -26,10 +26,7 @@ const Community = ({ community }) => {
   //     });
   //     const channel = pusher.subscribe(`community-${slug}`);
   //     channel.bind("chat", function (data) {
-  //       queryClient.setQueryData(["messages", slug], (prev) => [
-  //         ...prev,
-  //         data,
-  //       ]);
+  //       queryClient.setQueryData(["messages", slug], (prev) => [...prev, data]);
   //     });
   //     return () => {
   //       pusher.unsubscribe(`community-${slug}`);

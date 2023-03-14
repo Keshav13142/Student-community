@@ -20,9 +20,9 @@ export default async function handler(req, res) {
   const { user } = session;
 
   try {
-    // Check if the user is an admin of the community
     const { memberId, action, role, communityId } = req.body;
 
+    // Check if the user is an admin of the community
     if (!(await checkIfUserIsCommAdmin(user.id, communityId))) {
       res
         .status(401)

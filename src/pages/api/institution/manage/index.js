@@ -26,7 +26,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // TODO Check if the user is an admin of the institution
     if (!(await checkIfUserIsInstAdmin(user.id, institutionId))) {
       res
         .status(401)

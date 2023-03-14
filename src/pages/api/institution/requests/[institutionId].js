@@ -1,8 +1,5 @@
 import prisma from "@/lib/prisma";
-import {
-  checkIfUserIsCommAdmin,
-  checkIfUserIsInstAdmin,
-} from "@/src/utils/server";
+import { checkIfUserIsInstAdmin } from "@/src/utils/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 
@@ -18,14 +15,14 @@ export default async function handler(req, res) {
   const { user } = session;
   const { institutionId } = req.query;
 
-  try {
-    if (!(await checkIfUserIsInstAdmin(user.id, institutionId))) {
-      res
-        .status(401)
-        .json({ error: "Only community admins can perform this action!!" });
-      return;
-    }
+  if (!(await checkIfUserIsInstAdmin(user.id, institutionId))) {
+    res
+      .status(401)
+      .json({ error: "Only community admins can perform this action!!" });
+    return;
+  }
 
+  try {
     // Get a list of all the pending Approvals for that community
     if (req.method === "GET") {
       res.json(
