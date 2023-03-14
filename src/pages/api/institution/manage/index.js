@@ -20,18 +20,18 @@ export default async function handler(req, res) {
 
   // Return error if ID's are missing
   if (!institutionId) {
-    res.status(500).json({ error: "Missing fields!!" });
+    res.status(400).json({ error: "Missing fields!!" });
     return;
   }
 
   try {
     // TODO Check if the user is an admin of the institution
-    // if (!checkIfUserIsInstAdmin(user.id)) {
-    //   res
-    //     .status(500)
-    //     .json({ error: "You don't have permission to perform this action!!" });
-    //   return;
-    // }
+    if (!(await checkIfUserIsInstAdmin(user.id, institutionId))) {
+      res
+        .status(401)
+        .json({ error: "You don't have permission to perform this action!!" });
+      return;
+    }
 
     // Update the details
     const institution = await prisma.institution.update({
@@ -53,10 +53,13 @@ export default async function handler(req, res) {
         members: {
           select: {
             id: true,
-            name: true,
-            username: true,
-            image: true,
-            institutionAdminId: true,
+            user: {
+              id: true,
+              name: true,
+              username: true,
+              image: true,
+            },
+            type: true,
           },
         },
       },

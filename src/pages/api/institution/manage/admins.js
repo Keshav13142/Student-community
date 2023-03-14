@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   const { institutionId, userId, action } = req.body;
 
   if (!institutionId || !userId || !action) {
-    res.status(500).json({ error: "Missing details!!" });
+    res.status(400).json({ error: "Missing details!!" });
     return;
   }
 
@@ -27,45 +27,30 @@ export default async function handler(req, res) {
           id: institutionId,
         },
         data: {
-          admins: {
-            ...(action === "promote"
-              ? {
-                  connect: {
-                    id: userId,
-                  },
-                }
-              : {
-                  disconnect: {
-                    id: userId,
-                  },
-                }),
+          members: {
+            update: {
+              where: {
+                id: userId,
+              },
+              data: {
+                type: action === "promote" ? "ADMIN" : "MEMBER",
+              },
+            },
           },
         },
         include: {
           members: {
             select: {
               id: true,
-              name: true,
-              username: true,
-              image: true,
-              institutionAdminId: true,
+              user: {
+                id: true,
+                name: true,
+                username: true,
+                image: true,
+              },
+              type: true,
             },
           },
-        },
-      });
-
-      await prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          ...(action === "promote"
-            ? {
-                type: "ADMIN",
-              }
-            : {
-                type: "MEMBER",
-              }),
         },
       });
 
