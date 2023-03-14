@@ -69,7 +69,7 @@ const SideBar = () => {
       <Stack
         className="border-r border-r-slate-200"
         maxW="md"
-        minW="xs"
+        minW="2xs"
         alignItems="center"
         justifyContent="space-between"
         height="full"

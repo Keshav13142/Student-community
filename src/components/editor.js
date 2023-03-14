@@ -1,7 +1,6 @@
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
 import CodeMirror from "@uiw/react-codemirror";
-import React from "react";
 
 const MarkdownEditor = ({ onChange, value }) => {
   return (

@@ -56,50 +56,55 @@ const DiscoverCommunities = () => {
             Discover new Communities
             <BsFillPeopleFill />
           </h1>
-          <Stack spacing={3}>
-            {publicCommunities?.length === 0 && (
-              <Stack mt={2} alignItems="center">
+          <Stack
+            spacing={3}
+            justifyContent={publicCommunities?.length > 0 ? "" : "center"}
+            flexGrow={1}
+          >
+            {publicCommunities?.length > 0 ? (
+              publicCommunities?.map((c) => (
+                <Flex
+                  className="rounded-md border border-purple-500"
+                  key={c.id}
+                  alignItems="center"
+                  justifyContent="space-between"
+                  p={3}
+                  minW="md"
+                >
+                  <div className="flex items-center gap-5">
+                    <Avatar src={c.image} name={c.name} />
+                    <div className="flex flex-col">
+                      <Link
+                        href={`/community/${c.slug}`}
+                        className="text-lg font-medium text-blue-700 hover:underline"
+                      >
+                        # {c.name}
+                      </Link>
+                      <span>{c.desc}</span>
+                    </div>
+                  </div>
+                  <Badge
+                    variant="outline"
+                    color={c.type === "PUBLIC" ? "whatsapp.400" : "blue.300"}
+                  >
+                    {c.type}
+                  </Badge>
+                </Flex>
+              ))
+            ) : (
+              <div className="flex flex-col items-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  className="w-[50%] animate-pulse"
+                  src="https://doodleipsum.com/700x394/outline?i=c03e7275e5d70c0305b16230cb66f01c"
+                  alt="empty"
+                />
                 <div className="flex items-center gap-2 rounded-xl border border-purple-400 px-4 py-2 text-xl">
                   <SlInfo />
                   <span>No public communities found</span>
                 </div>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  className="w-[50%] animate-pulse"
-                  src="https://assets.materialup.com/uploads/8b0ec3cb-a32d-40bb-b17d-66b9fd744172/attachment.jpg"
-                  alt="empty"
-                />
-              </Stack>
+              </div>
             )}
-            {publicCommunities?.map((c) => (
-              <Flex
-                className="rounded-md border border-purple-500"
-                key={c.id}
-                alignItems="center"
-                justifyContent="space-between"
-                p={3}
-                minW="lg"
-              >
-                <Flex gap={5} alignItems="center">
-                  <Avatar src={c.image} name={c.name} />
-                  <Stack>
-                    <Link
-                      href={`/community/${c.slug}`}
-                      className="text-lg font-medium hover:text-blue-700 hover:underline"
-                    >
-                      # {c.name}
-                    </Link>
-                    <span>{c.desc}</span>
-                  </Stack>
-                </Flex>
-                <Badge
-                  variant="outline"
-                  color={c.type === "PUBLIC" ? "whatsapp.400" : "blue.300"}
-                >
-                  {c.type}
-                </Badge>
-              </Flex>
-            ))}
           </Stack>
         </Stack>
       )}

@@ -8,7 +8,6 @@ import {
 } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import React from "react";
 
 const Logout = () => (
   <Button

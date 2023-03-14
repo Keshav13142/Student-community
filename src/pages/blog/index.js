@@ -1,10 +1,9 @@
 import prisma from "@/lib/prisma";
-import { Button, IconButton, Stack } from "@chakra-ui/react";
+import { Button, IconButton } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { getServerSession } from "next-auth";
 import Head from "next/head";
 import Link from "next/link";
-import React from "react";
 import { BsNewspaper } from "react-icons/bs";
 import { MdClear } from "react-icons/md";
 import Navbar from "../../components/Layout/navbar";

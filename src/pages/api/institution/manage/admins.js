@@ -33,6 +33,11 @@ export default async function handler(req, res) {
                 id: userId,
               },
               data: {
+                user: {
+                  update: {
+                    isInstitutionAdmin: action === "promote" ? true : false,
+                  },
+                },
                 type: action === "promote" ? "ADMIN" : "MEMBER",
               },
             },
@@ -43,10 +48,12 @@ export default async function handler(req, res) {
             select: {
               id: true,
               user: {
-                id: true,
-                name: true,
-                username: true,
-                image: true,
+                select: {
+                  id: true,
+                  name: true,
+                  username: true,
+                  image: true,
+                },
               },
               type: true,
             },
