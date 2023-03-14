@@ -12,24 +12,21 @@ export default async function handler(req, res) {
     res.json(
       await prisma.institution.findMany({
         include: {
-          admins: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
           members: {
             select: {
-              id: true,
-              name: true,
-              email: true,
+              user: {
+                id: true,
+                name: true,
+                email: true,
+              },
+              type: true,
             },
           },
           communities: {
             select: {
               id: true,
               name: true,
+              type: true,
             },
           },
         },
@@ -76,7 +73,7 @@ const getInstWithName = async (name) => {
 // Create a new institution
 const handlePOST = async (name, image, res) => {
   if (!name) {
-    res.status(500).json({ error: "Institution name is required!!" });
+    res.status(400).json({ error: "Institution name is required!!" });
     return;
   }
 
