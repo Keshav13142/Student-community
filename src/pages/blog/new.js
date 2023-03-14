@@ -141,7 +141,7 @@ const CreateNewPost = ({ allCategories }) => {
       </Head>
       <div className="min-h-screen">
         <Navbar />
-        <div className="flex flex-col items-center justify-center gap-20 py-10 lg:flex-row lg:items-start">
+        <div className="flex flex-col items-center justify-center gap-5 py-10 lg:flex-row lg:items-start xl:gap-10  2xl:gap-20">
           <div className="order-2 flex max-w-3xl flex-col gap-10 lg:order-1">
             {fields.map((f, idx) => (
               <InputGroup key={idx} className="flex flex-col">
