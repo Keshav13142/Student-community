@@ -177,7 +177,7 @@ const SinglePost = ({ post }) => {
                 >
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-blue-500">
-                      {m.user.username}
+                      {m.user ? m.user.username : "[deleted]"}
                     </span>
                     <span className="text-xs text-gray-500">
                       {format(new Date(m.createdAt), "do MMMM")}
