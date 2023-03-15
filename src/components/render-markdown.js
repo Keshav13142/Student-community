@@ -6,7 +6,6 @@ import remarkGfm from "remark-gfm";
 const RenderMarkdown = ({ content }) => {
   return (
     <ReactMarkdown
-      className="max-w-[85vw] lg:max-w-[60vw] xl:min-w-[50vw] 2xl:min-w-[45vw]"
       rehypePlugins={[remarkGfm]}
       components={{
         code({ node, inline, className, children, ...props }) {
