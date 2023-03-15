@@ -1,4 +1,12 @@
-import { Flex, Hide, Stack } from "@chakra-ui/react";
+import {
+  Drawer,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerOverlay,
+  Flex,
+  Stack,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import Navbar from "./navbar";
 import SideBar from "./sidebar";
@@ -8,18 +16,24 @@ const routesWithLayout = ["/community/discover", "/community"];
 
 const Layout = ({ children }) => {
   const router = useRouter();
+  const { onClose, isOpen, onOpen } = useDisclosure();
 
   // If the current URL has the route, then render it with the Layout
   if (routesWithLayout.some((route) => router.pathname.includes(route))) {
     return (
       <Stack height="100vh">
-        <Navbar />
+        <Navbar onSidebarOpen={onOpen} />
         <Flex className="h-full" direction="row" style={{ marginTop: "0px" }}>
-          {/* Replace hide with hiding on smaller breakpoints  */}
-          {/* Cause the hide comp unmounts the sidebar causing it to refetch */}
-          <Hide below="md">
+          <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+            <DrawerOverlay />
+            <DrawerContent>
+              <DrawerCloseButton />
+              <SideBar />
+            </DrawerContent>
+          </Drawer>
+          <div className="hidden lg:block">
             <SideBar />
-          </Hide>
+          </div>
           {children}
         </Flex>
       </Stack>

@@ -12,8 +12,8 @@
 - [x] ~~Fix the community members modal code
 - [x] ~~Posts/Blog articles with comments~~
 - [x] ~~Check if user has admin/mod access in API before performing actions~~
-- [ ] User settings option in navbar dropdown
-- [ ] Responsiveness of sidebar
+- [x] ~~User settings option in navbar dropdown~~
+- [x] ~~Responsiveness of sidebar~~
 - [ ] Fix scrollbar height in chat page
 - [ ] Query filter params in blog page (AI&ML not working , probably cause of `&` symbol?)
 - [ ] User pending request screen
