@@ -57,7 +57,8 @@ const CommunityInfo = ({ data, code }) => {
               : data.type === "PRIVATE"
               ? "red.500"
               : "blue.300"
-          }>
+          }
+        >
           {data.type}
         </Badge>
       </Box>

@@ -6,7 +6,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { BsNewspaper } from "react-icons/bs";
 import { MdClear } from "react-icons/md";
-import Navbar from "../../components/Layout/navbar";
+import Navbar from "../../components/layout/navbar";
 import { authOptions } from "../api/auth/[...nextauth]";
 
 export async function getServerSideProps({ req, res, query }) {

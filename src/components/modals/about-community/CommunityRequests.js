@@ -1,7 +1,7 @@
 import {
-  getPendingInstnRequests,
-  managePendingInstnRequests,
-} from "@/src/utils/api-calls/institution";
+  getPendingCommRequests,
+  managePendingCommRequests,
+} from "@/lib/api-calls/community";
 import {
   Avatar,
   Badge,
@@ -12,19 +12,19 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import React, { useState } from "react";
 import { TbUserCheck, TbUserX } from "react-icons/tb";
 
-const InstitutionRequests = ({ institutionId }) => {
+const CommunityRequests = ({ communityId }) => {
   const toast = useToast();
   const queryClient = useQueryClient();
   const [showPendingOnly, setShowPendingOnly] = useState(true);
 
-  const { data } = useQuery(["institution_requests", institutionId], () =>
-    getPendingInstnRequests(institutionId)
+  const { data } = useQuery(["community_requests", communityId], () =>
+    getPendingCommRequests(communityId)
   );
 
-  const mutation = useMutation(managePendingInstnRequests, {
+  const mutation = useMutation(managePendingCommRequests, {
     onError: () => {
       toast({
         title: "Something went wrong!",
@@ -34,9 +34,8 @@ const InstitutionRequests = ({ institutionId }) => {
       });
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(
-        ["institution_requests", institutionId],
-        (prev) => prev.map((r) => (r.id === data.id ? data : r))
+      queryClient.setQueryData(["community_requests", communityId], (prev) =>
+        prev.map((r) => (r.id === data.id ? data : r))
       );
     },
   });
@@ -69,19 +68,21 @@ const InstitutionRequests = ({ institutionId }) => {
               p={2}
               className="rounded-lg border border-purple-400 shadow-sm"
               justifyContent="space-between"
-              alignItems="center">
+              alignItems="center"
+            >
               <Flex alignItems="center" gap={5}>
-                <Avatar src={user.image} name={user.name} />
+                <Avatar src={user?.image} name={user?.name} />
                 <Stack>
-                  <span className="text-base font-medium">{user.name}</span>
-                  <span className="cursor-pointer text-blue-700">{`@${user.username}`}</span>
+                  <span className="text-base font-medium">{user?.name}</span>
+                  <span className="cursor-pointer text-blue-700">{`@${user?.username}`}</span>
                 </Stack>
               </Flex>
               {status !== "PENDING" && (
                 <Badge
                   className="mr-2"
                   variant="outline"
-                  colorScheme={status === "REJECTED" ? "red" : "green"}>
+                  colorScheme={status === "REJECTED" ? "red" : "green"}
+                >
                   {status}
                 </Badge>
               )}
@@ -89,7 +90,7 @@ const InstitutionRequests = ({ institutionId }) => {
                 <IconButton
                   onClick={() => {
                     mutation.mutate({
-                      institutionId,
+                      communityId,
                       approvalId: id,
                       approvalStatus: true,
                     });
@@ -102,7 +103,7 @@ const InstitutionRequests = ({ institutionId }) => {
                 <IconButton
                   onClick={() => {
                     mutation.mutate({
-                      institutionId,
+                      communityId,
                       approvalId: id,
                       approvalStatus: false,
                     });
@@ -121,4 +122,4 @@ const InstitutionRequests = ({ institutionId }) => {
   );
 };
 
-export default InstitutionRequests;
+export default CommunityRequests;

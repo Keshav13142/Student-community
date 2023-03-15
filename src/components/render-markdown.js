@@ -1,4 +1,4 @@
-import { synthWave } from "@/src/theme";
+import { synthWave } from "@/utils/theme";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import remarkGfm from "remark-gfm";

@@ -1,4 +1,4 @@
-import { manageInstnAdmin } from "@/src/utils/api-calls/institution";
+import { manageInstnAdmin } from "@/lib/api-calls/institution";
 import {
   Alert,
   AlertIcon,
@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -76,7 +76,8 @@ const InstitutionAdminActions = ({
       isOpen={isOpen}
       onClose={onClose}
       size="md"
-      isCentered>
+      isCentered
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader textAlign="center" fontSize="2xl">
@@ -103,7 +104,8 @@ const InstitutionAdminActions = ({
             colorScheme="red"
             variant={"outline"}
             mr={3}
-            onClick={handleAction}>
+            onClick={handleAction}
+          >
             Proceed
           </Button>
         </ModalFooter>

@@ -1,5 +1,5 @@
-import { createUserProfile } from "@/src/utils/api-calls/user";
-import { newUserFormSchema, parseZodErrors } from "@/src/utils/zod_schemas";
+import { createUserProfile } from "@/lib/api-calls/user";
+import { newUserFormSchema, parseZodErrors } from "@/utils/zod_schemas";
 import {
   Button,
   Flex,
@@ -39,7 +39,8 @@ const formFields = [
         placement="right-start"
         trigger="hover"
         openDelay={0}
-        closeDelay={700}>
+        closeDelay={700}
+      >
         <PopoverTrigger>
           <IconButton
             tabIndex="-1"
@@ -88,7 +89,8 @@ const formFields = [
       <Tooltip
         placement="right"
         label="Enter the unique code of the institution you belong to!"
-        fontSize="md">
+        fontSize="md"
+      >
         <span>
           <AiOutlineInfoCircle />
         </span>
@@ -202,7 +204,8 @@ const NewUserForm = () => {
           onChange={(v) => {
             setCodeType(v);
             setFromErrors((p) => ({ ...p, institutionCode: null }));
-          }}>
+          }}
+        >
           <Stack spacing={5} direction="row">
             <Radio colorScheme="blue" value="memberCode">
               Member
@@ -219,7 +222,8 @@ const NewUserForm = () => {
         type="submit"
         variant="solid"
         colorScheme="purple"
-        onClick={handleSubmit}>
+        onClick={handleSubmit}
+      >
         Join
       </Button>
       <Button
@@ -228,7 +232,8 @@ const NewUserForm = () => {
         colorScheme="purple"
         onClick={() => {
           signOut({ redirect: false });
-        }}>
+        }}
+      >
         Logout
       </Button>
     </form>

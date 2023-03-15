@@ -1,9 +1,9 @@
+import { createNewPost } from "@/lib/api-calls/posts";
 import prisma from "@/lib/prisma";
 import MarkdownEditor from "@/src/components/editor";
-import Navbar from "@/src/components/Layout/navbar";
+import Navbar from "@/src/components/layout/navbar";
 import RenderMarkdown from "@/src/components/render-markdown";
-import { createNewPost } from "@/src/utils/api-calls/posts";
-import { createPostSchema, parseZodErrors } from "@/src/utils/zod_schemas";
+import { createPostSchema, parseZodErrors } from "@/utils/zod_schemas";
 import {
   Button,
   Input,

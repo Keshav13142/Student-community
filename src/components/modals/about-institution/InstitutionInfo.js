@@ -1,4 +1,4 @@
-import { getInstInviteCodes } from "@/src/utils/api-calls/institution";
+import { getInstInviteCodes } from "@/lib/api-calls/institution";
 import {
   Box,
   Flex,

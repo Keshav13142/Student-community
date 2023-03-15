@@ -1,7 +1,7 @@
+import { sendComment } from "@/lib/api-calls/posts";
 import prisma from "@/lib/prisma";
-import Navbar from "@/src/components/Layout/navbar";
+import Navbar from "@/src/components/layout/navbar";
 import RenderMarkdown from "@/src/components/render-markdown";
-import { sendComment } from "@/src/utils/api-calls/posts";
 import { Avatar, Button, IconButton, Input, useToast } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";

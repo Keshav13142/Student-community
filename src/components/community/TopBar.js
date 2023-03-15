@@ -1,4 +1,4 @@
-import { requestToJoinCommunity } from "@/src/utils/api-calls/community";
+import { requestToJoinCommunity } from "@/lib/api-calls/community";
 import {
   Avatar,
   Button,
@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { FaChevronLeft } from "react-icons/fa";
 import { ImInfo } from "react-icons/im";
-import AboutCommunity from "../modals/AboutCommunity";
+import AboutCommunity from "../modals/about-community";
 
 const CommunityTopBar = ({ data, isDisabled }) => {
   const router = useRouter();

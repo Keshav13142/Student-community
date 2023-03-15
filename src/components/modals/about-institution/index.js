@@ -1,7 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
-import { getCommInviteCode } from "@/src/utils/api-calls/community";
+import { fetchInstitutionData } from "@/lib/api-calls/institution";
 import {
-  Badge,
   IconButton,
   Modal,
   ModalBody,
@@ -18,20 +16,23 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { RiEditBoxLine } from "react-icons/ri";
-import CommunityActions from "../AdminActions/community";
-import CommunityInfo from "./CommunityInfo";
-import { default as CommunityMembers } from "./CommunityMembers";
-import CommunityRequests from "./CommunityRequests";
-import EditCommunityInfo from "./EditCommunityInfo";
+import InstitutionAdminActions from "../admin-actions/institution";
+import EditInstitutionInfo from "./EditInstitutionInfo";
+import InstitutionInfo from "./InstitutionInfo";
+import Members from "./InstitutionMembers";
+import InstitutionRequests from "./InstitutionRequests";
 
-const AboutCommunity = ({ isOpen, onClose, data }) => {
-  const { data: codeData } = useQuery(
-    ["communityInviteCode", data?.id],
-    () => getCommInviteCode(data.id),
-    { enabled: Boolean(data.isCurrentUserAdmin) }
+const AboutInstitution = ({ isOpen, onClose }) => {
+  const { data: institutionData } = useQuery(
+    ["aboutInstitution"],
+    fetchInstitutionData
   );
+
+  const session = useSession();
+  const isCurrentUserAdmin = session.data?.user.isInstitutionAdmin;
 
   const {
     isOpen: isActionsOpen,
@@ -48,9 +49,9 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
 
   return (
     <>
-      {data?.isCurrentUserAdmin && (
-        <CommunityActions
-          communityId={data?.id}
+      {isCurrentUserAdmin && (
+        <InstitutionAdminActions
+          institutionId={institutionData?.id}
           action={action}
           onClose={onActionsClose}
           isOpen={isActionsOpen}
@@ -71,11 +72,8 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
             display="flex"
             justifyContent="center"
           >
-            <div className="text-2xl">
-              <span>About </span>
-              <span className="text-purple-500">- {data.name}</span>
-            </div>
-            {data.isCurrentUserAdmin && (
+            <span className="text-2xl">About institution</span>
+            {isCurrentUserAdmin && (
               <Tooltip label="Edit" placement="right">
                 <IconButton
                   icon={<RiEditBoxLine />}
@@ -87,39 +85,35 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Tabs isFitted variant="line" colorScheme="purple">
+            <Tabs isFitted variant="enclosed-colored" colorScheme="purple">
               <TabList mb="1em">
                 <Tab>Info</Tab>
                 <Tab>Members</Tab>
-                {data.isCurrentUserAdmin && data.type === "RESTRICTED" && (
-                  <Tab>Requests</Tab>
-                )}
+                {isCurrentUserAdmin && <Tab>Requests</Tab>}
               </TabList>
               <TabPanels>
                 <TabPanel>
                   {isEditMode ? (
-                    <EditCommunityInfo
-                      data={data}
-                      onCancel={() => {
-                        setIsEditMode(false);
-                      }}
+                    <EditInstitutionInfo
+                      data={institutionData}
+                      onCancel={() => setIsEditMode(false)}
                     />
                   ) : (
-                    <CommunityInfo data={data} code={codeData?.code} />
+                    <InstitutionInfo data={institutionData} />
                   )}
                 </TabPanel>
                 <TabPanel>
-                  <CommunityMembers
+                  <Members
                     doAction={(data) => {
                       setAction(data);
                       onActionsOpen();
                     }}
-                    data={data}
+                    members={institutionData?.members}
                   />
                 </TabPanel>
-                {data.isCurrentUserAdmin && (
+                {isCurrentUserAdmin && (
                   <TabPanel>
-                    <CommunityRequests communityId={data.id} />
+                    <InstitutionRequests institutionId={institutionData?.id} />
                   </TabPanel>
                 )}
               </TabPanels>
@@ -131,4 +125,4 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
   );
 };
 
-export default AboutCommunity;
+export default AboutInstitution;

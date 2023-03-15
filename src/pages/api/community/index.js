@@ -3,7 +3,7 @@ import {
   checkIfUserIsInstAdmin,
   getCommunityWithName,
   slugify,
-} from "@/src/utils/server";
+} from "@/lib/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 

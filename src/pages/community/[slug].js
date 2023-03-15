@@ -1,8 +1,8 @@
+import { getCommunityInfo } from "@/lib/api-calls/community";
+import { fetchMessages } from "@/lib/api-calls/messages";
 import CommunityTopBar from "@/src/components/community/TopBar";
 import ScrollableMessageBox from "@/src/components/messages";
 import MessageInputBox from "@/src/components/messages/InputBox";
-import { getCommunityInfo } from "@/src/utils/api-calls/community";
-import { fetchMessages } from "@/src/utils/api-calls/messages";
 import { Box, Progress, Stack, useToast } from "@chakra-ui/react";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";

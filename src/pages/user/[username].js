@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import Navbar from "@/src/components/Layout/navbar";
+import Navbar from "@/src/components/layout/navbar";
 import {
   Alert,
   AlertIcon,

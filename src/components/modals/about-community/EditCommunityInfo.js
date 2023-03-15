@@ -1,47 +1,40 @@
-import { updateInstitutionInfo } from "@/src/utils/api-calls/institution";
-import {
-  parseZodErrors,
-  updateInstitutionSchema,
-} from "@/src/utils/zod_schemas";
+import { updateCommunityInfo } from "@/lib/api-calls/community";
+import { parseZodErrors, updateCommunitySchema } from "@/utils/zod_schemas";
 import {
   Button,
   Flex,
   Input,
   InputGroup,
   InputRightElement,
+  Radio,
+  RadioGroup,
   Stack,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
-import { AiOutlineLink } from "react-icons/ai";
+import { useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
-import { MdAlternateEmail } from "react-icons/md";
 
 const formFields = [
-  { name: "name", icon: null, placeholder: "Institution Name" },
-  { name: "website", icon: <AiOutlineLink />, placeholder: "Website link" },
-  {
-    name: "supportEmail",
-    icon: <MdAlternateEmail />,
-    placeholder: "Support email",
-  },
-  { name: "image", icon: <BsFillImageFill />, placeholder: "Image link" },
+  { name: "name", icon: null, placeholder: "Community Name" },
+  { name: "desc", icon: null, placeholder: "Description" },
+  { name: "image", icon: <BsFillImageFill />, placeholder: "Logo link" },
 ];
 
 const initialErrors = {
   name: null,
+  desc: null,
   image: null,
-  website: null,
-  supportEmail: null,
+  type: null,
 };
 
-const EditInstitutionInfo = ({ data, onCancel }) => {
+const EditCommunityInfo = ({ data, onCancel }) => {
   const initialInputs = {
     name: data?.name,
+    desc: data?.desc || "",
     image: data?.image || "",
-    website: data?.website || "",
-    supportEmail: data?.supportEmail || "",
+    type: data?.type,
   };
 
   const [inputs, setInputs] = useState(initialInputs);
@@ -49,17 +42,31 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
   const queryClient = useQueryClient();
   const toast = useToast();
 
-  const mutation = useMutation(updateInstitutionInfo, {
-    onError: () => {
+  const mutation = useMutation(updateCommunityInfo, {
+    onError: (error) => {
       toast({
-        title: "Failed to update!!",
+        title: error.response.data.error,
         status: "error",
         duration: 3000,
         isClosable: true,
       });
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["aboutInstitution"], () => data);
+    onSuccess: (newData) => {
+      queryClient.setQueryData(["communityInfo", newData.slug], (prev) => ({
+        ...prev,
+        ...newData,
+      }));
+      queryClient.setQueryData(["userCommunities"], (prev) =>
+        prev.map((comm) =>
+          comm.id === newData.id ? { ...comm, ...newData } : comm
+        )
+      );
+      toast({
+        title: "Updated info!!",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
       onCancel();
     },
   });
@@ -75,14 +82,14 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const parsedInputs = updateInstitutionSchema.safeParse(inputs);
+    const parsedInputs = updateCommunitySchema.safeParse(inputs);
 
     if (!parsedInputs.success) {
       setErrors((p) => ({ ...p, ...parseZodErrors(parsedInputs) }));
       return;
     }
 
-    mutation.mutate({ ...inputs, institutionId: data.id });
+    mutation.mutate({ ...inputs, communityId: data.id });
   };
 
   return (
@@ -104,6 +111,20 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
             </InputGroup>
           </div>
         ))}
+        <RadioGroup
+          defaultValue={inputs.type}
+          name="type"
+          onChange={(v) => {
+            setInputs((p) => ({ ...p, type: v }));
+          }}
+        >
+          <Stack spacing={3}>
+            <Text className="font-medium">Community type</Text>
+            <Radio value="PUBLIC">Public</Radio>
+            <Radio value="PRIVATE">Private</Radio>
+            <Radio value="RESTRICTED">Restricted</Radio>
+          </Stack>
+        </RadioGroup>
         <Flex alignSelf="center" gap={3}>
           <Button
             disabled={mutation.isLoading}
@@ -114,7 +135,8 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
               setErrors(initialErrors);
               onCancel();
             }}
-            type="button">
+            type="button"
+          >
             Cancel
           </Button>
           <Button
@@ -124,13 +146,15 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
             onClick={() => {
               setInputs(initialInputs);
               setErrors(initialErrors);
-            }}>
+            }}
+          >
             Reset
           </Button>
           <Button
             isLoading={mutation.isLoading}
             colorScheme="purple"
-            type="submit">
+            type="submit"
+          >
             Submit
           </Button>
         </Flex>
@@ -139,4 +163,4 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
   );
 };
 
-export default EditInstitutionInfo;
+export default EditCommunityInfo;

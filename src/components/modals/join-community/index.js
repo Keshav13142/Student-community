@@ -1,4 +1,4 @@
-import { joinCommunityWithCode } from "@/src/utils/api-calls/community";
+import { joinCommunityWithCode } from "@/lib/api-calls/community";
 import {
   Button,
   Flex,

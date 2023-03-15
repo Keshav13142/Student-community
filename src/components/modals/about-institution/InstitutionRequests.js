@@ -1,7 +1,7 @@
 import {
-  getPendingCommRequests,
-  managePendingCommRequests,
-} from "@/src/utils/api-calls/community";
+  getPendingInstnRequests,
+  managePendingInstnRequests,
+} from "@/lib/api-calls/institution";
 import {
   Avatar,
   Badge,
@@ -12,19 +12,19 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { useState } from "react";
 import { TbUserCheck, TbUserX } from "react-icons/tb";
 
-const CommunityRequests = ({ communityId }) => {
+const InstitutionRequests = ({ institutionId }) => {
   const toast = useToast();
   const queryClient = useQueryClient();
   const [showPendingOnly, setShowPendingOnly] = useState(true);
 
-  const { data } = useQuery(["community_requests", communityId], () =>
-    getPendingCommRequests(communityId)
+  const { data } = useQuery(["institution_requests", institutionId], () =>
+    getPendingInstnRequests(institutionId)
   );
 
-  const mutation = useMutation(managePendingCommRequests, {
+  const mutation = useMutation(managePendingInstnRequests, {
     onError: () => {
       toast({
         title: "Something went wrong!",
@@ -34,8 +34,9 @@ const CommunityRequests = ({ communityId }) => {
       });
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(["community_requests", communityId], (prev) =>
-        prev.map((r) => (r.id === data.id ? data : r))
+      queryClient.setQueryData(
+        ["institution_requests", institutionId],
+        (prev) => prev.map((r) => (r.id === data.id ? data : r))
       );
     },
   });
@@ -71,10 +72,10 @@ const CommunityRequests = ({ communityId }) => {
               alignItems="center"
             >
               <Flex alignItems="center" gap={5}>
-                <Avatar src={user?.image} name={user?.name} />
+                <Avatar src={user.image} name={user.name} />
                 <Stack>
-                  <span className="text-base font-medium">{user?.name}</span>
-                  <span className="cursor-pointer text-blue-700">{`@${user?.username}`}</span>
+                  <span className="text-base font-medium">{user.name}</span>
+                  <span className="cursor-pointer text-blue-700">{`@${user.username}`}</span>
                 </Stack>
               </Flex>
               {status !== "PENDING" && (
@@ -90,7 +91,7 @@ const CommunityRequests = ({ communityId }) => {
                 <IconButton
                   onClick={() => {
                     mutation.mutate({
-                      communityId,
+                      institutionId,
                       approvalId: id,
                       approvalStatus: true,
                     });
@@ -103,7 +104,7 @@ const CommunityRequests = ({ communityId }) => {
                 <IconButton
                   onClick={() => {
                     mutation.mutate({
-                      communityId,
+                      institutionId,
                       approvalId: id,
                       approvalStatus: false,
                     });
@@ -122,4 +123,4 @@ const CommunityRequests = ({ communityId }) => {
   );
 };
 
-export default CommunityRequests;
+export default InstitutionRequests;

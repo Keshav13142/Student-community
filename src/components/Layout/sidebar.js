@@ -1,8 +1,10 @@
-import { fetchCommunities } from "@/src/utils/api-calls/community";
+import { fetchCommunities } from "@/lib/api-calls/community";
 import {
   Button,
+  Container,
   Divider,
   Flex,
+  SkeletonText,
   Stack,
   Text,
   useDisclosure,
@@ -14,10 +16,21 @@ import Link from "next/link";
 import { ImInfo } from "react-icons/im";
 import { RiUserAddLine } from "react-icons/ri";
 import { TbBrowserPlus } from "react-icons/tb";
-import AboutInstitution from "../../modals/AboutInstitution";
-import CreateCommunityModal from "../../modals/CreateCommunityModal";
-import JoinCommunity from "../../modals/JoinCommunity";
-import Loading from "./Loading";
+import AboutInstitution from "../modals/about-institution";
+import CreateCommunityModal from "../modals/create-community";
+import JoinCommunity from "../modals/join-community";
+
+const LoadingSkeleton = ({ count }) => {
+  return (
+    <>
+      {[...new Array(count)].map((_, i) => (
+        <Container key={i} padding="5" bg="gray.200" rounded="xl">
+          <SkeletonText noOfLines={2} spacing="2" skeletonHeight="2" />
+        </Container>
+      ))}{" "}
+    </>
+  );
+};
 
 const SideBar = () => {
   const session = useSession();
@@ -79,7 +92,7 @@ const SideBar = () => {
           <Text className="text-2xl font-medium">Your communities</Text>
           <Divider />
           {loading ? (
-            <Loading count={4} />
+            <LoadingSkeleton count={4} />
           ) : (
             <Stack>
               {communities === [] ? (

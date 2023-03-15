@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { slugify } from "@/src/utils/server";
+import { slugify } from "@/lib/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 

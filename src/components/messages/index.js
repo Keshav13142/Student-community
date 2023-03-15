@@ -1,4 +1,4 @@
-import { hideOrShowMessage } from "@/src/utils/api-calls/messages";
+import { hideOrShowMessage } from "@/lib/api-calls/messages";
 import {
   AlertDialog,
   AlertDialogBody,

@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SessionProvider } from "next-auth/react";
 import { useState } from "react";
 import AuthGuard from "../components/Auth";
-import Layout from "../components/Layout";
+import Layout from "../components/layout";
 import { TailwindIndicator } from "../components/tailwindcss-indicator";
 
 export default function App({ Component, pageProps }) {

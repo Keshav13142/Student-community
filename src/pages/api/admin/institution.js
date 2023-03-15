@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { slugify } from "@/src/utils/server";
+import { slugify } from "@/lib/server";
 
 export default async function handler(req, res) {
   //Return error if admin secret is missing
