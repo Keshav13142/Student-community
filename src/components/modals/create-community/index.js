@@ -23,7 +23,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
 
-const CreateCommunityModal = ({ isOpen, onClose }) => {
+const CreateCommunityModal = ({ isOpen, onClose, onSidebarClose }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const toast = useToast();
@@ -46,6 +46,7 @@ const CreateCommunityModal = ({ isOpen, onClose }) => {
       queryClient.invalidateQueries({ queryKey: ["userCommunities"] });
       queryClient.invalidateQueries({ queryKey: ["publicCommunities"] });
       onClose();
+      onSidebarClose();
       toast({
         title: "Created community successfully!",
         status: "success",

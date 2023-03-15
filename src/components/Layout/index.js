@@ -28,11 +28,11 @@ const Layout = ({ children }) => {
             <DrawerOverlay />
             <DrawerContent>
               <DrawerCloseButton />
-              <SideBar />
+              <SideBar onSidebarClose={onClose} />
             </DrawerContent>
           </Drawer>
           <div className="hidden lg:block">
-            <SideBar />
+            <SideBar onSidebarClose={onClose} />
           </div>
           {children}
         </Flex>

@@ -19,21 +19,21 @@ const Community = ({ community }) => {
   const { slug } = router.query;
   const queryClient = useQueryClient();
 
-  // useEffect(() => {
-  //   if (slug) {
-  //     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
-  //       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
-  //     });
-  //     const channel = pusher.subscribe(`community-${slug}`);
-  //     channel.bind("chat", function (data) {
-  //       queryClient.setQueryData(["messages", slug], (prev) => [...prev, data]);
-  //     });
-  //     return () => {
-  //       pusher.unsubscribe(`community-${slug}`);
-  //     };
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [slug]);
+  useEffect(() => {
+    if (slug) {
+      const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+        cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+      });
+      const channel = pusher.subscribe(`community-${slug}`);
+      channel.bind("chat", function (data) {
+        queryClient.setQueryData(["messages", slug], (prev) => [...prev, data]);
+      });
+      return () => {
+        pusher.unsubscribe(`community-${slug}`);
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
 
   const [
     { data: communityData, isLoading: isCommLoading, error },

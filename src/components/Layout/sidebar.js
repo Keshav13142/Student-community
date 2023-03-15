@@ -32,7 +32,7 @@ const LoadingSkeleton = ({ count }) => {
   );
 };
 
-const SideBar = () => {
+const SideBar = ({ onSidebarClose }) => {
   const session = useSession();
   const toast = useToast();
 
@@ -74,11 +74,23 @@ const SideBar = () => {
 
   return (
     <>
-      <AboutInstitution onClose={onAboutClose} isOpen={isAboutOpen} />
+      <AboutInstitution
+        onClose={onAboutClose}
+        isOpen={isAboutOpen}
+        onSidebarClose={onSidebarClose}
+      />
       {session.data?.user?.isInstitutionAdmin && (
-        <CreateCommunityModal onClose={onCreateClose} isOpen={isCreateOpen} />
+        <CreateCommunityModal
+          onSidebarClose={onSidebarClose}
+          onClose={onCreateClose}
+          isOpen={isCreateOpen}
+        />
       )}
-      <JoinCommunity isOpen={isJoinOpen} onClose={onJoinClose} />
+      <JoinCommunity
+        isOpen={isJoinOpen}
+        onClose={onJoinClose}
+        onSidebarClose={onSidebarClose}
+      />
       <Stack
         className="border-r border-r-slate-200"
         maxW="md"
@@ -99,7 +111,11 @@ const SideBar = () => {
                 <h2>Communities you join will show up here!</h2>
               ) : (
                 communities?.map((c, i) => (
-                  <Link key={c.id} href={`/community/${c.slug}`}>
+                  <Link
+                    key={c.id}
+                    href={`/community/${c.slug}`}
+                    onClick={onSidebarClose}
+                  >
                     <Flex
                       paddingY={2}
                       display="flex"

@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { MdVpnKey } from "react-icons/md";
 
-const JoinCommunity = ({ isOpen, onClose }) => {
+const JoinCommunity = ({ isOpen, onClose, onSidebarClose }) => {
   const [inviteCode, setInviteCode] = useState("");
   const [error, setError] = useState(null);
   const toast = useToast();
@@ -36,12 +36,11 @@ const JoinCommunity = ({ isOpen, onClose }) => {
         isClosable: true,
       });
     },
-    onSuccess: (data) => {
-      if (data.isExistingUser) {
-        router.push(`/community/${data.id}`);
+    onSuccess: ({ isExistingUser, data, redirect }) => {
+      if (isExistingUser) {
+        router.push(redirect);
         toast({
-          title: `You are already a member of ${data.name}`,
-          description: "Bruhhh 😑",
+          title: `You are already a member`,
           status: "info",
           duration: 2500,
           isClosable: true,
@@ -49,7 +48,7 @@ const JoinCommunity = ({ isOpen, onClose }) => {
       } else {
         queryClient.setQueryData(["userCommunities"], (prev) => [
           ...prev,
-          data.data,
+          data,
         ]);
         toast({
           title: `Welcome to ${data.name}`,
@@ -57,11 +56,10 @@ const JoinCommunity = ({ isOpen, onClose }) => {
           duration: 2500,
           isClosable: true,
         });
-        router.push(data.redirect);
+        router.push(redirect);
       }
-    },
-    onSettled: () => {
       onClose();
+      onSidebarClose();
       setInviteCode("");
     },
   });

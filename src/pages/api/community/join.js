@@ -78,11 +78,17 @@ export default async function handler(req, res) {
           },
         ],
       },
+      select: {
+        slug: true,
+      },
     });
 
     // Return if above case is true
     if (community) {
-      res.json({ ...community, isExistingUser: true });
+      res.json({
+        redirect: `/community/${community.slug}`,
+        isExistingUser: true,
+      });
       return;
     }
 
@@ -112,7 +118,7 @@ export default async function handler(req, res) {
     });
 
     res.json({
-      redirect: `/community/${community.slug}`,
+      redirect: `/community/${joinedCommunity.slug}`,
       data: joinedCommunity,
     });
   } catch (error) {

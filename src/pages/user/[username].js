@@ -109,7 +109,7 @@ export async function getServerSideProps({ req, res, query }) {
           }
         : profile,
       communities,
-      ownProfile: profile.username === user.username,
+      ownProfile: profile?.username === user.username,
     },
   };
 }
