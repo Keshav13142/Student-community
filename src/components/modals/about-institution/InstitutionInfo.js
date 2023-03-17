@@ -37,15 +37,16 @@ const InviteCode = ({ code, title }) => {
 };
 
 const InstitutionInfo = ({ data }) => {
+  const session = useSession();
+
   const { data: inviteCodes } = useQuery(
     ["institutionInviteCodes"],
     getInstInviteCodes,
     {
-      enabled: Boolean(data?.isCurrentUserAdmin),
+      enabled: session.data?.user?.isInstitutionAdmin,
     }
   );
 
-  const session = useSession();
   return (
     <Stack flexDirection="column" gap={5} alignItems="center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
