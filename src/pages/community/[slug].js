@@ -8,10 +8,10 @@ import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Pusher from "pusher-js";
 import { useEffect } from "react";
+import SocketIOClient from "socket.io-client";
 
-const Community = ({ community }) => {
+const Community = () => {
   const router = useRouter();
   const session = useSession();
   const toast = useToast();
@@ -20,20 +20,18 @@ const Community = ({ community }) => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (slug) {
-      const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
-        cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
-      });
-      const channel = pusher.subscribe(`community-${slug}`);
-      channel.bind("chat", function (data) {
-        if (data.sender.id === session.data?.user.id) return;
-        queryClient.setQueryData(["messages", slug], (prev) => [...prev, data]);
-      });
-      return () => {
-        pusher.unsubscribe(`community-${slug}`);
-      };
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // connect to socket server
+    const socket = SocketIOClient.connect(process.env.NEXT_PUBLIC_APP_URL, {
+      path: "/api/socketio",
+    });
+
+    // update chat on new message dispatched
+    socket.on(`community-${slug}`, (data) => {
+      queryClient.setQueryData(["messages", slug], (prev) => [...prev, data]);
+    });
+
+    // socket disconnet onUnmount if exists
+    if (socket) return () => socket.disconnect();
   }, [slug]);
 
   const [

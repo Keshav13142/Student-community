@@ -27,15 +27,6 @@ const MessageInputBox = ({ isDisabled, slug }) => {
     const { user } = session.data;
     if (mutation.isLoading) return;
     if (input.trim() !== "") {
-      const newMessage = {
-        content: input,
-        createdAt: new Date(),
-        sender: { id: user.id, username: user.username },
-      };
-      queryClient.setQueryData(["messages", slug], (prev) => [
-        ...prev,
-        newMessage,
-      ]);
       setInput("");
       mutation.mutate({ slug, content: input });
     }
