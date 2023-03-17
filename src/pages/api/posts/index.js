@@ -14,8 +14,6 @@ export default async function handler(req, res) {
 
   const { user } = session;
 
-  console.log(user);
-
   if (req.method === "GET") {
     try {
       const posts = await prisma.post.findMany({
@@ -102,14 +100,14 @@ export default async function handler(req, res) {
     }
   }
 
-  const { postId } = req.query;
-
-  if (!postId) {
-    res.status(400).json({ message: "Missing post id." });
-    return;
-  }
-
   if (req.method === "PATCH") {
+    const { postId } = req.query;
+
+    if (!postId) {
+      res.status(400).json({ message: "Missing post id." });
+      return;
+    }
+
     const { title, bannerImage, content, categoryId, newCategory, publish } =
       req.body;
 
@@ -160,6 +158,13 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "DELETE") {
+    const { postId } = req.query;
+
+    if (!postId) {
+      res.status(400).json({ message: "Missing post id." });
+      return;
+    }
+
     try {
       await prisma.post.delete({ where: { id: postId } });
       res.json({

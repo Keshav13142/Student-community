@@ -16,8 +16,6 @@ export default async function handler(req, res) {
   const { user } = session;
   const { comment, slug } = req.body;
 
-  console.log(req.body);
-
   try {
     const newComment = await prisma.postComments.create({
       data: {

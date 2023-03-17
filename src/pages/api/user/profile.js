@@ -127,6 +127,7 @@ export default async function handler(req, res) {
           enrollmentStatus: {
             set: codeType === "adminCode" ? "APPROVED" : "PENDING",
           },
+          isInstitutionAdmin: codeType === "adminCode" ? true : false,
           username,
           bio,
           name,

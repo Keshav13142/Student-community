@@ -99,7 +99,6 @@ const SinglePost = ({ post }) => {
       });
     },
     onSuccess: (data) => {
-      console.log(data);
       setInput("");
       toast({
         title: "Comment sent",

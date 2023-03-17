@@ -67,15 +67,15 @@ export default async function handler(req, res) {
       }
     }
 
-    if (!(await checkIfUserIsCommAdmin(user.id, communityId))) {
-      res
-        .status(401)
-        .json({ error: "Only community admins can perform this action!!" });
-      return;
-    }
-
     // Get a list of all the pending Approvals for that community
     if (req.method === "GET") {
+      if (!(await checkIfUserIsCommAdmin(user.id, communityId))) {
+        res.status(401).json({
+          error: "Only community admins can perform this action!!",
+        });
+        return;
+      }
+
       res.json(
         await prisma.pendingApprovals.findMany({
           where: {
@@ -101,6 +101,13 @@ export default async function handler(req, res) {
 
     // handle PUT request
     if (req.method === "PATCH") {
+      if (!(await checkIfUserIsCommAdmin(user.id, communityId))) {
+        res.status(401).json({
+          error: "Only community admins can perform this action!!",
+        });
+        return;
+      }
+
       const { approvalId, approvalStatus } = req.body;
 
       const approval = await prisma.pendingApprovals.update({
