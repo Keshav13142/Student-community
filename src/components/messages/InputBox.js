@@ -24,6 +24,7 @@ const MessageInputBox = ({ isDisabled, slug }) => {
 
   const handleMessageSend = async (e) => {
     e.preventDefault();
+    if (mutation.isLoading) return;
     if (input.trim() !== "") {
       mutation.mutate({ slug, content: input });
     }
@@ -52,7 +53,7 @@ const MessageInputBox = ({ isDisabled, slug }) => {
             isDisabled={isDisabled}
             icon={<BiSend />}
             type="submit"
-            disabled={mutation.isLoading}
+            isLoading={mutation.isLoading}
           />
         </Flex>
       </Tooltip>
