@@ -25,18 +25,17 @@ const Community = () => {
       path: "/api/socketio",
     });
 
-    console.log(process.env.NEXT_PUBLIC_APP_URL);
+    if (slug) {
+      // log socket connection
+      socket.on("connect", () => {
+        console.log("SOCKET CONNECTED!");
+      });
 
-    // log socket connection
-    socket.on("connect", () => {
-      console.log("SOCKET CONNECTED!");
-      setConnected(true);
-    });
-
-    // update chat on new message dispatched
-    socket.on(`community-${slug}`, (data) => {
-      queryClient.setQueryData(["messages", slug], (prev) => [...prev, data]);
-    });
+      // update chat on new message dispatched
+      socket.on(`community-${slug}`, (data) => {
+        queryClient.setQueryData(["messages", slug], (prev) => [...prev, data]);
+      });
+    }
 
     // socket disconnet onUnmount if exists
     if (socket) return () => socket.disconnect();
