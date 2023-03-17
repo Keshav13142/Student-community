@@ -1,6 +1,7 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 generator client {
@@ -29,6 +30,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId], name: "provider_providerAccountId")
+  @@index([userId])
   @@map("accounts")
 }
 
@@ -39,6 +41,7 @@ model Session {
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@map("sessions")
 }
 
@@ -82,7 +85,7 @@ model Post {
   slug          String?        @unique
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  content       String
+  content       String         @db.LongText
   published     Boolean
   author        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   title         String
@@ -92,6 +95,9 @@ model Post {
   userId        String
   institutionId String
   postComments  PostComments[]
+
+  @@index([userId])
+  @@index([institutionId])
 }
 
 model PostComments {
@@ -102,6 +108,9 @@ model PostComments {
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId    String?
   createdAt DateTime @default(now())
+
+  @@index([postId])
+  @@index([userId])
 }
 
 model Category {
@@ -125,6 +134,8 @@ model Community {
   institution      Institution        @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   institutionId    String
   pendingApprovals PendingApprovals[]
+
+  @@index([institutionId])
 }
 
 model PendingApprovals {
@@ -138,6 +149,8 @@ model PendingApprovals {
   institutionId String?
 
   @@unique([userId, communityId])
+  @@index([communityId])
+  @@index([institutionId])
 }
 
 model CommunityMember {
@@ -147,6 +160,9 @@ model CommunityMember {
   Community   Community?          @relation(fields: [communityId], references: [id], onDelete: Cascade)
   userId      String
   communityId String
+
+  @@index([userId])
+  @@index([communityId])
 }
 
 model Message {
@@ -161,6 +177,9 @@ model Message {
   senderId    String?
   communityId String
   // TODO => add message replies
+
+  @@index([senderId])
+  @@index([communityId])
 }
 
 model Institution {
@@ -186,6 +205,8 @@ model InstitutionMember {
   Institution   Institution           @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   userId        String                @unique
   institutionId String
+
+  @@index([institutionId])
 }
 
 enum CommunityType {
