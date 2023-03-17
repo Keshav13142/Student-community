@@ -1,12 +1,15 @@
 import { sendMessage } from "@/lib/api-calls/messages";
 import { Flex, IconButton, Input, Tooltip, useToast } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { BiSend } from "react-icons/bi";
 
 const MessageInputBox = ({ isDisabled, slug }) => {
   const [input, setInput] = useState("");
   const toast = useToast();
+  const queryClient = useQueryClient();
+  const session = useSession();
 
   const mutation = useMutation(sendMessage, {
     onError: () => {
@@ -17,15 +20,23 @@ const MessageInputBox = ({ isDisabled, slug }) => {
         isClosable: true,
       });
     },
-    onSuccess: () => {
-      setInput("");
-    },
   });
 
   const handleMessageSend = async (e) => {
     e.preventDefault();
+    const { user } = session.data;
     if (mutation.isLoading) return;
     if (input.trim() !== "") {
+      const newMessage = {
+        content: input,
+        createdAt: new Date(),
+        sender: { id: user.id, username: user.username },
+      };
+      queryClient.setQueryData(["messages", slug], (prev) => [
+        ...prev,
+        newMessage,
+      ]);
+      setInput("");
       mutation.mutate({ slug, content: input });
     }
   };
@@ -49,12 +60,7 @@ const MessageInputBox = ({ isDisabled, slug }) => {
               setInput(e.target.value);
             }}
           />
-          <IconButton
-            isDisabled={isDisabled}
-            icon={<BiSend />}
-            type="submit"
-            isLoading={mutation.isLoading}
-          />
+          <IconButton isDisabled={isDisabled} icon={<BiSend />} type="submit" />
         </Flex>
       </Tooltip>
     </form>

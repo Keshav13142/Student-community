@@ -26,6 +26,7 @@ const Community = ({ community }) => {
       });
       const channel = pusher.subscribe(`community-${slug}`);
       channel.bind("chat", function (data) {
+        if (data.sender.id === session.data?.user.id) return;
         queryClient.setQueryData(["messages", slug], (prev) => [...prev, data]);
       });
       return () => {

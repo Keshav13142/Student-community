@@ -77,10 +77,9 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
             >
               {msg.content}
             </Linkify>
-            <span className={`self-end text-sm opacity-40`}>
+            <span className={`self-end text-xs opacity-40`}>
               {Intl.DateTimeFormat("en-us", {
                 timeStyle: "short",
-                hour12: false,
               }).format(msg.currentMsgTime)}
             </span>
           </>

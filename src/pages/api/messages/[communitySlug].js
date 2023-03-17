@@ -44,6 +44,12 @@ export default async function handler(req, res) {
       return;
     }
 
+    await pusher.trigger(`community-${communitySlug}`, "chat", {
+      content,
+      sender: { id: user.id, username: user.username },
+      createdAt: new Date(),
+    });
+
     try {
       const message = await prisma.message.create({
         data: {
@@ -62,7 +68,6 @@ export default async function handler(req, res) {
         select: messageSelect,
       });
 
-      await pusher.trigger(`community-${communitySlug}`, "chat", message);
       res.status(201).json(message);
     } catch (error) {
       console.log(error);
