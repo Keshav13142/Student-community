@@ -1,6 +1,6 @@
 import { sendComment } from "@/lib/api-calls/posts";
 import prisma from "@/lib/prisma";
-import Navbar from "@/src/components/layout/navbar";
+import Navbar from "@/src/components/Layout/navbar";
 import RenderMarkdown from "@/src/components/render-markdown";
 import { Avatar, Button, IconButton, Input, useToast } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";

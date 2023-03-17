@@ -1,7 +1,7 @@
 import { deletePost, updatePost } from "@/lib/api-calls/posts";
 import prisma from "@/lib/prisma";
 import MarkdownEditor from "@/src/components/editor";
-import Navbar from "@/src/components/layout/navbar";
+import Navbar from "@/src/components/Layout/navbar";
 import RenderMarkdown from "@/src/components/render-markdown";
 import { createPostSchema, parseZodErrors } from "@/utils/zod_schemas";
 import {
