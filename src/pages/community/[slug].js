@@ -55,6 +55,7 @@ const Community = () => {
         queryKey: ["messages", slug],
         queryFn: () => fetchMessages(slug),
         enabled: Boolean(slug),
+        refetchOnWindowFocus: false,
       },
     ],
   });

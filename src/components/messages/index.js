@@ -15,7 +15,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ContextMenu } from "chakra-ui-contextmenu";
 import { useSession } from "next-auth/react";
-import React, { forwardRef, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { BiBlock } from "react-icons/bi";
 import { MdHideSource } from "react-icons/md";
 import Linkify from "react-linkify";
@@ -28,44 +28,42 @@ const MsgDayInfo = ({ day }) => (
 
 const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
   return (
-    <div className={`${msg.isOwnMessage ? "self-end" : "self-start"} w-fit`}>
-      <div
-        className={`flex w-full flex-col gap-0.5 rounded-md px-3 py-1.5 ${
-          msg.isOwnMessage ? "bg-green-200" : "bg-purple-200"
-        }`}
-      >
-        {msg.isDeleted ? (
-          <div className="flex items-center gap-2 text-slate-500">
-            <BiBlock />
-            This message was deleted {msg.deletedBy && `by ${msg.deletedBy}`}
-          </div>
-        ) : (
-          <>
-            {!msg.isOwnMessage && (
-              <div
-                className={`${
-                  msg.sender ? "text-purple-500" : "text-slate-400"
-                } text-sm font-bold`}
-              >
-                {msg.sender ? msg.sender.username : "[deleted]"}
-              </div>
-            )}
-            <Linkify
-              properties={{
-                target: "_blank",
-                style: { color: "red", fontWeight: "bold" },
-              }}
+    <div
+      className={`flex w-full flex-col gap-0.5 rounded-md px-3 py-1.5 ${
+        msg.isOwnMessage ? "bg-green-200" : "bg-purple-200"
+      }`}
+    >
+      {msg.isDeleted ? (
+        <div className="flex items-center gap-2 text-slate-500">
+          <BiBlock />
+          This message was deleted {msg.deletedBy && `by ${msg.deletedBy}`}
+        </div>
+      ) : (
+        <>
+          {!msg.isOwnMessage && (
+            <div
+              className={`${
+                msg.sender ? "text-purple-500" : "text-slate-400"
+              } text-sm font-bold`}
             >
-              {msg.content}
-            </Linkify>
-            <span className={`self-end text-xs opacity-40`}>
-              {Intl.DateTimeFormat("en-us", {
-                timeStyle: "short",
-              }).format(msg.currentMsgTime)}
-            </span>
-          </>
-        )}
-      </div>
+              {msg.sender ? msg.sender.username : "[deleted]"}
+            </div>
+          )}
+          <Linkify
+            properties={{
+              target: "_blank",
+              style: { color: "red", fontWeight: "bold" },
+            }}
+          >
+            {msg.content}
+          </Linkify>
+          <span className={`self-end text-xs opacity-40`}>
+            {Intl.DateTimeFormat("en-us", {
+              timeStyle: "short",
+            }).format(msg.currentMsgTime)}
+          </span>
+        </>
+      )}
     </div>
   );
 });
@@ -77,6 +75,7 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const [deleteMessageId, setDeleteMessageId] = useState(null);
+  const latestMessageRef = useRef(undefined);
 
   const mutation = useMutation(hideOrShowMessage, {
     onError: () => {
@@ -96,6 +95,14 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
       setDeleteMessageId(null);
     },
   });
+
+  useEffect(() => {
+    if (messages) {
+      latestMessageRef.current.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  }, [messages]);
 
   return (
     // Fix this scrolling stuff later
@@ -160,27 +167,38 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
                   }).format(msg.currentMsgTime)}
                 />
               )}
-              {isUserAdminOrMod && !msg.isOwnMessage && !msg.isDeleted ? (
-                <ContextMenu
-                  renderMenu={() => (
-                    <MenuList>
-                      <MenuItem
-                        onClick={() => {
-                          setDeleteMessageId(msg.id);
-                          onOpen();
-                        }}
-                      >
-                        <MdHideSource size={20} className="mr-2" color="red" />
-                        Delete message for everyone
-                      </MenuItem>
-                    </MenuList>
-                  )}
-                >
-                  {(ref) => <MessageBubble msg={msg} ref={ref} />}
-                </ContextMenu>
-              ) : (
-                <MessageBubble msg={msg} />
-              )}
+              <div
+                className={`${
+                  msg.isOwnMessage ? "self-end" : "self-start"
+                } w-fit`}
+                ref={idx + 1 === messages?.length ? latestMessageRef : null}
+              >
+                {isUserAdminOrMod && !msg.isOwnMessage && !msg.isDeleted ? (
+                  <ContextMenu
+                    renderMenu={() => (
+                      <MenuList>
+                        <MenuItem
+                          onClick={() => {
+                            setDeleteMessageId(msg.id);
+                            onOpen();
+                          }}
+                        >
+                          <MdHideSource
+                            size={20}
+                            className="mr-2"
+                            color="red"
+                          />
+                          Delete message for everyone
+                        </MenuItem>
+                      </MenuList>
+                    )}
+                  >
+                    {(ref) => <MessageBubble msg={msg} ref={ref} />}
+                  </ContextMenu>
+                ) : (
+                  <MessageBubble msg={msg} />
+                )}
+              </div>
             </React.Fragment>
           );
         })}
