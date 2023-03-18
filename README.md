@@ -9,19 +9,21 @@
 - [x] ~~Add requests feature to join institution~~
 - [x] ~~User onDelete cascade~~
 - [x] ~~User profile with their posts and restr. and pvt comms~~
-- [x] ~~Fix the community members modal code
+- [x] ~~Fix the community members modal code~~
 - [x] ~~Posts/Blog articles with comments~~
 - [x] ~~Check if user has admin/mod access in API before performing actions~~
 - [x] ~~User settings option in navbar dropdown~~
 - [x] ~~Responsiveness of sidebar~~
-- [ ] Migrate to nextJs app/ directory
-- [ ] Fix sidebar issue in blog and profile page
+- [x] ~~Fix tabindex in nav links~~
+- [x] ~~Switch to ui.shadcn.com from chakra UI (better accessibility and lighter)~~
+- [x] ~~Fix sidebar issue in blog and profile page (and add nav links in mobile-nav)~~
+- [x] ~~Fix scrollbar height in chat page~~
+- [ ] Fix modal styling in smaller screens
 - [ ] Community visibilty for each year and dept.
 - [ ] Verify clg mail (get dept and year from mail).
 - [ ] Truthful data for student year and dept (probably from their clg email).
 - [ ] Admins can view all students, filter by dept and year.
 - [ ] Update students year(1,2,3 or 4) every year (Batch edit by admins/figure out how to do it automagically)
-- [ ] Fix scrollbar height in chat page
 - [ ] Query filter params in blog page (AI&ML not working , probably cause of `&` symbol?)
 - [ ] User pending request screen
 - [ ] automagically figure of code type while new-user registration
@@ -35,5 +37,6 @@
 - [ ] Add email-pass login? (maybe)
 - [ ] Add relavent meta tags to pages
 - [ ] Use NextJs image tags with cloudinary for image storage?
+- [ ] Migrate to nextJs app/ directory
 
 <!-- ![mock](final-year-project-mock.png) -->
