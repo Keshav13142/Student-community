@@ -1,4 +1,4 @@
-import { Badge, Flex, IconButton, Input, useToast } from "@chakra-ui/react";
+import { Badge, IconButton, Input, useToast } from "@chakra-ui/react";
 import Image from "next/image";
 import { FiCopy } from "react-icons/fi";
 

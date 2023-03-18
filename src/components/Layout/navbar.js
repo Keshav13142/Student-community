@@ -1,14 +1,12 @@
 import {
   Avatar,
   Button,
-  Flex,
   Heading,
   IconButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Stack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
@@ -41,7 +39,7 @@ const Navbar = ({ onSidebarOpen, showMenu }) => {
         </div>
         <div className="flex gap-20">
           <div className="hidden items-center md:flex">
-            <Stack direction="row" spacing="5" alignItems="center">
+            <div className="flex items-center gap-5">
               <Link href="/community/discover">
                 <Button tabIndex={-1} variant="link" color="purple.600">
                   Discover
@@ -52,7 +50,7 @@ const Navbar = ({ onSidebarOpen, showMenu }) => {
                   Blogs
                 </Button>
               </Link>
-            </Stack>
+            </div>
           </div>
           <Menu>
             <MenuButton

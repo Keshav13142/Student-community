@@ -2,15 +2,7 @@ import {
   getPendingInstnRequests,
   managePendingInstnRequests,
 } from "@/lib/api-calls/institution";
-import {
-  Avatar,
-  Badge,
-  Flex,
-  IconButton,
-  Stack,
-  Switch,
-  useToast,
-} from "@chakra-ui/react";
+import { Avatar, Badge, IconButton, Switch, useToast } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { TbUserCheck, TbUserX } from "react-icons/tb";

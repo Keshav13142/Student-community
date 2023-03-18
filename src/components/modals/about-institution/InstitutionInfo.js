@@ -1,16 +1,8 @@
 import { getInstInviteCodes } from "@/lib/api-calls/institution";
-import {
-  Box,
-  Flex,
-  IconButton,
-  Input,
-  Stack,
-  useToast,
-} from "@chakra-ui/react";
+import { IconButton, Input, useToast } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React from "react";
 import { FiCopy } from "react-icons/fi";
 
 const InviteCode = ({ code, title }) => {

@@ -15,7 +15,6 @@ import {
   Portal,
   Radio,
   RadioGroup,
-  Stack,
   Text,
   Tooltip,
   useToast,
@@ -56,13 +55,13 @@ const formFields = [
               Username requirements
             </PopoverHeader>
             <PopoverBody>
-              <Stack>
+              <div className="flex flex-col">
                 <Text>- Must be unique</Text>
                 <Text>- Lowercase Letters (a-z)</Text>
                 <Text>- Numbers (0-9)</Text>
                 <Text>- Dots (.)</Text>
                 <Text>- Underscores (_)</Text>
-              </Stack>
+              </div>
             </PopoverBody>
           </PopoverContent>
         </Portal>

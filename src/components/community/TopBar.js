@@ -2,14 +2,13 @@ import { requestToJoinCommunity } from "@/lib/api-calls/community";
 import {
   Avatar,
   Button,
-  Flex,
   IconButton,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaChevronLeft } from "react-icons/fa";
 import { ImInfo } from "react-icons/im";
 import AboutCommunity from "../modals/about-community";

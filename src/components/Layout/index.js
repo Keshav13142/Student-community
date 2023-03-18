@@ -3,8 +3,6 @@ import {
   DrawerCloseButton,
   DrawerContent,
   DrawerOverlay,
-  Flex,
-  Stack,
   useDisclosure,
 } from "@chakra-ui/react";
 import Navbar from "./navbar";

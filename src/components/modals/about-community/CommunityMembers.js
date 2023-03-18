@@ -1,13 +1,11 @@
 import {
   Avatar,
   Badge,
-  Flex,
   IconButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Stack,
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";

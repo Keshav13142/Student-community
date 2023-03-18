@@ -1,14 +1,13 @@
 import { sendMessage } from "@/lib/api-calls/messages";
-import { Flex, IconButton, Input, Tooltip, useToast } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { IconButton, Input, Tooltip, useToast } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { BiSend } from "react-icons/bi";
 
 const MessageInputBox = ({ isDisabled, slug }) => {
   const [input, setInput] = useState("");
   const toast = useToast();
-  const queryClient = useQueryClient();
   const session = useSession();
 
   const mutation = useMutation(sendMessage, {
@@ -24,7 +23,6 @@ const MessageInputBox = ({ isDisabled, slug }) => {
 
   const handleMessageSend = async (e) => {
     e.preventDefault();
-    const { user } = session.data;
     if (mutation.isLoading) return;
     if (input.trim() !== "") {
       setInput("");

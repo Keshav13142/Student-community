@@ -1,7 +1,6 @@
 import { joinCommunityWithCode } from "@/lib/api-calls/community";
 import {
   Button,
-  Flex,
   Input,
   InputGroup,
   InputRightElement,
@@ -11,7 +10,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
   useToast,
 } from "@chakra-ui/react";
 import { isCuid } from "@paralleldrive/cuid2";
