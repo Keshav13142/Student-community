@@ -6,7 +6,7 @@ const MarkdownEditor = ({ onChange, value }) => {
   return (
     <CodeMirror
       value={value}
-      minHeight="50vh"
+      minHeight="30vh"
       extensions={[
         markdown({
           base: markdownLanguage,
@@ -14,7 +14,7 @@ const MarkdownEditor = ({ onChange, value }) => {
         }),
       ]}
       onChange={onChange}
-      className="max-w-[85vw] border border-slate-300 lg:max-w-[60vw] xl:max-w-[60vw]"
+      className="border border-slate-300"
     />
   );
 };

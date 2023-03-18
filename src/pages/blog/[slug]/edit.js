@@ -176,6 +176,16 @@ const EditPost = ({ post, allCategories }) => {
   };
 
   const handleCreate = () => {
+    if (inputs.content.trim().length < 100) {
+      toast({
+        title: "Content must contain atleast 100 characters",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+
     // Check the form inputs for error
     let parsedInputs = createPostSchema.safeParse(inputs);
 
@@ -234,7 +244,7 @@ const EditPost = ({ post, allCategories }) => {
       </AlertDialog>
       <div>
         <div className="flex flex-col items-center justify-center gap-5 py-10 lg:flex-row lg:items-start xl:gap-10  2xl:gap-20">
-          <div className="order-2 flex max-w-3xl flex-col gap-10 lg:order-1">
+          <div className="order-2 flex w-[90vw] flex-col gap-10 md:w-[70vw] lg:order-1 lg:w-[60vw] xl:w-[50vw]">
             {fields.map((f, idx) => (
               <InputGroup key={idx} className="flex flex-col">
                 <Input
@@ -256,7 +266,7 @@ const EditPost = ({ post, allCategories }) => {
                 <Tab>Write</Tab>
                 <Tab>Preview</Tab>
               </TabList>
-              <TabPanels>
+              <TabPanels className="max-h-[60vh] min-h-[30vh] overflow-y-auto">
                 <TabPanel>
                   <MarkdownEditor
                     value={inputs.content}
@@ -267,7 +277,13 @@ const EditPost = ({ post, allCategories }) => {
                 </TabPanel>
                 <TabPanel>
                   <article className="prose max-w-[85vw]">
-                    <RenderMarkdown content={inputs.content} />
+                    {inputs.content.trim() !== "" ? (
+                      <RenderMarkdown content={inputs.content} />
+                    ) : (
+                      <div className="text-center font-medium text-slate-500">
+                        Start typing to see the preview
+                      </div>
+                    )}
                   </article>
                 </TabPanel>
               </TabPanels>
