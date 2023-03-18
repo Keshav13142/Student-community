@@ -3,6 +3,7 @@ import { Button, IconButton } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { getServerSession } from "next-auth";
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import { BsNewspaper } from "react-icons/bs";
 import { MdClear } from "react-icons/md";
@@ -136,12 +137,22 @@ const Blog = ({ posts, categories }) => {
                     </div>
                   </div>
                   <Link href={`/blog/${p.slug}`}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={p.bannerImage}
-                      className="aspect-video h-24 w-32 rounded-md object-cover md:h-28 md:w-36 lg:h-32 lg:w-40"
-                      alt={p.title}
-                    />
+                    {p.bannerImage === "" || !p.bannerImage ? (
+                      <Image
+                        src="https://cdn-icons-png.flaticon.com/512/3875/3875148.png"
+                        className="object-cover"
+                        height="96"
+                        width="128"
+                        alt="No img"
+                      />
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={p.bannerImage}
+                        className="aspect-video h-24 w-32 rounded-md object-cover"
+                        alt={p.title}
+                      />
+                    )}
                   </Link>
                 </div>
               ))

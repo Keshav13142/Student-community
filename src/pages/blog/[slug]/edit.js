@@ -266,7 +266,7 @@ const EditPost = ({ post, allCategories }) => {
                   />
                 </TabPanel>
                 <TabPanel>
-                  <article className="prose">
+                  <article className="prose max-w-[85vw]">
                     <RenderMarkdown content={inputs.content} />
                   </article>
                 </TabPanel>

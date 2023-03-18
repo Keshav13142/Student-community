@@ -14,7 +14,7 @@ const MarkdownEditor = ({ onChange, value }) => {
         }),
       ]}
       onChange={onChange}
-      className="min-w-[85vw] border border-slate-300 lg:min-w-[60vw] xl:min-w-[50vw] 2xl:min-w-[40vw]"
+      className="max-w-[85vw] border border-slate-300 lg:max-w-[60vw] xl:max-w-[60vw]"
     />
   );
 };

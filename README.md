@@ -15,10 +15,10 @@
 - [x] ~~User settings option in navbar dropdown~~
 - [x] ~~Responsiveness of sidebar~~
 - [x] ~~Fix tabindex in nav links~~
-- [x] ~~Switch to ui.shadcn.com from chakra UI (better accessibility and lighter)~~
 - [x] ~~Fix sidebar issue in blog and profile page (and add nav links in mobile-nav)~~
 - [x] ~~Fix scrollbar height in chat page~~
 - [ ] Fix modal styling in smaller screens
+- [ ] Switch to ui.shadcn.com from chakra UI (better accessibility and lighter)
 - [ ] Community visibilty for each year and dept.
 - [ ] Verify clg mail (get dept and year from mail).
 - [ ] Truthful data for student year and dept (probably from their clg email).

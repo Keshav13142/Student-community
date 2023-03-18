@@ -172,7 +172,7 @@ const CreateNewPost = ({ allCategories }) => {
                   />
                 </TabPanel>
                 <TabPanel>
-                  <article className="prose min-w-[40vw]">
+                  <article className="prose max-w-[85vw]">
                     <RenderMarkdown content={inputs.content} />
                   </article>
                 </TabPanel>
