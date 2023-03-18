@@ -3,9 +3,7 @@ import {
   Button,
   Container,
   Divider,
-  Flex,
   SkeletonText,
-  Stack,
   Text,
   useDisclosure,
   useToast,
@@ -91,22 +89,14 @@ const SideBar = ({ onSidebarClose }) => {
         onClose={onJoinClose}
         onSidebarClose={onSidebarClose}
       />
-      <Stack
-        className="border-r border-r-slate-200"
-        maxW="md"
-        minW="2xs"
-        alignItems="center"
-        justifyContent="space-between"
-        height="full"
-        p={3}
-      >
-        <Stack spacing={2} w="full" alignItems="center">
-          <Text className="text-2xl font-medium">Your communities</Text>
+      <div className="flex h-full max-w-md flex-col items-center justify-between gap-3 border-r border-r-slate-200 p-3">
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-2xl font-medium">Your communities</p>
           <Divider />
           {loading ? (
             <LoadingSkeleton count={4} />
           ) : (
-            <Stack>
+            <div className="flex flex-col">
               {communities === [] ? (
                 <h2>Communities you join will show up here!</h2>
               ) : (
@@ -116,26 +106,17 @@ const SideBar = ({ onSidebarClose }) => {
                     href={`/community/${c.slug}`}
                     onClick={onSidebarClose}
                   >
-                    <Flex
-                      paddingY={2}
-                      display="flex"
-                      justifyContent="flex-start"
-                      paddingX={2}
-                      gap={2}
-                      alignItems="center"
-                      w="full"
-                      textColor="purple.600"
-                    >
-                      <span className="font-medium ">{`# ${c.name}`}</span>
-                    </Flex>
+                    <p className="my-1 p-2 font-medium text-purple-600">
+                      {`# ${c.name}`}
+                    </p>
                     {i !== communities.length - 1 && <Divider />}
                   </Link>
                 ))
               )}
-            </Stack>
+            </div>
           )}
-        </Stack>
-        <Stack w="full" spacing={3}>
+        </div>
+        <div className="flex flex-col gap-3">
           {session.data?.user?.isInstitutionAdmin && (
             <Button
               w="full"
@@ -165,8 +146,8 @@ const SideBar = ({ onSidebarClose }) => {
           >
             About Institution
           </Button>
-        </Stack>
-      </Stack>
+        </div>
+      </div>
     </>
   );
 };

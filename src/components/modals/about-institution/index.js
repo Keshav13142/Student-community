@@ -40,6 +40,11 @@ const AboutInstitution = ({ isOpen, onClose }) => {
     onOpen: onActionsOpen,
   } = useDisclosure();
 
+  const [tabIndex, setTabIndex] = useState(0);
+  const handleTabsChange = (index) => {
+    setTabIndex(index);
+  };
+
   const [action, setAction] = useState({
     type: "",
     userId: "",
@@ -61,7 +66,6 @@ const AboutInstitution = ({ isOpen, onClose }) => {
         blockScrollOnMount={false}
         isOpen={isOpen}
         onClose={onClose}
-        size="2xl"
         scrollBehavior="inside"
       >
         <ModalOverlay />
@@ -72,20 +76,27 @@ const AboutInstitution = ({ isOpen, onClose }) => {
             display="flex"
             justifyContent="center"
           >
-            <span className="text-2xl">About institution</span>
+            <h1 className="text-2xl">About institution</h1>
             {isCurrentUserAdmin && (
-              <Tooltip label="Edit" placement="right">
-                <IconButton
-                  icon={<RiEditBoxLine />}
-                  bg="transparent"
-                  onClick={() => setIsEditMode((prev) => !prev)}
-                />
-              </Tooltip>
+              <IconButton
+                icon={<RiEditBoxLine />}
+                bg="transparent"
+                onClick={() => {
+                  setTabIndex(0);
+                  setIsEditMode((prev) => !prev);
+                }}
+              />
             )}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Tabs isFitted variant="enclosed-colored" colorScheme="purple">
+            <Tabs
+              isFitted
+              variant="enclosed-colored"
+              colorScheme="purple"
+              index={tabIndex}
+              onChange={handleTabsChange}
+            >
               <TabList mb="1em">
                 <Tab>Info</Tab>
                 <Tab>Members</Tab>

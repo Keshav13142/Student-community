@@ -17,15 +17,23 @@ export default function App({ Component, pageProps }) {
       <QueryClientProvider client={queryClient}>
         <ChakraProvider>
           <SessionProvider session={pageProps.session}>
-            <Layout>
-              {Component.withAuth ? (
-                <AuthGuard>
+            {Component.withLayout ? (
+              <Layout navOnly={Component.navOnly}>
+                {Component.withAuth ? (
+                  <AuthGuard>
+                    <Component {...pageProps} />
+                  </AuthGuard>
+                ) : (
                   <Component {...pageProps} />
-                </AuthGuard>
-              ) : (
+                )}
+              </Layout>
+            ) : Component.withAuth ? (
+              <AuthGuard>
                 <Component {...pageProps} />
-              )}
-            </Layout>
+              </AuthGuard>
+            ) : (
+              <Component {...pageProps} />
+            )}
             <ReactQueryDevtools />
             <TailwindIndicator />
           </SessionProvider>

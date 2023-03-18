@@ -50,14 +50,8 @@ const CommunityTopBar = ({ data, isDisabled }) => {
   return (
     <>
       <AboutCommunity data={data} isOpen={isAboutOpen} onClose={onAboutClose} />
-      <Flex
-        px={2}
-        py={2}
-        alignItems="center"
-        justifyContent="space-between"
-        className="shadow-sm"
-      >
-        <Flex gap={4} align="center">
+      <div className="flex items-center justify-between p-2 shadow-sm">
+        <div className="flex items-center gap-4">
           <IconButton
             bg="transparent"
             icon={<FaChevronLeft />}
@@ -67,8 +61,8 @@ const CommunityTopBar = ({ data, isDisabled }) => {
           />
           <Avatar src={data?.image} />
           <h3 className="text-xl font-medium">{data?.name}</h3>
-        </Flex>
-        <Flex alignItems="center" gap={5}>
+        </div>
+        <div className="flex items-center gap-5">
           {isDisabled && (
             <Button
               onClick={() => {
@@ -90,8 +84,8 @@ const CommunityTopBar = ({ data, isDisabled }) => {
             variant="outline"
             size="sm"
           />
-        </Flex>
-      </Flex>
+        </div>
+      </div>
     </>
   );
 };

@@ -1,13 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import prisma from "@/lib/prisma";
-import Navbar from "@/src/components/Layout/navbar";
 import {
   Alert,
   AlertIcon,
   Avatar,
   Badge,
-  Divider,
   IconButton,
-  Input,
   Tab,
   TabList,
   TabPanel,
@@ -17,9 +15,9 @@ import {
 import { format } from "date-fns";
 import { getServerSession } from "next-auth";
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
 import { FiEdit } from "react-icons/fi";
 import { GoMarkGithub } from "react-icons/go";
 import { GrLinkedin } from "react-icons/gr";
@@ -127,8 +125,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <div className="min-h-screen">
-        <Navbar />
+      <div>
         {!profile ? (
           <div className="flex flex-col items-center justify-center px-10 pt-10">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -150,14 +147,16 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
         ) : (
           <div className="flex flex-col items-center gap-10 rounded-xl p-5 pt-10 lg:flex-row lg:items-start lg:justify-center lg:px-10">
             <div className="order-2 flex min-w-[50%] max-w-4xl flex-col gap-5 lg:order-1">
-              <h1 className="text-2xl font-medium">{profile.name}</h1>
+              <h1 className="hidden text-2xl font-medium lg:block">
+                {profile.name}
+              </h1>
               <Tabs variant="line">
                 <TabList>
                   <Tab>Posts</Tab>
                   <Tab>Communities</Tab>
                 </TabList>
                 <TabPanels>
-                  <TabPanel className="flex h-[60vh] flex-col gap-5 overflow-y-auto">
+                  <TabPanel className="flex max-h-[60vh] flex-col gap-5 overflow-y-auto">
                     {profile.posts.length > 0 ? (
                       profile.posts.map((p, idx) => (
                         <div
@@ -212,26 +211,36 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                                 : `/blog/${p.id}/edit`
                             }
                           >
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={p.bannerImage}
-                              className="aspect-video h-24 w-32 rounded-md object-cover"
-                              alt={p.title}
-                            />
+                            {p.bannerImage === "" || !p.bannerImage ? (
+                              <Image
+                                src="https://cdn-icons-png.flaticon.com/512/3875/3875148.png"
+                                className="object-cover"
+                                height="96"
+                                width="128"
+                                alt="No img"
+                              />
+                            ) : (
+                              <img
+                                src={p.bannerImage}
+                                className="aspect-video h-24 w-32 rounded-md object-cover"
+                                alt={p.title}
+                              />
+                            )}
                           </Link>
                         </div>
                       ))
                     ) : (
-                      <div className="flex flex-col items-center gap-2">
-                        <h2 className="text-xl">
+                      <div className="mt-3 flex flex-col items-center gap-2">
+                        <h2 className="text-center text-lg font-medium text-slate-600 lg:text-lg">
                           {ownProfile ? "You have" : "This user has"} not
                           authored any posts
                         </h2>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          className="max-w-sm"
-                          src="https://i.kym-cdn.com/entries/icons/original/000/006/707/nothing-to-do-here-template.jpg.scaled500.jpg"
-                          alt="oh so empty"
+                        <Image
+                          src="https://illustrations.popsy.co/violet/falling.svg"
+                          className="object-cover"
+                          height={200}
+                          width={200}
+                          alt="No img"
                         />
                       </div>
                     )}
@@ -244,7 +253,11 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                       >
                         <Link href={`/community/${c.slug}`}>
                           <div className="flex items-center gap-2 rounded-xl p-2">
-                            <Avatar src={c.image} name={c.name} />
+                            <Avatar
+                              src={c.image}
+                              name={c.name}
+                              size={["sm", "md"]}
+                            />
                             <div className="flex flex-col gap-2">
                               <h4 className="text-base font-medium lg:text-lg">
                                 {c.name}
@@ -264,7 +277,11 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
             <div className="order-1 h-fit max-w-xl rounded-md border-2 border-purple-300 px-3 py-2 lg:order-2">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
-                  <Avatar src={profile.image} name={profile.name} size="xl" />
+                  <Avatar
+                    src={profile.image}
+                    name={profile.name}
+                    size={["sm", "md"]}
+                  />
                   <div>
                     <h3 className="text-xl font-medium">{profile.name}</h3>
                     <h4 className="text-purple-500">@{profile.username}</h4>
@@ -305,5 +322,8 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
     </>
   );
 };
+
+UserProfile.withLayout = true;
+UserProfile.navOnly = true;
 
 export default UserProfile;

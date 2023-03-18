@@ -1,15 +1,12 @@
 import { updateCommunityInfo } from "@/lib/api-calls/community";
-import { parseZodErrors, updateCommunitySchema } from "@/utils/zod_schemas";
+import { parseZodErrors, updateCommunitySchema } from "@/lib/validations";
 import {
   Button,
-  Flex,
   Input,
   InputGroup,
   InputRightElement,
   Radio,
   RadioGroup,
-  Stack,
-  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -94,7 +91,7 @@ const EditCommunityInfo = ({ data, onCancel }) => {
 
   return (
     <form onSubmit={onSubmit}>
-      <Stack spacing={4}>
+      <div className="flex flex-col gap-4">
         {formFields.map((f, idx) => (
           <div key={idx} className="flex flex-col">
             <span className="mb-1 font-medium">{f.placeholder}</span>
@@ -118,14 +115,14 @@ const EditCommunityInfo = ({ data, onCancel }) => {
             setInputs((p) => ({ ...p, type: v }));
           }}
         >
-          <Stack spacing={3}>
-            <Text className="font-medium">Community type</Text>
+          <div className="fc flex gap-3">
+            <p className="font-medium">Community type</p>
             <Radio value="PUBLIC">Public</Radio>
             <Radio value="PRIVATE">Private</Radio>
             <Radio value="RESTRICTED">Restricted</Radio>
-          </Stack>
+          </div>
         </RadioGroup>
-        <Flex alignSelf="center" gap={3}>
+        <div className="flex items-center gap-3">
           <Button
             disabled={mutation.isLoading}
             colorScheme="red"
@@ -157,8 +154,8 @@ const EditCommunityInfo = ({ data, onCancel }) => {
           >
             Submit
           </Button>
-        </Flex>
-      </Stack>
+        </div>
+      </div>
     </form>
   );
 };

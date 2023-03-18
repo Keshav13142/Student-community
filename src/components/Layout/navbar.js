@@ -16,37 +16,39 @@ import Link from "next/link";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import EditProfile from "../modals/edit-profile";
 
-const Navbar = ({ onSidebarOpen }) => {
+const Navbar = ({ onSidebarOpen, showMenu }) => {
   const session = useSession();
   const { isOpen, onClose, onOpen } = useDisclosure();
   return (
     <>
       <EditProfile isOpen={isOpen} onClose={onClose} />
       <nav className="flex items-center justify-between py-2 px-6 shadow-md">
-        <Flex gap={2}>
-          <div className="block lg:hidden">
-            <IconButton
-              variant="ghost"
-              colorScheme="purple"
-              fontSize="25px"
-              onClick={onSidebarOpen}
-              icon={<HiOutlineMenuAlt2 />}
-            />
-          </div>
+        <div className="flex gap-2">
+          {showMenu && (
+            <div className="block lg:hidden">
+              <IconButton
+                variant="ghost"
+                colorScheme="purple"
+                fontSize="25px"
+                onClick={onSidebarOpen}
+                icon={<HiOutlineMenuAlt2 />}
+              />
+            </div>
+          )}
           <Heading size={"lg"} alignSelf="center">
             Student <span className="text-purple-600">Community</span>
           </Heading>
-        </Flex>
-        <Flex gap={20}>
+        </div>
+        <div className="flex gap-20">
           <div className="hidden items-center md:flex">
             <Stack direction="row" spacing="5" alignItems="center">
               <Link href="/community/discover">
-                <Button variant="link" color="purple.600">
+                <Button tabIndex={-1} variant="link" color="purple.600">
                   Discover
                 </Button>
               </Link>
               <Link href="/blog">
-                <Button variant="link" color="purple.600">
+                <Button tabIndex={-1} variant="link" color="purple.600">
                   Blogs
                 </Button>
               </Link>
@@ -78,7 +80,7 @@ const Navbar = ({ onSidebarOpen }) => {
               </MenuItem>
             </MenuList>
           </Menu>
-        </Flex>
+        </div>
       </nav>
     </>
   );

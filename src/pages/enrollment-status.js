@@ -4,7 +4,6 @@ import {
   AlertIcon,
   AlertTitle,
   Button,
-  Stack,
 } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -59,7 +58,7 @@ const EnrollmentStatus = () => {
   const content = info[user.enrollmentStatus];
 
   return (
-    <Stack h="100dvh" alignItems="center" justifyContent="center">
+    <div className="flex min-h-screen flex-col items-center justify-center">
       {content.image && (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -86,7 +85,7 @@ const EnrollmentStatus = () => {
         <AlertDescription maxWidth="sm">{content.desc}</AlertDescription>
       </Alert>
       {content.action}
-    </Stack>
+    </div>
   );
 };
 

@@ -1,5 +1,4 @@
 import NewUserForm from "@/src/components/new-user/NewUserForm";
-import { Box, Heading, Stack } from "@chakra-ui/react";
 import Head from "next/head";
 
 const NewUserProfile = () => {
@@ -14,14 +13,14 @@ const NewUserProfile = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <Box h="100dvh">
-        <Stack maxW="md" h="full" spacing={10} mx="auto" justify="center">
-          <Heading alignSelf="center">
+      <main>
+        <div className="mx-auto flex min-h-screen flex-col items-center justify-center gap-10">
+          <h1 className="self-center text-2xl font-medium md:text-3xl lg:text-4xl">
             Complete your <span className=" text-purple-600">Profile</span>
-          </Heading>
+          </h1>
           <NewUserForm />
-        </Stack>
-      </Box>
+        </div>
+      </main>
     </>
   );
 };

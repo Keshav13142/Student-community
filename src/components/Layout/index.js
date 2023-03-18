@@ -7,41 +7,40 @@ import {
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import Navbar from "./navbar";
 import SideBar from "./sidebar";
 
-// Routes that need the Layout
-const routesWithLayout = ["/community/discover", "/community"];
-
-const Layout = ({ children }) => {
-  const router = useRouter();
+const Layout = ({ children, navOnly }) => {
   const { onClose, isOpen, onOpen } = useDisclosure();
 
-  // If the current URL has the route, then render it with the Layout
-  if (routesWithLayout.some((route) => router.pathname.includes(route))) {
+  if (navOnly) {
     return (
-      <Stack height="100vh">
-        <Navbar onSidebarOpen={onOpen} />
-        <Flex className="h-full" direction="row" style={{ marginTop: "0px" }}>
-          <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
-            <DrawerOverlay />
-            <DrawerContent>
-              <DrawerCloseButton />
-              <SideBar onSidebarClose={onClose} />
-            </DrawerContent>
-          </Drawer>
-          <div className="hidden lg:block">
-            <SideBar onSidebarClose={onClose} />
-          </div>
-          {children}
-        </Flex>
-      </Stack>
+      <div className="flex min-h-screen flex-col">
+        <Navbar onSidebarOpen={onOpen} showMenu={!navOnly} />
+        {children}
+      </div>
     );
   }
 
-  // Else return as it is
-  return children;
+  // If the current URL has the route, then render it with the Layout
+  return (
+    <div className="flex min-h-screen flex-col">
+      <Navbar onSidebarOpen={onOpen} showMenu={!navOnly} />
+      <div className="flex flex-1">
+        <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <SideBar onSidebarClose={onClose} />
+          </DrawerContent>
+        </Drawer>
+        <div className="hidden lg:block">
+          <SideBar onSidebarClose={onClose} />
+        </div>
+        {children}
+      </div>
+    </div>
+  );
 };
 
 export default Layout;

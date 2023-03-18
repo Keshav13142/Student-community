@@ -1,13 +1,5 @@
-import {
-  Badge,
-  Box,
-  Flex,
-  IconButton,
-  Input,
-  Stack,
-  useToast,
-} from "@chakra-ui/react";
-import React from "react";
+import { Badge, Flex, IconButton, Input, useToast } from "@chakra-ui/react";
+import Image from "next/image";
 import { FiCopy } from "react-icons/fi";
 
 const InviteCode = ({ code, title }) => {
@@ -26,27 +18,25 @@ const InviteCode = ({ code, title }) => {
     });
   };
   return (
-    <Flex minW="60%" gap={5}>
+    <div className="flex min-w-[60%] gap-5">
       <span>{title} Code</span>
       <Input value={code} type="password" isReadOnly variant="flushed" />
       <IconButton icon={<FiCopy />} onClick={copyToClipboard} />
-    </Flex>
+    </div>
   );
 };
 
 const CommunityInfo = ({ data, code }) => {
   return (
-    <Stack flexDirection="column" gap={5} alignItems="center">
-      {/*  eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        className="h-3w-36 w-36 rounded-xl"
-        src={
-          data?.image ||
-          "https://img-cdn.inc.com/image/upload/w_1920,h_1080,c_fill/images/panoramic/GettyImages-1011930076_460470_i7oi1u.jpg"
-        }
-        alt="instituion image"
+    <div className="flex flex-col items-center gap-5">
+      <Image
+        src="https://illustrations.popsy.co/violet/student-with-diploma.svg"
+        alt="default community"
+        className="object-cover"
+        width={300}
+        height={300}
       />
-      <Box className="font-bold">
+      <div className="font-bold">
         Type :
         <Badge
           className="ml-2 text-base"
@@ -61,13 +51,13 @@ const CommunityInfo = ({ data, code }) => {
         >
           {data.type}
         </Badge>
-      </Box>
-      <Box className="font-bold">
+      </div>
+      <div className="font-bold">
         Description :
         <span className="font-normal"> {data?.desc || "Not provided"}</span>
-      </Box>
+      </div>
       {data.isCurrentUserAdmin && <InviteCode code={code} title="Invite" />}
-    </Stack>
+    </div>
   );
 };
 

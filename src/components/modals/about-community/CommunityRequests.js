@@ -43,8 +43,8 @@ const CommunityRequests = ({ communityId }) => {
   const pendingReqLength = data?.filter((r) => r.status === "PENDING").length;
 
   return (
-    <Stack>
-      <Flex alignItems="center" alignSelf="flex-end" mr={5} gap={3}>
+    <div className="flex flex-col">
+      <div className="mr-5 flex items-center gap-3 self-end">
         <span>Show pending only</span>
         <Switch
           isChecked={showPendingOnly}
@@ -52,8 +52,8 @@ const CommunityRequests = ({ communityId }) => {
             setShowPendingOnly((prev) => !prev);
           }}
         />
-      </Flex>
-      <Stack spacing={3} alignItems="center">
+      </div>
+      <div className="flex flex-col items-center gap-3">
         {showPendingOnly && pendingReqLength === 0 && (
           <span className="mt-2 text-lg text-blue-600">
             No pending requests
@@ -62,21 +62,17 @@ const CommunityRequests = ({ communityId }) => {
         {data?.map(({ id, status, user }) => {
           if (showPendingOnly && status !== "PENDING") return null;
           return (
-            <Flex
-              minW="sm"
+            <div
               key={id}
-              p={2}
-              className="rounded-lg border border-purple-400 shadow-sm"
-              justifyContent="space-between"
-              alignItems="center"
+              className="flex items-center justify-between rounded-lg border border-purple-400 p-2 shadow-sm"
             >
-              <Flex alignItems="center" gap={5}>
+              <div className="flex items-center gap-5">
                 <Avatar src={user?.image} name={user?.name} />
-                <Stack>
+                <div className="flex flex-col">
                   <span className="text-base font-medium">{user?.name}</span>
                   <span className="cursor-pointer text-blue-700">{`@${user?.username}`}</span>
-                </Stack>
-              </Flex>
+                </div>
+              </div>
               {status !== "PENDING" && (
                 <Badge
                   className="mr-2"
@@ -86,7 +82,7 @@ const CommunityRequests = ({ communityId }) => {
                   {status}
                 </Badge>
               )}
-              <Flex alignItems="center" gap={3}>
+              <div className="flex items-center gap-3">
                 <IconButton
                   onClick={() => {
                     mutation.mutate({
@@ -113,12 +109,12 @@ const CommunityRequests = ({ communityId }) => {
                   colorScheme="red"
                   variant="outline"
                 />
-              </Flex>
-            </Flex>
+              </div>
+            </div>
           );
         })}
-      </Stack>
-    </Stack>
+      </div>
+    </div>
   );
 };
 

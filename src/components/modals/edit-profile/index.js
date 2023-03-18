@@ -1,5 +1,5 @@
 import { getProfileData, updateUserProfile } from "@/lib/api-calls/user";
-import { parseZodErrors, updateProfileSchema } from "@/utils/zod_schemas";
+import { parseZodErrors, updateProfileSchema } from "@/lib/validations";
 import {
   Button,
   Input,
@@ -132,7 +132,6 @@ const EditProfile = ({ isOpen, onClose }) => {
       blockScrollOnMount={false}
       isOpen={isOpen}
       onClose={onClose}
-      size="xl"
       scrollBehavior="inside"
     >
       <ModalOverlay />

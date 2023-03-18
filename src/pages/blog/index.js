@@ -6,7 +6,6 @@ import Head from "next/head";
 import Link from "next/link";
 import { BsNewspaper } from "react-icons/bs";
 import { MdClear } from "react-icons/md";
-import Navbar from "../../components/Layout/navbar";
 import { authOptions } from "../api/auth/[...nextauth]";
 
 export async function getServerSideProps({ req, res, query }) {
@@ -90,11 +89,8 @@ const Blog = ({ posts, categories }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <div className="min-h-screen">
-        <Navbar />
-        {/* md:flex-col justify-start */}
+      <div>
         <main className="flex flex-col justify-center gap-10 py-10 px-5 sm:px-20 md:px-32 lg:flex-row lg:px-40">
-          {/* md:order-2 */}
           <div className="order-2 flex min-w-[80%] flex-col gap-3 md:min-w-[65%] lg:order-1 lg:min-w-[75%] xl:min-w-[60%]">
             {posts.length > 0 ? (
               posts.map((p, idx) => (
@@ -170,7 +166,6 @@ const Blog = ({ posts, categories }) => {
               </div>
             )}
           </div>
-          {/* md:order-1 */}
           <div className="order-1 flex h-fit min-w-[35%] flex-col items-center gap-5 p-2 lg:sticky lg:top-24 lg:order-2">
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-medium text-slate-900">
@@ -211,5 +206,8 @@ const Blog = ({ posts, categories }) => {
     </>
   );
 };
+
+Blog.withLayout = true;
+Blog.navOnly = true;
 
 export default Blog;

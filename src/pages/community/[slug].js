@@ -3,7 +3,7 @@ import { fetchMessages } from "@/lib/api-calls/messages";
 import CommunityTopBar from "@/src/components/community/TopBar";
 import ScrollableMessageBox from "@/src/components/messages";
 import MessageInputBox from "@/src/components/messages/InputBox";
-import { Box, Progress, Stack, useToast } from "@chakra-ui/react";
+import { Progress, useToast } from "@chakra-ui/react";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
@@ -92,11 +92,11 @@ const Community = () => {
         <link rel="icon" href="/favicon.png" />
       </Head>
       {isCommLoading || isMessagesLoading ? (
-        <Box w="full">
+        <div>
           <Progress size="md" isIndeterminate colorScheme="purple" />
-        </Box>
+        </div>
       ) : (
-        <Stack w="full" spacing={3} maxH="93.3vh">
+        <div className="flex grow flex-col gap-3">
           <CommunityTopBar
             data={{
               ...communityData,
@@ -111,10 +111,13 @@ const Community = () => {
             isUserAdminOrMod={isCurrentUserMod || isCurrentUserAdmin}
           />
           <MessageInputBox isDisabled={isDisabled} slug={slug} />
-        </Stack>
+        </div>
       )}
     </>
   );
 };
+
+Community.withAuth = true;
+Community.withLayout = true;
 
 export default Community;

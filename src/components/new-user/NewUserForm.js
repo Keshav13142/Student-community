@@ -1,8 +1,7 @@
 import { createUserProfile } from "@/lib/api-calls/user";
-import { newUserFormSchema, parseZodErrors } from "@/utils/zod_schemas";
+import { newUserFormSchema, parseZodErrors } from "@/lib/validations";
 import {
   Button,
-  Flex,
   IconButton,
   Input,
   InputGroup,
@@ -112,6 +111,10 @@ const NewUserForm = () => {
     data: { user },
   } = useSession();
 
+  if (user.hasProfile && user.enrollmentStatus === "APPROVED") {
+    router.push("/community/discover");
+  }
+
   const mutation = useMutation(createUserProfile, {
     onError: ({
       response: {
@@ -181,7 +184,7 @@ const NewUserForm = () => {
   };
 
   return (
-    <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+    <form className="flex min-w-[25dvw] flex-col gap-5" onSubmit={handleSubmit}>
       {formFields.map((f, idx) => (
         <InputGroup key={idx} className="flex flex-col">
           <Input
@@ -197,7 +200,7 @@ const NewUserForm = () => {
           <span className="mt-1 text-red-400">{formErrors[f.name]}</span>
         </InputGroup>
       ))}
-      <Flex gap={10} alignItems="center">
+      <div className="flex items-center gap-10">
         <span>Code Type</span>
         <RadioGroup
           defaultValue="memberCode"
@@ -206,23 +209,22 @@ const NewUserForm = () => {
             setFromErrors((p) => ({ ...p, institutionCode: null }));
           }}
         >
-          <Stack spacing={5} direction="row">
-            <Radio colorScheme="blue" value="memberCode">
+          <div className="flex gap-5">
+            <Radio colorScheme="blue" value="memberCode" type="button">
               Member
             </Radio>
-            <Radio colorScheme="purple" value="adminCode">
+            <Radio colorScheme="purple" value="adminCode" type="button">
               Admin
             </Radio>
-          </Stack>
+          </div>
         </RadioGroup>
-      </Flex>
+      </div>
       <Button
         isLoading={mutation.isLoading}
         loadingText="creating profile"
         type="submit"
         variant="solid"
         colorScheme="purple"
-        onClick={handleSubmit}
       >
         Join
       </Button>

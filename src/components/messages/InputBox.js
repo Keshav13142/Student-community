@@ -41,7 +41,7 @@ const MessageInputBox = ({ isDisabled, slug }) => {
         }
         hasArrow
       >
-        <Flex gap={5} p={3}>
+        <div className="flex gap-5 p-3">
           <Input
             disabled={isDisabled}
             value={input}
@@ -52,7 +52,7 @@ const MessageInputBox = ({ isDisabled, slug }) => {
             }}
           />
           <IconButton isDisabled={isDisabled} icon={<BiSend />} type="submit" />
-        </Flex>
+        </div>
       </Tooltip>
     </form>
   );

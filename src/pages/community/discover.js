@@ -1,13 +1,5 @@
 import { fetchPublicAndRestrictedCommunities } from "@/lib/api-calls/community";
-import {
-  Avatar,
-  Badge,
-  Box,
-  Flex,
-  Progress,
-  Stack,
-  useToast,
-} from "@chakra-ui/react";
+import { Avatar, Badge, Progress, useToast } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import Link from "next/link";
@@ -47,30 +39,23 @@ const DiscoverCommunities = () => {
         <link rel="icon" href="/favicon.png" />
       </Head>
       {isloading ? (
-        <Box w="full">
+        <div>
           <Progress size="md" isIndeterminate colorScheme="purple" />
-        </Box>
+        </div>
       ) : (
-        <Stack align="center" w="100%" spacing={5} m={5}>
+        <div className="m-5 flex grow flex-col items-center gap-2">
           <h1 className="flex items-center gap-2 text-2xl font-medium text-indigo-900">
             Discover new Communities
             <BsFillPeopleFill />
           </h1>
-          <Stack
-            spacing={3}
-            justifyContent={publicCommunities?.length > 0 ? "" : "center"}
-            flexGrow={1}
+          <div
+            className={`flex grow flex-col gap-3 ${
+              publicCommunities?.length > 0 ? "" : "justify-center"
+            }`}
           >
             {publicCommunities?.length > 0 ? (
               publicCommunities?.map((c) => (
-                <Flex
-                  className="rounded-md border border-purple-500"
-                  key={c.id}
-                  alignItems="center"
-                  justifyContent="space-between"
-                  p={3}
-                  minW="md"
-                >
+                <div className="flex items-center justify-between rounded-md border border-purple-500 p-3">
                   <div className="flex items-center gap-5">
                     <Avatar src={c.image} name={c.name} />
                     <div className="flex flex-col">
@@ -89,7 +74,7 @@ const DiscoverCommunities = () => {
                   >
                     {c.type}
                   </Badge>
-                </Flex>
+                </div>
               ))
             ) : (
               <div className="flex flex-col items-center">
@@ -105,8 +90,8 @@ const DiscoverCommunities = () => {
                 </div>
               </div>
             )}
-          </Stack>
-        </Stack>
+          </div>
+        </div>
       )}
     </>
   );
@@ -114,5 +99,6 @@ const DiscoverCommunities = () => {
 
 // Protected route
 DiscoverCommunities.withAuth = true;
+DiscoverCommunities.withLayout = true;
 
 export default DiscoverCommunities;

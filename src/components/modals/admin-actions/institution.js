@@ -75,7 +75,6 @@ const InstitutionAdminActions = ({
       blockScrollOnMount={false}
       isOpen={isOpen}
       onClose={onClose}
-      size="md"
       isCentered
     >
       <ModalOverlay />

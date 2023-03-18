@@ -24,24 +24,20 @@ const CommunityMembers = ({ data, doAction }) => {
   const session = useSession();
 
   return (
-    <Stack spacing={3} alignItems="center">
+    <div className="flex flex-col items-center gap-3">
       {data?.members.map((m) => {
         const isCurrentUser = m.user.id === session.data?.user.id;
         const isAdmin = m.type === "ADMIN";
         const isMod = m.type === "MODERATOR";
 
         return (
-          <Flex
-            minW="sm"
+          <div
             key={m.id}
-            p={2}
-            className="rounded-lg border border-purple-400 shadow-sm"
-            justifyContent="space-between"
-            alignItems="center"
+            className="flex items-center justify-between rounded-lg border border-purple-400 p-2 shadow-sm"
           >
-            <Flex alignItems="center" gap={5}>
+            <div className="flex items-center gap-5">
               <Avatar src={m.user.image} name={m.user.name} />
-              <Stack>
+              <div className="flex flex-col">
                 <span className="text-base font-medium">
                   {isCurrentUser ? (
                     <Badge variant="outline" colorScheme="green">
@@ -52,8 +48,8 @@ const CommunityMembers = ({ data, doAction }) => {
                   )}
                 </span>
                 <span className="cursor-pointer text-blue-700">{`@${m.user.username}`}</span>
-              </Stack>
-            </Flex>
+              </div>
+            </div>
             {isAdmin ? (
               <Badge variant="outline" colorScheme="red">
                 Admin
@@ -126,10 +122,10 @@ const CommunityMembers = ({ data, doAction }) => {
                 ) : null}
               </MenuList>
             </Menu>
-          </Flex>
+          </div>
         );
       })}
-    </Stack>
+    </div>
   );
 };
 

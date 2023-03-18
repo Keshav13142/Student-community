@@ -1,6 +1,5 @@
 import { sendComment } from "@/lib/api-calls/posts";
 import prisma from "@/lib/prisma";
-import Navbar from "@/src/components/Layout/navbar";
 import RenderMarkdown from "@/src/components/render-markdown";
 import { Avatar, Button, IconButton, Input, useToast } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
@@ -126,8 +125,7 @@ const SinglePost = ({ post }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <div className="min-h-screen min-w-full">
-        <Navbar />
+      <div>
         <div className="flex flex-col gap-10 p-5 xl:p-10">
           <Button
             variant="link"
@@ -207,5 +205,8 @@ const SinglePost = ({ post }) => {
     </>
   );
 };
+
+SinglePost.withLayout = true;
+SinglePost.navOnly = true;
 
 export default SinglePost;

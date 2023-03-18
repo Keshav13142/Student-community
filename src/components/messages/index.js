@@ -6,12 +6,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Box,
   Button,
-  Flex,
   MenuItem,
   MenuList,
-  Stack,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -22,42 +19,26 @@ import React, { forwardRef, useRef, useState } from "react";
 import { BiBlock } from "react-icons/bi";
 import { MdHideSource } from "react-icons/md";
 import Linkify from "react-linkify";
-import ScrollableFeed from "react-scrollable-feed";
 
 const MsgDayInfo = ({ day }) => (
-  <Box
-    alignSelf="center"
-    bg="gray.200"
-    px={2}
-    rounded="md"
-    py={0.5}
-    my={2}
-    fontSize="sm"
-  >
+  <div className="center my-2 mx-auto w-fit rounded-md bg-gray-200 px-2 py-0.5 text-sm">
     {day}
-  </Box>
+  </div>
 );
 
 const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
   return (
-    <Flex
-      alignSelf={msg.isOwnMessage ? "flex-end" : "flex-start"}
-      maxW="45%"
-      ref={ref}
-    >
-      <Stack
-        w="full"
-        px={3}
-        py={2}
-        spacing={0.4}
-        borderRadius={10}
-        bgColor={msg.isOwnMessage ? "whatsapp.50" : "purple.50"}
+    <div className={`${msg.isOwnMessage ? "self-end" : "self-start"} w-fit`}>
+      <div
+        className={`flex w-full flex-col gap-0.5 rounded-md px-3 py-1.5 ${
+          msg.isOwnMessage ? "bg-green-200" : "bg-purple-200"
+        }`}
       >
         {msg.isDeleted ? (
-          <Flex alignItems="center" gap={2} className="text-slate-500">
+          <div className="flex items-center gap-2 text-slate-500">
             <BiBlock />
             This message was deleted {msg.deletedBy && `by ${msg.deletedBy}`}
-          </Flex>
+          </div>
         ) : (
           <>
             {!msg.isOwnMessage && (
@@ -84,8 +65,8 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
             </span>
           </>
         )}
-      </Stack>
-    </Flex>
+      </div>
+    </div>
   );
 });
 
@@ -156,7 +137,7 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-      <ScrollableFeed className="custom-scrollbar flex flex-col gap-1 py-2 px-10">
+      <div className="flex h-72 grow flex-col gap-2 overflow-y-auto scroll-smooth py-2 px-5">
         {messages?.map((msg, idx) => {
           msg.isOwnMessage = session.data?.user?.id === msg.sender?.id;
           msg.currentMsgTime = new Date(msg.createdAt);
@@ -203,7 +184,7 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
             </React.Fragment>
           );
         })}
-      </ScrollableFeed>
+      </div>
     </>
   );
 };

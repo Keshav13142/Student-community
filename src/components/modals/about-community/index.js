@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { getCommInviteCode } from "@/lib/api-calls/community";
 import {
   Badge,
@@ -39,6 +38,11 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
     onOpen: onActionsOpen,
   } = useDisclosure();
 
+  const [tabIndex, setTabIndex] = useState(0);
+  const handleTabsChange = (index) => {
+    setTabIndex(index);
+  };
+
   const [action, setAction] = useState({
     type: "",
     userId: "",
@@ -60,34 +64,40 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
         blockScrollOnMount={false}
         isOpen={isOpen}
         onClose={onClose}
-        size="2xl"
         scrollBehavior="inside"
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent className="min-w-[30%]">
           <ModalHeader
             alignItems="center"
             gap={2}
             display="flex"
             justifyContent="center"
           >
-            <div className="text-2xl">
+            <div className="text-lg lg:text-xl">
               <span>About </span>
               <span className="text-purple-500">- {data.name}</span>
             </div>
             {data.isCurrentUserAdmin && (
-              <Tooltip label="Edit" placement="right">
-                <IconButton
-                  icon={<RiEditBoxLine />}
-                  bg="transparent"
-                  onClick={() => setIsEditMode((prev) => !prev)}
-                />
-              </Tooltip>
+              <IconButton
+                icon={<RiEditBoxLine />}
+                bg="transparent"
+                onClick={() => {
+                  setTabIndex(0);
+                  setIsEditMode((prev) => !prev);
+                }}
+              />
             )}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Tabs isFitted variant="line" colorScheme="purple">
+            <Tabs
+              isFitted
+              variant="line"
+              colorScheme="purple"
+              index={tabIndex}
+              onChange={handleTabsChange}
+            >
               <TabList mb="1em">
                 <Tab>Info</Tab>
                 <Tab>Members</Tab>

@@ -85,7 +85,7 @@ const JoinCommunity = ({ isOpen, onClose, onSidebarClose }) => {
         <ModalCloseButton />
         <ModalBody>
           <form onSubmit={onSubmit}>
-            <Stack spacing={4}>
+            <div className="flex flex-col gap-4">
               <div className="flex flex-col">
                 <span className="mb-1 font-medium">Invite code</span>
                 <InputGroup>
@@ -102,7 +102,7 @@ const JoinCommunity = ({ isOpen, onClose, onSidebarClose }) => {
                   <span className="mm-1 tt-1 text-re">{error}</span>
                 </InputGroup>
               </div>
-              <Flex alignSelf="center" gap={3}>
+              <div className="flex items-center gap-3">
                 <Button
                   colorScheme="red"
                   variant="outline"
@@ -122,8 +122,8 @@ const JoinCommunity = ({ isOpen, onClose, onSidebarClose }) => {
                 >
                   Join
                 </Button>
-              </Flex>
-            </Stack>
+              </div>
+            </div>
           </form>
         </ModalBody>
       </ModalContent>

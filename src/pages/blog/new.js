@@ -1,9 +1,8 @@
 import { createNewPost } from "@/lib/api-calls/posts";
 import prisma from "@/lib/prisma";
+import { createPostSchema, parseZodErrors } from "@/lib/validations";
 import MarkdownEditor from "@/src/components/editor";
-import Navbar from "@/src/components/Layout/navbar";
 import RenderMarkdown from "@/src/components/render-markdown";
-import { createPostSchema, parseZodErrors } from "@/utils/zod_schemas";
 import {
   Button,
   Input,
@@ -139,8 +138,7 @@ const CreateNewPost = ({ allCategories }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <div className="min-h-screen">
-        <Navbar />
+      <div>
         <div className="flex flex-col items-center justify-center gap-5 py-10 lg:flex-row lg:items-start xl:gap-10  2xl:gap-20">
           <div className="order-2 flex max-w-3xl flex-col gap-10 lg:order-1">
             {fields.map((f, idx) => (
@@ -238,5 +236,7 @@ const CreateNewPost = ({ allCategories }) => {
     </>
   );
 };
+CreateNewPost.withLayout = true;
+CreateNewPost.navOnly = true;
 
 export default CreateNewPost;

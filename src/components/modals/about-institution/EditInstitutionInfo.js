@@ -1,16 +1,14 @@
 import { updateInstitutionInfo } from "@/lib/api-calls/institution";
-import { parseZodErrors, updateInstitutionSchema } from "@/utils/zod_schemas";
+import { parseZodErrors, updateInstitutionSchema } from "@/lib/validations";
 import {
   Button,
-  Flex,
   Input,
   InputGroup,
   InputRightElement,
-  Stack,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { useState } from "react";
 import { AiOutlineLink } from "react-icons/ai";
 import { BsFillImageFill } from "react-icons/bs";
 import { MdAlternateEmail } from "react-icons/md";
@@ -84,7 +82,7 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
 
   return (
     <form onSubmit={onSubmit}>
-      <Stack spacing={4}>
+      <div className="flex flex-col gap-4">
         {formFields.map((f, idx) => (
           <div key={idx} className="flex flex-col">
             <span className="mb-1 font-medium">{f.placeholder}</span>
@@ -101,7 +99,7 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
             </InputGroup>
           </div>
         ))}
-        <Flex alignSelf="center" gap={3}>
+        <div className="flex items-center gap-3">
           <Button
             disabled={mutation.isLoading}
             colorScheme="red"
@@ -133,8 +131,8 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
           >
             Submit
           </Button>
-        </Flex>
-      </Stack>
+        </div>
+      </div>
     </form>
   );
 };

@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import React from "react";
 import { FiCopy } from "react-icons/fi";
 
@@ -28,11 +29,11 @@ const InviteCode = ({ code, title }) => {
     });
   };
   return (
-    <Flex minW="60%" gap={5}>
+    <div className="flex min-w-[60%] gap-5">
       <span>{title} Code</span>
       <Input value={code} type="password" isReadOnly variant="flushed" />
       <IconButton icon={<FiCopy />} onClick={copyToClipboard} />
-    </Flex>
+    </div>
   );
 };
 
@@ -48,38 +49,36 @@ const InstitutionInfo = ({ data }) => {
   );
 
   return (
-    <Stack flexDirection="column" gap={5} alignItems="center">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        className="h-36 w-36 rounded-xl"
-        src={
-          data?.image ||
-          "http://vastusanskar.com/wp-content/uploads/2019/02/government-institution.jpg"
-        }
-        alt="instituion image"
+    <div className="flex flex-col items-center gap-5">
+      <Image
+        src="https://illustrations.popsy.co/violet/business-analysis.svg"
+        alt="default community"
+        className="object-cover"
+        width={200}
+        height={200}
       />
-      <Box>
+      <div>
         Name :<span className="text-xl font-bold">{data?.name}</span>
-      </Box>
-      <Box>
+      </div>
+      <div>
         Website :
         <span className="text-xl font-bold">
           {data?.website || "Not provided"}
         </span>
-      </Box>
-      <Box>
+      </div>
+      <div>
         Support email :
         <span className="text-xl font-bold">
           {data?.supportEmail || "Not provided"}
         </span>
-      </Box>
+      </div>
       {session?.data?.user?.isInstitutionAdmin && (
         <>
           <InviteCode code={inviteCodes?.adminCode} title="Admin" />
           <InviteCode code={inviteCodes?.memberCode} title="Member" />
         </>
       )}
-    </Stack>
+    </div>
   );
 };
 

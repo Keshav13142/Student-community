@@ -1,5 +1,5 @@
 import { createCommunity } from "@/lib/api-calls/community";
-import { createCommunitySchema, parseZodErrors } from "@/utils/zod_schemas";
+import { createCommunitySchema, parseZodErrors } from "@/lib/validations";
 import {
   Button,
   Input,
@@ -14,8 +14,6 @@ import {
   ModalOverlay,
   Radio,
   RadioGroup,
-  Stack,
-  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -97,7 +95,7 @@ const CreateCommunityModal = ({ isOpen, onClose, onSidebarClose }) => {
       blockScrollOnMount={false}
       isOpen={isOpen}
       onClose={onClose}
-      size="2xl"
+      scrollBehavior="inside"
     >
       <ModalOverlay />
       <ModalContent>
@@ -105,7 +103,7 @@ const CreateCommunityModal = ({ isOpen, onClose, onSidebarClose }) => {
         <ModalCloseButton disabled={mutation.isLoading} />
         <ModalBody>
           <form onSubmit={onSubmit}>
-            <Stack spacing={5}>
+            <div className="flex flex-col gap-5">
               <InputGroup className="flex flex-col">
                 <Input
                   name="name"
@@ -140,14 +138,14 @@ const CreateCommunityModal = ({ isOpen, onClose, onSidebarClose }) => {
                   setDetails((p) => ({ ...p, type: v }));
                 }}
               >
-                <Stack spacing={3}>
-                  <Text className="font-medium">Community type</Text>
+                <div className="flex flex-col gap-3">
+                  <p className="font-medium">Community type</p>
                   <Radio value="PUBLIC">Public</Radio>
                   <Radio value="PRIVATE">Private</Radio>
                   <Radio value="RESTRICTED">Restricted</Radio>
-                </Stack>
+                </div>
               </RadioGroup>
-            </Stack>
+            </div>
           </form>
         </ModalBody>
         <ModalFooter>
