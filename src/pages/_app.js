@@ -18,7 +18,9 @@ export default function App({ Component, pageProps }) {
         <ChakraProvider>
           <SessionProvider session={pageProps.session}>
             {Component.withLayout ? (
-              <Layout navOnly={Component.navOnly}>
+              <Layout
+                showCommunityInfo={Component.withLayout.showCommunityInfo}
+              >
                 {Component.withAuth ? (
                   <AuthGuard>
                     <Component {...pageProps} />

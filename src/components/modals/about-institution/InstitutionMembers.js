@@ -18,12 +18,12 @@ const InstitutionMembers = ({ members, doAction }) => {
   const session = useSession();
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex flex-col items-center gap-3">
       {members.map((m) => {
         return (
           <div
             key={m.id}
-            className="flex items-center justify-between rounded-lg border border-purple-400 p-2 shadow-sm"
+            className="flex min-w-[80%] items-center justify-between rounded-lg border border-purple-400 p-2 shadow-sm"
           >
             <div className="flex items-center gap-5">
               <Avatar src={m.user.image} name={m.user.name} />

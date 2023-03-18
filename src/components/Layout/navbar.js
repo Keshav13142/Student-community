@@ -1,7 +1,6 @@
 import {
   Avatar,
   Button,
-  Heading,
   IconButton,
   Menu,
   MenuButton,
@@ -14,7 +13,7 @@ import Link from "next/link";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import EditProfile from "../modals/edit-profile";
 
-const Navbar = ({ onSidebarOpen, showMenu }) => {
+const Navbar = ({ onSidebarOpen, showCommunityInfo }) => {
   const session = useSession();
   const { isOpen, onClose, onOpen } = useDisclosure();
   return (
@@ -22,20 +21,22 @@ const Navbar = ({ onSidebarOpen, showMenu }) => {
       <EditProfile isOpen={isOpen} onClose={onClose} />
       <nav className="flex items-center justify-between py-2 px-6 shadow-md">
         <div className="flex gap-2">
-          {showMenu && (
-            <div className="block lg:hidden">
-              <IconButton
-                variant="ghost"
-                colorScheme="purple"
-                fontSize="25px"
-                onClick={onSidebarOpen}
-                icon={<HiOutlineMenuAlt2 />}
-              />
-            </div>
-          )}
-          <Heading size={"lg"} alignSelf="center">
-            Student <span className="text-purple-600">Community</span>
-          </Heading>
+          <div
+            className={`block ${showCommunityInfo ? "lg:hidden" : "md:hidden"}`}
+          >
+            <IconButton
+              variant="ghost"
+              colorScheme="purple"
+              fontSize="25px"
+              onClick={onSidebarOpen}
+              icon={<HiOutlineMenuAlt2 />}
+            />
+          </div>
+          <Link href="/community/discover">
+            <h1 className="self-center text-2xl font-bold">
+              Student <span className="text-purple-600">Community</span>
+            </h1>
+          </Link>
         </div>
         <div className="flex gap-20">
           <div className="hidden items-center md:flex">

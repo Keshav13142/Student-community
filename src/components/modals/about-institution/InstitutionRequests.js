@@ -36,7 +36,7 @@ const InstitutionRequests = ({ institutionId }) => {
   const pendingReqLength = data?.filter((r) => r.status === "PENDING").length;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-5">
       <div className="mr-5 flex items-center gap-3 self-end">
         <span>Show pending only</span>
         <Switch
@@ -57,9 +57,9 @@ const InstitutionRequests = ({ institutionId }) => {
           return (
             <div
               key={id}
-              className="items-center justify-between rounded-lg border border-purple-400 p-2 shadow-sm"
+              className="flex items-center justify-between gap-3 rounded-lg border border-purple-400 p-2 shadow-sm"
             >
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-3">
                 <Avatar src={user.image} name={user.name} />
                 <div className="flex flex-col">
                   <span className="text-base font-medium">{user.name}</span>
@@ -68,6 +68,7 @@ const InstitutionRequests = ({ institutionId }) => {
               </div>
               {status !== "PENDING" && (
                 <Badge
+                  fontSize={"0.7rem"}
                   className="mr-2"
                   variant="outline"
                   colorScheme={status === "REJECTED" ? "red" : "green"}

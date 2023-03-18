@@ -233,7 +233,7 @@ const EditPost = ({ post, allCategories }) => {
         </AlertDialogOverlay>
       </AlertDialog>
       <div>
-        <main className="flex flex-col items-center justify-center gap-5 py-10 lg:flex-row lg:items-start xl:gap-10  2xl:gap-20">
+        <div className="flex flex-col items-center justify-center gap-5 py-10 lg:flex-row lg:items-start xl:gap-10  2xl:gap-20">
           <div className="order-2 flex max-w-3xl flex-col gap-10 lg:order-1">
             {fields.map((f, idx) => (
               <InputGroup key={idx} className="flex flex-col">
@@ -333,13 +333,12 @@ const EditPost = ({ post, allCategories }) => {
               Delete
             </Button>
           </div>
-        </main>
+        </div>
       </div>
     </>
   );
 };
 
-EditPost.withLayout = true;
-EditPost.navOnly = true;
+EditPost.withLayout = { showCommunityInfo: false };
 
 export default EditPost;

@@ -91,7 +91,7 @@ const Blog = ({ posts, categories }) => {
         <link rel="icon" href="/favicon.png" />
       </Head>
       <div>
-        <main className="flex flex-col justify-center gap-10 py-10 px-5 sm:px-20 md:px-32 lg:flex-row lg:px-40">
+        <div className="flex flex-col justify-center gap-10 py-10 px-5 sm:px-20 md:px-32 lg:flex-row lg:px-40">
           <div className="order-2 flex min-w-[80%] flex-col gap-3 md:min-w-[65%] lg:order-1 lg:min-w-[75%] xl:min-w-[60%]">
             {posts.length > 0 ? (
               posts.map((p, idx) => (
@@ -212,13 +212,12 @@ const Blog = ({ posts, categories }) => {
               </Button>
             </Link>
           </div>
-        </main>
+        </div>
       </div>
     </>
   );
 };
 
-Blog.withLayout = true;
-Blog.navOnly = true;
+Blog.withLayout = { showCommunityInfo: false };
 
 export default Blog;

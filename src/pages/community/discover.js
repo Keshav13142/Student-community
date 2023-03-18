@@ -99,6 +99,6 @@ const DiscoverCommunities = () => {
 
 // Protected route
 DiscoverCommunities.withAuth = true;
-DiscoverCommunities.withLayout = true;
+DiscoverCommunities.withLayout = { showCommunityInfo: true };
 
 export default DiscoverCommunities;

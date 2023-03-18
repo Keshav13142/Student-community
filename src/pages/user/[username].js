@@ -323,7 +323,6 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
   );
 };
 
-UserProfile.withLayout = true;
-UserProfile.navOnly = true;
+UserProfile.withLayout = { showCommunityInfo: false };
 
 export default UserProfile;

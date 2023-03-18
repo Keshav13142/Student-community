@@ -236,7 +236,6 @@ const CreateNewPost = ({ allCategories }) => {
     </>
   );
 };
-CreateNewPost.withLayout = true;
-CreateNewPost.navOnly = true;
+CreateNewPost.withLayout = { showCommunityInfo: false };
 
 export default CreateNewPost;

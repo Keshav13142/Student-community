@@ -118,6 +118,6 @@ const Community = () => {
 };
 
 Community.withAuth = true;
-Community.withLayout = true;
+Community.withLayout = { showCommunityInfo: true };
 
 export default Community;

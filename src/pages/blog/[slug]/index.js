@@ -125,88 +125,85 @@ const SinglePost = ({ post }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <div>
-        <div className="flex flex-col gap-10 p-5 xl:p-10">
-          <Button
-            variant="link"
-            leftIcon={<IoChevronBack />}
-            className="w-fit"
-            onClick={() => {
-              router.push("/blog");
-            }}
+      <div className="flex flex-col gap-10 p-5 xl:p-10">
+        <Button
+          variant="link"
+          leftIcon={<IoChevronBack />}
+          className="w-fit"
+          onClick={() => {
+            router.push("/blog");
+          }}
+        >
+          All posts
+        </Button>
+        <div className="flex w-[90%] flex-col gap-5 self-center sm:w-[80%] lg:w-[55%]">
+          <time
+            dateTime={new Date(post.createdAt)}
+            className="font-mono text-slate-700"
           >
-            All posts
-          </Button>
-          <div className="flex w-[90%] flex-col gap-5 self-center sm:w-[80%] lg:w-[55%]">
-            <time
-              dateTime={new Date(post.createdAt)}
-              className="font-mono text-slate-700"
-            >
-              {format(new Date(post.createdAt), "EEEE, LLLL d, yyyy")}
-            </time>
-            <h1 className="text-xl font-medium lg:text-2xl xl:text-4xl">
-              {post.title}
-            </h1>
-            <div className="flex items-center gap-3">
-              <Avatar src={post.author.image} name={post.author.name} />
-              <div className="flex flex-col gap-1">
-                <p className="text-slate-900">{post.author.name}</p>
-                <Link href={`/user/@${post.author.username}`}>
-                  <p className="text-purple-500 hover:text-purple-600">
-                    @{post.author.username}
-                  </p>
-                </Link>
-              </div>
+            {format(new Date(post.createdAt), "EEEE, LLLL d, yyyy")}
+          </time>
+          <h1 className="text-xl font-medium lg:text-2xl xl:text-4xl">
+            {post.title}
+          </h1>
+          <div className="flex items-center gap-3">
+            <Avatar src={post.author.image} name={post.author.name} />
+            <div className="flex flex-col gap-1">
+              <p className="text-slate-900">{post.author.name}</p>
+              <Link href={`/user/@${post.author.username}`}>
+                <p className="text-purple-500 hover:text-purple-600">
+                  @{post.author.username}
+                </p>
+              </Link>
             </div>
           </div>
-          <div className="w-[95%] self-center rounded-lg border-2 border-gray-200 sm:w-[80%] lg:w-[55%]" />
-          <article className="prose max-w-[90vw] self-center">
-            <RenderMarkdown content={post.content} />
-          </article>
-          <div className="w-[95%] self-center rounded-lg border-2 border-gray-200 sm:w-[80%] lg:w-[55%]" />
-          <div className="flex  w-[100%] flex-col gap-5 self-center sm:w-[70%] lg:w-[55%]">
-            <h2 className="text-2xl font-medium underline">Comments</h2>
-            <div className="flex max-h-[20vh] flex-col gap-2 overflow-y-auto">
-              {comments.map((m) => (
-                <div
-                  key={m.id}
-                  className="flex w-fit min-w-[20%] flex-col rounded-lg bg-gray-200 px-2 py-1"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-blue-500">
-                      {m.user ? m.user.username : "[deleted]"}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {format(new Date(m.createdAt), "do MMMM")}
-                    </span>
-                  </div>
-                  <span>{m.comment}</span>
+        </div>
+        <div className="w-[95%] self-center rounded-lg border-2 border-gray-200 sm:w-[80%] lg:w-[55%]" />
+        <article className="prose max-w-[90vw] self-center">
+          <RenderMarkdown content={post.content} />
+        </article>
+        <div className="w-[95%] self-center rounded-lg border-2 border-gray-200 sm:w-[80%] lg:w-[55%]" />
+        <div className="flex  w-[100%] flex-col gap-5 self-center sm:w-[70%] lg:w-[55%]">
+          <h2 className="text-2xl font-medium underline">Comments</h2>
+          <div className="flex max-h-[20vh] flex-col gap-2 overflow-y-auto">
+            {comments.map((m) => (
+              <div
+                key={m.id}
+                className="flex w-fit min-w-[20%] flex-col rounded-lg bg-gray-200 px-2 py-1"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-blue-500">
+                    {m.user ? m.user.username : "[deleted]"}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {format(new Date(m.createdAt), "do MMMM")}
+                  </span>
                 </div>
-              ))}
-            </div>
-            <form className="flex gap-3" onSubmit={handleSendComment}>
-              <Input
-                value={input}
-                placeholder="Send a message"
-                borderWidth={2}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                }}
-              />
-              <IconButton
-                isDisabled={mutation.isLoading}
-                icon={<BiSend />}
-                type="submit"
-              />
-            </form>
+                <span>{m.comment}</span>
+              </div>
+            ))}
           </div>
+          <form className="flex gap-3" onSubmit={handleSendComment}>
+            <Input
+              value={input}
+              placeholder="Send a message"
+              borderWidth={2}
+              onChange={(e) => {
+                setInput(e.target.value);
+              }}
+            />
+            <IconButton
+              isDisabled={mutation.isLoading}
+              icon={<BiSend />}
+              type="submit"
+            />
+          </form>
         </div>
       </div>
     </>
   );
 };
 
-SinglePost.withLayout = true;
-SinglePost.navOnly = true;
+SinglePost.withLayout = { showCommunityInfo: false };
 
 export default SinglePost;
