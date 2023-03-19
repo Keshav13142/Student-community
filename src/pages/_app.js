@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Analytics } from "@vercel/analytics/react";
 import { SessionProvider } from "next-auth/react";
 import { useState } from "react";
 import AuthGuard from "../components/Auth";
@@ -37,6 +38,7 @@ export default function App({ Component, pageProps }) {
               <Component {...pageProps} />
             )}
             <ReactQueryDevtools />
+            <Analytics />
             <TailwindIndicator />
           </SessionProvider>
         </ChakraProvider>
