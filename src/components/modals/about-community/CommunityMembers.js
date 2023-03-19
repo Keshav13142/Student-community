@@ -31,35 +31,52 @@ const CommunityMembers = ({ data, doAction }) => {
         return (
           <div
             key={m.id}
-            className="flex items-center justify-between rounded-lg border border-purple-400 p-2 shadow-sm"
+            className="flex min-w-full items-center justify-between gap-2 rounded-lg border border-purple-400 p-2 shadow-sm md:min-w-[80%]"
           >
-            <div className="flex items-center gap-5">
-              <Avatar src={m.user.image} name={m.user.name} />
+            <div className="flex items-center gap-3">
+              <Avatar
+                src={m.user.image}
+                name={m.user.name}
+                size={["sm", "md"]}
+              />
               <div className="flex flex-col">
                 <span className="text-base font-medium">
                   {isCurrentUser ? (
-                    <Badge variant="outline" colorScheme="green">
+                    <Badge
+                      fontSize={["2xs", "xs"]}
+                      variant="outline"
+                      colorScheme="green"
+                    >
                       You
                     </Badge>
                   ) : (
                     <span className="text-base font-medium">{m.user.name}</span>
                   )}
                 </span>
-                <span className="cursor-pointer text-blue-700">{`@${m.user.username}`}</span>
+                <span className="cursor-pointer text-sm text-blue-700 md:text-base">{`@${m.user.username}`}</span>
               </div>
             </div>
             {isAdmin ? (
-              <Badge variant="outline" colorScheme="red">
+              <Badge
+                fontSize={["2xs", "xs"]}
+                variant="outline"
+                colorScheme="red"
+              >
                 Admin
               </Badge>
             ) : null}
             {isMod ? (
-              <Badge variant="outline" colorScheme="purple">
+              <Badge
+                fontSize={["2xs", "xs"]}
+                variant="outline"
+                colorScheme="purple"
+              >
                 Mod
               </Badge>
             ) : null}
             <Menu>
               <MenuButton
+                size="sm"
                 as={IconButton}
                 icon={<HiDotsVertical />}
                 bg="transparent"

@@ -1,6 +1,5 @@
 import { getCommInviteCode } from "@/lib/api-calls/community";
 import {
-  Badge,
   IconButton,
   Modal,
   ModalBody,
@@ -13,7 +12,6 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
@@ -64,22 +62,16 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
         blockScrollOnMount={false}
         isOpen={isOpen}
         onClose={onClose}
+        size={["xs", "sm", "md", "xl"]}
         scrollBehavior="inside"
       >
         <ModalOverlay />
         <ModalContent className="min-w-[30%]">
-          <ModalHeader
-            alignItems="center"
-            gap={2}
-            display="flex"
-            justifyContent="center"
-          >
-            <div className="text-lg lg:text-xl">
-              <span>About </span>
-              <span className="text-purple-500">- {data.name}</span>
-            </div>
+          <ModalHeader className="mt-5 flex items-center justify-center gap-2 text-center">
+            <h1 className="text-lg text-purple-500 lg:text-xl">{data.name}</h1>
             {data.isCurrentUserAdmin && (
               <IconButton
+                size="xs"
                 icon={<RiEditBoxLine />}
                 bg="transparent"
                 onClick={() => {

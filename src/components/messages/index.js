@@ -15,6 +15,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ContextMenu } from "chakra-ui-contextmenu";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { BiBlock } from "react-icons/bi";
 import { MdHideSource } from "react-icons/md";
@@ -97,7 +98,7 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
   });
 
   useEffect(() => {
-    if (messages) {
+    if (messages && latestMessageRef.current) {
       latestMessageRef.current.scrollIntoView({
         behavior: "smooth",
       });
@@ -145,63 +146,81 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
         </AlertDialogOverlay>
       </AlertDialog>
       <div className="flex h-72 grow flex-col gap-2 overflow-y-auto scroll-smooth py-2 px-5">
-        {messages?.map((msg, idx) => {
-          msg.isOwnMessage = session.data?.user?.id === msg.sender?.id;
-          msg.currentMsgTime = new Date(msg.createdAt);
-          msg.lastMsgTime = new Date(messages[idx - 1]?.createdAt);
-          msg.msgSentToday =
-            new Date().toDateString() === msg.currentMsgTime.toDateString();
-          msg.isNewDateMsg =
-            msg.currentMsgTime.toDateString() !==
-            msg.lastMsgTime.toDateString();
+        {messages?.length > 0 ? (
+          messages?.map((msg, idx) => {
+            msg.isOwnMessage = session.data?.user?.id === msg.sender?.id;
+            msg.currentMsgTime = new Date(msg.createdAt);
+            msg.lastMsgTime = new Date(messages[idx - 1]?.createdAt);
+            msg.msgSentToday =
+              new Date().toDateString() === msg.currentMsgTime.toDateString();
+            msg.isNewDateMsg =
+              msg.currentMsgTime.toDateString() !==
+              msg.lastMsgTime.toDateString();
 
-          return (
-            <React.Fragment key={idx}>
-              {msg.msgSentToday && msg.isNewDateMsg && (
-                <MsgDayInfo day="Today" />
-              )}
-              {msg.isNewDateMsg && !msg.msgSentToday && (
-                <MsgDayInfo
-                  day={Intl.DateTimeFormat("en-us", {
-                    dateStyle: "medium",
-                  }).format(msg.currentMsgTime)}
-                />
-              )}
-              <div
-                className={`${
-                  msg.isOwnMessage ? "self-end" : "self-start"
-                } w-fit`}
-                ref={idx + 1 === messages?.length ? latestMessageRef : null}
-              >
-                {isUserAdminOrMod && !msg.isOwnMessage && !msg.isDeleted ? (
-                  <ContextMenu
-                    renderMenu={() => (
-                      <MenuList>
-                        <MenuItem
-                          onClick={() => {
-                            setDeleteMessageId(msg.id);
-                            onOpen();
-                          }}
-                        >
-                          <MdHideSource
-                            size={20}
-                            className="mr-2"
-                            color="red"
-                          />
-                          Delete message for everyone
-                        </MenuItem>
-                      </MenuList>
-                    )}
-                  >
-                    {(ref) => <MessageBubble msg={msg} ref={ref} />}
-                  </ContextMenu>
-                ) : (
-                  <MessageBubble msg={msg} />
+            return (
+              <React.Fragment key={idx}>
+                {msg.msgSentToday && msg.isNewDateMsg && (
+                  <MsgDayInfo day="Today" />
                 )}
-              </div>
-            </React.Fragment>
-          );
-        })}
+                {msg.isNewDateMsg && !msg.msgSentToday && (
+                  <MsgDayInfo
+                    day={Intl.DateTimeFormat("en-us", {
+                      dateStyle: "medium",
+                    }).format(msg.currentMsgTime)}
+                  />
+                )}
+                <div
+                  className={`${
+                    msg.isOwnMessage ? "self-end" : "self-start"
+                  } w-fit`}
+                  ref={idx + 1 === messages?.length ? latestMessageRef : null}
+                >
+                  {isUserAdminOrMod && !msg.isOwnMessage && !msg.isDeleted ? (
+                    <ContextMenu
+                      renderMenu={() => (
+                        <MenuList>
+                          <MenuItem
+                            onClick={() => {
+                              setDeleteMessageId(msg.id);
+                              onOpen();
+                            }}
+                          >
+                            <MdHideSource
+                              size={20}
+                              className="mr-2"
+                              color="red"
+                            />
+                            Delete message for everyone
+                          </MenuItem>
+                        </MenuList>
+                      )}
+                    >
+                      {(ref) => <MessageBubble msg={msg} ref={ref} />}
+                    </ContextMenu>
+                  ) : (
+                    <MessageBubble msg={msg} />
+                  )}
+                </div>
+              </React.Fragment>
+            );
+          })
+        ) : (
+          <div className="flex grow flex-col items-center justify-center gap-2">
+            <Image
+              src="https://illustrations.popsy.co/violet/student-going-to-school.svg"
+              width={300}
+              height={300}
+              alt="No messages"
+              className="max-w-72 max-h-72"
+            />
+            <h2 className="font-sans text-base font-medium text-slate-500 md:text-lg xl:text-xl">
+              So empty,{" "}
+              <span className="text-purple-500">
+                start a conversation by saying hi👋
+              </span>
+            </h2>
+          </div>
+        )}
       </div>
     </>
   );

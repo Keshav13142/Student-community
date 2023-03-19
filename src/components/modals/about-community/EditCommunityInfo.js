@@ -86,7 +86,11 @@ const EditCommunityInfo = ({ data, onCancel }) => {
       return;
     }
 
-    mutation.mutate({ ...inputs, communityId: data.id });
+    mutation.mutate({
+      ...inputs,
+      communityId: data.id,
+      institutionId: data.institutionId,
+    });
   };
 
   return (
@@ -104,8 +108,8 @@ const EditCommunityInfo = ({ data, onCancel }) => {
                 onChange={handleInputChange}
               />
               {f.icon && <InputRightElement>{f.icon}</InputRightElement>}
-              <span className="mt-1 text-red-400">{errors[f.name]}</span>
             </InputGroup>
+            <span className="mt-1 text-red-400">{errors[f.name]}</span>
           </div>
         ))}
         <RadioGroup
@@ -115,15 +119,16 @@ const EditCommunityInfo = ({ data, onCancel }) => {
             setInputs((p) => ({ ...p, type: v }));
           }}
         >
-          <div className="fc flex gap-3">
+          <div className="flex flex-col gap-3">
             <p className="font-medium">Community type</p>
             <Radio value="PUBLIC">Public</Radio>
             <Radio value="PRIVATE">Private</Radio>
             <Radio value="RESTRICTED">Restricted</Radio>
           </div>
         </RadioGroup>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-center gap-3">
           <Button
+            size={["sm", "md"]}
             disabled={mutation.isLoading}
             colorScheme="red"
             variant="outline"
@@ -137,6 +142,7 @@ const EditCommunityInfo = ({ data, onCancel }) => {
             Cancel
           </Button>
           <Button
+            size={["sm", "md"]}
             disabled={mutation.isLoading}
             variant="outline"
             color="cadetblue"
@@ -148,6 +154,7 @@ const EditCommunityInfo = ({ data, onCancel }) => {
             Reset
           </Button>
           <Button
+            size={["sm", "md"]}
             isLoading={mutation.isLoading}
             colorScheme="purple"
             type="submit"

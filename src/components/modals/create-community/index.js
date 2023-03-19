@@ -9,7 +9,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Radio,
@@ -96,75 +95,77 @@ const CreateCommunityModal = ({ isOpen, onClose, onSidebarClose }) => {
       isOpen={isOpen}
       onClose={onClose}
       scrollBehavior="inside"
+      size={["xs", "sm", "md", "xl"]}
     >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Create a new Community</ModalHeader>
         <ModalCloseButton disabled={mutation.isLoading} />
         <ModalBody>
-          <form onSubmit={onSubmit}>
-            <div className="flex flex-col gap-5">
-              <InputGroup className="flex flex-col">
-                <Input
-                  name="name"
-                  _placeholder={{ color: "#1a1b26" }}
-                  placeholder="Community name"
-                  onChange={handleInputChange}
-                />
-                <span className="mt-1 text-red-400">{errors.name}</span>
-              </InputGroup>
+          <form onSubmit={onSubmit} className="flex flex-col gap-5">
+            <InputGroup className="flex flex-col">
               <Input
-                name="desc"
+                name="name"
                 _placeholder={{ color: "#1a1b26" }}
-                placeholder="Description"
+                placeholder="Community name"
                 onChange={handleInputChange}
               />
-              <InputGroup className="flex flex-col">
-                <Input
-                  name="image"
-                  _placeholder={{ color: "#1a1b26" }}
-                  placeholder="Logo link"
-                  onChange={handleInputChange}
-                />
-                <InputRightElement>
-                  <BsFillImageFill />
-                </InputRightElement>
-                <span className="mt-1 text-red-400">{errors.image}</span>
-              </InputGroup>
-              <RadioGroup
-                defaultValue="PUBLIC"
-                name="type"
-                onChange={(v) => {
-                  setDetails((p) => ({ ...p, type: v }));
-                }}
+              <span className="mt-1 text-red-400">{errors.name}</span>
+            </InputGroup>
+            <Input
+              name="desc"
+              _placeholder={{ color: "#1a1b26" }}
+              placeholder="Description"
+              onChange={handleInputChange}
+            />
+            <InputGroup className="flex flex-col">
+              <Input
+                name="image"
+                _placeholder={{ color: "#1a1b26" }}
+                placeholder="Logo link"
+                onChange={handleInputChange}
+              />
+              <InputRightElement>
+                <BsFillImageFill />
+              </InputRightElement>
+              <span className="mt-1 text-red-400">{errors.image}</span>
+            </InputGroup>
+            <RadioGroup
+              defaultValue="PUBLIC"
+              name="type"
+              onChange={(v) => {
+                setDetails((p) => ({ ...p, type: v }));
+              }}
+            >
+              <div className="flex flex-col gap-3">
+                <p className="font-medium">Community type</p>
+                <Radio value="PUBLIC">Public</Radio>
+                <Radio value="PRIVATE">Private</Radio>
+                <Radio value="RESTRICTED">Restricted</Radio>
+              </div>
+            </RadioGroup>
+            <div className="flex items-center justify-center gap-3">
+              <Button
+                size={["sm", "md"]}
+                colorScheme="red"
+                mr={3}
+                type="button"
+                variant="outline"
+                onClick={onClose}
               >
-                <div className="flex flex-col gap-3">
-                  <p className="font-medium">Community type</p>
-                  <Radio value="PUBLIC">Public</Radio>
-                  <Radio value="PRIVATE">Private</Radio>
-                  <Radio value="RESTRICTED">Restricted</Radio>
-                </div>
-              </RadioGroup>
+                Cancel
+              </Button>
+              <Button
+                size={["sm", "md"]}
+                isLoading={mutation.isLoading}
+                type="submit"
+                colorScheme="purple"
+              >
+                Create
+              </Button>
             </div>
           </form>
         </ModalBody>
-        <ModalFooter>
-          <Button
-            colorScheme="purple"
-            mr={3}
-            variant="outline"
-            onClick={onClose}
-          >
-            Cancel
-          </Button>
-          <Button
-            isLoading={mutation.isLoading}
-            onClick={onSubmit}
-            colorScheme="purple"
-          >
-            Create Community
-          </Button>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   );

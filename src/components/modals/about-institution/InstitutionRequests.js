@@ -57,52 +57,71 @@ const InstitutionRequests = ({ institutionId }) => {
           return (
             <div
               key={id}
-              className="flex items-center justify-between gap-3 rounded-lg border border-purple-400 p-2 shadow-sm"
+              className="flex min-w-full items-center justify-between gap-3 rounded-lg border border-purple-400 p-2 shadow-sm 
+md:min-w-[80%]"
             >
               <div className="flex items-center gap-3">
-                <Avatar src={user.image} name={user.name} />
+                <Avatar src={user.image} name={user.name} size={["sm", "md"]} />
                 <div className="flex flex-col">
-                  <span className="text-base font-medium">{user.name}</span>
-                  <span className="cursor-pointer text-blue-700">{`@${user.username}`}</span>
+                  <span className="text-sm font-medium md:text-base">
+                    {user.name}
+                  </span>
+                  <span className="cursor-pointer text-sm text-blue-700">{`@${user.username}`}</span>
                 </div>
               </div>
-              {status !== "PENDING" && (
+              {status === "APPROVED" && (
                 <Badge
-                  fontSize={"0.7rem"}
+                  fontSize={["2xs", "xs"]}
                   className="mr-2"
                   variant="outline"
-                  colorScheme={status === "REJECTED" ? "red" : "green"}
+                  colorScheme="green"
                 >
                   {status}
                 </Badge>
               )}
-              <div className="flex items-center gap-3">
-                <IconButton
-                  onClick={() => {
-                    mutation.mutate({
-                      institutionId,
-                      approvalId: id,
-                      approvalStatus: true,
-                    });
-                  }}
-                  isDisabled={status === "APPROVED" || mutation.isLoading}
-                  icon={<TbUserCheck />}
-                  colorScheme="green"
+              {status === "REJECTED" && (
+                <Badge
+                  fontSize={["2xs", "xs"]}
+                  className="mr-2"
                   variant="outline"
-                />
-                <IconButton
-                  onClick={() => {
-                    mutation.mutate({
-                      institutionId,
-                      approvalId: id,
-                      approvalStatus: false,
-                    });
-                  }}
-                  isDisabled={status !== "PENDING" || mutation.isLoading}
-                  icon={<TbUserX />}
                   colorScheme="red"
-                  variant="outline"
-                />
+                >
+                  {status}
+                </Badge>
+              )}
+              <div className="flex items-center gap-2">
+                {status !== "APPROVED" && (
+                  <IconButton
+                    size={["sm", "md"]}
+                    onClick={() => {
+                      mutation.mutate({
+                        institutionId,
+                        approvalId: id,
+                        approvalStatus: true,
+                      });
+                    }}
+                    isDisabled={mutation.isLoading}
+                    icon={<TbUserCheck />}
+                    colorScheme="green"
+                    variant="outline"
+                  />
+                )}
+                {status === "PENDING" && (
+                  <IconButton
+                    size={["sm", "md"]}
+                    onClick={() => {
+                      mutation.mutate({
+                        institutionId,
+                        approvalId: id,
+                        approvalStatus: false,
+                      });
+                    }}
+                    isDisabled={status !== "PENDING" || mutation.isLoading}
+                    icon={<TbUserX />}
+                    colorScheme="red"
+                    variant="outline"
+                  />
+                )}
               </div>
             </div>
           );

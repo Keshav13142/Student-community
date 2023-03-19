@@ -23,30 +23,43 @@ const InstitutionMembers = ({ members, doAction }) => {
         return (
           <div
             key={m.id}
-            className="flex min-w-[80%] items-center justify-between rounded-lg border border-purple-400 p-2 shadow-sm"
+            className="flex min-w-full items-center justify-between gap-2 rounded-lg border border-purple-400 p-2 shadow-sm md:min-w-[80%]"
           >
-            <div className="flex items-center gap-5">
-              <Avatar src={m.user.image} name={m.user.name} />
+            <div className="flex items-center gap-3">
+              <Avatar
+                src={m.user.image}
+                name={m.user.name}
+                size={["sm", "md"]}
+              />
               <div className="flex flex-col">
                 <span className="text-base font-medium">
                   {m.user.id === session.data?.user.id ? (
-                    <Badge variant="outline" colorScheme="green">
+                    <Badge
+                      variant="outline"
+                      colorScheme="green"
+                      fontSize={["2xs", "xs"]}
+                    >
                       You
                     </Badge>
                   ) : (
                     <span className="text-base font-medium">{m.user.name}</span>
                   )}
                 </span>
-                <span className="cursor-pointer text-blue-700">{`@${m.user.username}`}</span>
+                <span className="cursor-pointer text-sm text-blue-700 md:text-base">{`@${m.user.username}`}</span>
               </div>
             </div>
             {m.type === "ADMIN" ? (
-              <Badge variant="outline" colorScheme="red">
+              <Badge
+                variant="outline"
+                colorScheme="red"
+                fontSize={["2xs", "xs"]}
+              >
                 Admin
               </Badge>
             ) : null}
             <Menu>
               <MenuButton
+                size="sm"
                 as={IconButton}
                 icon={<HiDotsVertical />}
                 bg="transparent"

@@ -156,7 +156,7 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
                 {loading ? (
                   <LoadingSkeleton count={4} />
                 ) : (
-                  <div className="flex flex-col">
+                  <div className="flex max-h-[50vh] grow flex-col overflow-y-auto text-center md:max-h-[70vh]">
                     {communities === [] ? (
                       <h2>Communities you join will show up here!</h2>
                     ) : (
@@ -169,7 +169,9 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
                           <p className="my-1 p-2 font-medium text-purple-600">
                             {`# ${c.name}`}
                           </p>
-                          {i !== communities.length - 1 && <Divider />}
+                          {i !== communities.length - 1 && (
+                            <div className="w-full rounded-md border bg-slate-900" />
+                          )}
                         </Link>
                       ))
                     )}

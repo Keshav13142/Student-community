@@ -67,18 +67,17 @@ const AboutInstitution = ({ isOpen, onClose }) => {
         isOpen={isOpen}
         onClose={onClose}
         scrollBehavior="inside"
+        size={["xs", "sm", "md", "xl"]}
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader
-            alignItems="center"
-            gap={2}
-            display="flex"
-            justifyContent="center"
-          >
-            <h1 className="text-2xl">About institution</h1>
+          <ModalHeader className="flex items-center justify-center gap-2">
+            <h1 className="text-xl text-purple-500 md:text-2xl">
+              {institutionData?.name}
+            </h1>
             {isCurrentUserAdmin && (
               <IconButton
+                size={["xs", "sm", "md"]}
                 icon={<RiEditBoxLine />}
                 bg="transparent"
                 onClick={() => {

@@ -49,20 +49,23 @@ const CommunityTopBar = ({ data, isDisabled }) => {
   return (
     <>
       <AboutCommunity data={data} isOpen={isAboutOpen} onClose={onAboutClose} />
-      <div className="flex items-center justify-between p-2 shadow-sm">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between border-b-2 border-b-slate-200 p-2">
+        <div className="flex items-center gap-2 md:gap-4">
           <IconButton
+            size="sm"
             bg="transparent"
             icon={<FaChevronLeft />}
             onClick={() => {
               router.push("/community/discover");
             }}
           />
-          <Avatar src={data?.image} />
-          <h3 className="text-xl font-medium">{data?.name}</h3>
+          <Avatar src={data?.image} size={["sm", "md"]} />
+          <h3 className="flex text-base font-medium md:text-xl">
+            {data?.name}
+          </h3>
         </div>
-        <div className="flex items-center gap-5">
-          {isDisabled && (
+        <div className="flex items-center gap-2">
+          {isDisabled && !isRequestDisabled && (
             <Button
               onClick={() => {
                 mutation.mutate(data.id);
@@ -71,9 +74,8 @@ const CommunityTopBar = ({ data, isDisabled }) => {
               variant="outline"
               colorScheme="purple"
               size="sm"
-              isDisabled={isRequestDisabled}
             >
-              Request to join
+              Join
             </Button>
           )}
           <IconButton

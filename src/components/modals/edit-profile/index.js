@@ -132,6 +132,7 @@ const EditProfile = ({ isOpen, onClose }) => {
       blockScrollOnMount={false}
       isOpen={isOpen}
       onClose={onClose}
+      size={["xs", "sm", "md", "xl"]}
       scrollBehavior="inside"
     >
       <ModalOverlay />
@@ -142,7 +143,7 @@ const EditProfile = ({ isOpen, onClose }) => {
           display="flex"
           justifyContent="center"
         >
-          <h2 className="text-2xl">Edit your profile</h2>
+          <h2 className="text-xl md:text-2xl">Edit your profile</h2>
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -170,6 +171,7 @@ const EditProfile = ({ isOpen, onClose }) => {
                 type="button"
                 variant="outline"
                 colorScheme="red"
+                size={["sm", "md"]}
                 onClick={onClose}
               >
                 Cancel
@@ -180,6 +182,7 @@ const EditProfile = ({ isOpen, onClose }) => {
                 type="submit"
                 variant="solid"
                 colorScheme="purple"
+                size={["sm", "md"]}
                 onClick={handleSubmit}
               >
                 Update

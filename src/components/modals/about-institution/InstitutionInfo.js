@@ -22,9 +22,13 @@ const InviteCode = ({ code, title }) => {
   };
   return (
     <div className="flex min-w-[60%] gap-5">
-      <span>{title} Code</span>
+      <span className="text-sm md:text-base">{title} Code</span>
       <Input value={code} type="password" isReadOnly variant="flushed" />
-      <IconButton icon={<FiCopy />} onClick={copyToClipboard} />
+      <IconButton
+        icon={<FiCopy />}
+        onClick={copyToClipboard}
+        size={["sm", "md"]}
+      />
     </div>
   );
 };
@@ -50,17 +54,20 @@ const InstitutionInfo = ({ data }) => {
         height={200}
       />
       <div>
-        Name :<span className="text-xl font-bold">{data?.name}</span>
+        Name :
+        <span className="ml-4 text-base font-medium text-slate-500 md:text-xl">
+          {data?.name}
+        </span>
       </div>
       <div>
         Website :
-        <span className="text-xl font-bold">
+        <span className="ml-4 text-base font-medium text-slate-500 md:text-xl">
           {data?.website || "Not provided"}
         </span>
       </div>
       <div>
         Support email :
-        <span className="text-xl font-bold">
+        <span className="ml-4 text-base font-medium text-slate-500 md:text-xl">
           {data?.supportEmail || "Not provided"}
         </span>
       </div>
