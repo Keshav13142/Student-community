@@ -18,6 +18,8 @@
 - [x] ~~Fix sidebar issue in blog and profile page (and add nav links in mobile-nav)~~
 - [x] ~~Fix scrollbar height in chat page~~
 - [x] ~~Fix modal styling in smaller screens~~
+- [ ] Fix socket connection in production
+- [ ] Make error boundary UI look good
 - [ ] Switch to ui.shadcn.com from chakra UI (better accessibility and lighter)
 - [ ] Community visibilty for each year and dept.
 - [ ] Verify clg mail (get dept and year from mail).
