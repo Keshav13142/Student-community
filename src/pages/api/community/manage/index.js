@@ -1,5 +1,9 @@
 import prisma from "@/lib/prisma";
-import { checkIfUserIsCommAdmin, getCommunityWithName } from "@/lib/server";
+import {
+  checkIfUserIsCommAdmin,
+  getCommunityWithName,
+  slugify,
+} from "@/lib/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 
@@ -33,7 +37,7 @@ export default async function handler(req, res) {
     }
 
     // Check if a community with the name already exists
-    if (await getCommunityWithName(name, institutionId)) {
+    if (await getCommunityWithName(name, institutionId, communityId)) {
       res
         .status(500)
         .json({ error: "Community with this name already exists!!" });
@@ -51,6 +55,7 @@ export default async function handler(req, res) {
           desc,
           image,
           type,
+          slug: slugify(name),
         },
         select: {
           id: true,

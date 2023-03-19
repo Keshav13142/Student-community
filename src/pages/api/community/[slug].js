@@ -28,6 +28,7 @@ export default async function handler(req, res) {
         desc: true,
         type: true,
         name: true,
+        institutionId: true,
         members: {
           select: {
             id: true,

@@ -17,7 +17,7 @@
 - [x] ~~Fix tabindex in nav links~~
 - [x] ~~Fix sidebar issue in blog and profile page (and add nav links in mobile-nav)~~
 - [x] ~~Fix scrollbar height in chat page~~
-- [ ] Fix modal styling in smaller screens
+- [x] ~~Fix modal styling in smaller screens~~
 - [ ] Switch to ui.shadcn.com from chakra UI (better accessibility and lighter)
 - [ ] Community visibilty for each year and dept.
 - [ ] Verify clg mail (get dept and year from mail).
