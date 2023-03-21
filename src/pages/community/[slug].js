@@ -4,12 +4,10 @@ import CommunityTopBar from "@/src/components/community/TopBar";
 import ScrollableMessageBox from "@/src/components/messages";
 import MessageInputBox from "@/src/components/messages/InputBox";
 import { Progress, useToast } from "@chakra-ui/react";
-import { useQueries, useQueryClient } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { io } from "socket.io-client";
 
 const Community = () => {
   const router = useRouter();
@@ -17,43 +15,6 @@ const Community = () => {
   const toast = useToast();
   // Get the community id from the URL of the dynamic route in NextJS
   const { slug } = router.query;
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    let socket;
-
-    if (slug && !socket) {
-      // // connect to socket server
-      // socket = io(
-      //   process.env.NEXT_PUBLIC_VERCEL_URL || process.env.NEXT_PUBLIC_APP_URL,
-      //   {
-      //     path: "/api/socketio",
-      //     withCredentials: true,
-      //   }
-      // );
-      fetch("/api/socketio").then(() => {
-        socket = io({
-          path: "/api/socketio",
-        });
-
-        // log socket connection
-        socket.on("connect", () => {
-          console.log("SOCKET CONNECTED!");
-        });
-
-        // update chat on new message dispatched
-        socket.on(`community-${slug}`, (data) => {
-          queryClient.setQueryData(["messages", slug], (prev) => [
-            ...prev,
-            data,
-          ]);
-        });
-      });
-    }
-
-    // socket disconnet onUnmount if exists
-    if (socket) return () => socket.disconnect();
-  }, [slug]);
 
   const [
     { data: communityData, isLoading: isCommLoading, error },

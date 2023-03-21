@@ -42,13 +42,6 @@ export default async function handler(req, res) {
       return;
     }
 
-    // dispatch to socket channel
-    res?.socket?.server?.io?.emit(`community-${communitySlug}`, {
-      content,
-      sender: { id: user.id, username: user.username },
-      createdAt: new Date(),
-    });
-
     try {
       const message = await prisma.message.create({
         data: {
