@@ -24,9 +24,12 @@ const Community = () => {
 
     if (slug) {
       // connect to socket server
-      socket = SocketIOClient.connect(undefined, {
-        path: "/api/socketio",
-      });
+      socket = SocketIOClient.connect(
+        process.env.NEXT_PUBLIC_VERCEL_URL || process.env.NEXT_PUBLIC_APP_URL,
+        {
+          path: "/api/socketio",
+        }
+      );
 
       // log socket connection
       socket.on("connect", () => {
