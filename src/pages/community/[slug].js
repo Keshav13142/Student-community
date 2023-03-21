@@ -20,12 +20,14 @@ const Community = () => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    // connect to socket server
-    const socket = SocketIOClient.connect("/", {
-      path: "/api/socketio",
-    });
+    let socket;
 
     if (slug) {
+      // connect to socket server
+      socket = SocketIOClient.connect(undefined, {
+        path: "/api/socketio",
+      });
+
       // log socket connection
       socket.on("connect", () => {
         console.log("SOCKET CONNECTED!");
