@@ -2,10 +2,10 @@ import { getCommunityInfo } from "@/lib/api-calls/community";
 import { fetchMessages } from "@/lib/api-calls/messages";
 import CommunityTopBar from "@/src/components/community/TopBar";
 import ScrollableMessageBox from "@/src/components/messages";
-import MessageInputBox from "@/src/components/messages/InputBox";
 import { Progress, useToast } from "@chakra-ui/react";
 import { useQueries } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
@@ -58,6 +58,13 @@ const Community = () => {
   const isDisabled =
     communityData?.type === "RESTRICTED" &&
     !communityData?.members.find((m) => m.user.id === session.data?.user.id);
+
+  const MessageInputBox = dynamic(
+    () => import("../../components/messages/InputBox"),
+    {
+      ssr: false,
+    }
+  );
 
   return (
     <>

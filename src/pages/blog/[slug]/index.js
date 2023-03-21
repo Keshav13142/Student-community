@@ -1,15 +1,12 @@
-import { sendComment } from "@/lib/api-calls/posts";
 import prisma from "@/lib/prisma";
 import RenderMarkdown from "@/src/components/render-markdown";
-import { Avatar, Button, IconButton, Input, useToast } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
+import { Avatar, Button } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { getServerSession } from "next-auth";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { BiSend } from "react-icons/bi";
 import { IoChevronBack } from "react-icons/io5";
 import { authOptions } from "../../api/auth/[...nextauth]";
 
@@ -89,38 +86,13 @@ export async function getServerSideProps({ req, res, query }) {
 
 const SinglePost = ({ post }) => {
   const router = useRouter();
-  const [input, setInput] = useState("");
-  const toast = useToast();
-  const [comments, setComments] = useState(post.postComments);
 
-  const mutation = useMutation(sendComment, {
-    onError: () => {
-      toast({
-        title: "Failed to send message😢",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    },
-    onSuccess: (data) => {
-      setInput("");
-      toast({
-        title: "Comment sent",
-        status: "success",
-        duration: 1200,
-        isClosable: true,
-      });
-      setComments((p) => [...p, data]);
-    },
-  });
-
-  const handleSendComment = async (e) => {
-    e.preventDefault();
-    if (mutation.isLoading) return;
-    if (input.trim() !== "") {
-      mutation.mutate({ slug: post.slug, comment: input });
+  const PostComments = dynamic(
+    () => import("../../../components/post-comments"),
+    {
+      ssr: false,
     }
-  };
+  );
 
   return (
     <>
@@ -168,42 +140,7 @@ const SinglePost = ({ post }) => {
           <RenderMarkdown content={post.content} />
         </article>
         <div className="w-[95%] self-center rounded-lg border-2 border-gray-200 sm:w-[80%] lg:w-[55%]" />
-        <div className="flex  w-[100%] flex-col gap-5 self-center sm:w-[70%] lg:w-[55%]">
-          <h2 className="text-2xl font-medium underline">Comments</h2>
-          <div className="flex max-h-[20vh] flex-col gap-2 overflow-y-auto">
-            {comments.map((m) => (
-              <div
-                key={m.id}
-                className="flex w-fit min-w-[20%] flex-col rounded-lg bg-gray-200 px-2 py-1"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-blue-500">
-                    {m.user ? m.user.username : "[deleted]"}
-                  </span>
-                  <span className="text-xs text-gray-500">
-                    {format(new Date(m.createdAt), "do MMMM")}
-                  </span>
-                </div>
-                <span>{m.comment}</span>
-              </div>
-            ))}
-          </div>
-          <form className="flex gap-3" onSubmit={handleSendComment}>
-            <Input
-              value={input}
-              placeholder="Send a message"
-              borderWidth={2}
-              onChange={(e) => {
-                setInput(e.target.value);
-              }}
-            />
-            <IconButton
-              isDisabled={mutation.isLoading}
-              icon={<BiSend />}
-              type="submit"
-            />
-          </form>
-        </div>
+        <PostComments post={post} />
       </div>
     </>
   );
