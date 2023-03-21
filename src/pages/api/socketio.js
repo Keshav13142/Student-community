@@ -1,5 +1,5 @@
 //https://github.com/redbaron76/nextjs-socketio-chat
-import { Server as ServerIO } from "socket.io";
+import { Server } from "socket.io";
 
 export const config = {
   api: {
@@ -12,8 +12,13 @@ export default function SocketHandler(req, res) {
     console.log("New Socket.io server...");
     // adapt Next's net Server to http Server
     const httpServer = res.socket.server;
-    const io = new ServerIO(httpServer, {
+    const io = new Server(httpServer, {
       path: "/api/socketio",
+      cors: {
+        // I'm reusing next-auth-url for localhost
+        origin: process.env.VERCEL_URL || process.env.NEXTAUTH_URL,
+        credentials: true,
+      },
     });
     // append SocketIO server to Next.js socket server response
     res.socket.server.io = io;

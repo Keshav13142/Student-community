@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import SocketIOClient from "socket.io-client";
+import { io } from "socket.io-client";
 
 const Community = () => {
   const router = useRouter();
@@ -24,10 +24,11 @@ const Community = () => {
 
     if (slug) {
       // connect to socket server
-      socket = SocketIOClient.connect(
+      socket = io(
         process.env.NEXT_PUBLIC_VERCEL_URL || process.env.NEXT_PUBLIC_APP_URL,
         {
           path: "/api/socketio",
+          withCredentials: true,
         }
       );
 
