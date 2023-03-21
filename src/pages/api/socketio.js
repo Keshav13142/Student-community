@@ -14,11 +14,11 @@ export default function SocketHandler(req, res) {
     const httpServer = res.socket.server;
     const io = new Server(httpServer, {
       path: "/api/socketio",
-      cors: {
-        // I'm reusing next-auth-url for localhost
-        origin: process.env.VERCEL_URL || process.env.NEXTAUTH_URL,
-        credentials: true,
-      },
+      // cors: {
+      //   // I'm reusing next-auth-url for localhost
+      //   origin: process.env.VERCEL_URL || process.env.NEXTAUTH_URL,
+      //   credentials: true,
+      // },
     });
     // append SocketIO server to Next.js socket server response
     res.socket.server.io = io;

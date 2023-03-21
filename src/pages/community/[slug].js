@@ -22,24 +22,32 @@ const Community = () => {
   useEffect(() => {
     let socket;
 
-    if (slug) {
-      // connect to socket server
-      socket = io(
-        process.env.NEXT_PUBLIC_VERCEL_URL || process.env.NEXT_PUBLIC_APP_URL,
-        {
+    if (slug && !socket) {
+      // // connect to socket server
+      // socket = io(
+      //   process.env.NEXT_PUBLIC_VERCEL_URL || process.env.NEXT_PUBLIC_APP_URL,
+      //   {
+      //     path: "/api/socketio",
+      //     withCredentials: true,
+      //   }
+      // );
+      fetch("/api/socketio").then(() => {
+        socket = io({
           path: "/api/socketio",
-          withCredentials: true,
-        }
-      );
+        });
 
-      // log socket connection
-      socket.on("connect", () => {
-        console.log("SOCKET CONNECTED!");
-      });
+        // log socket connection
+        socket.on("connect", () => {
+          console.log("SOCKET CONNECTED!");
+        });
 
-      // update chat on new message dispatched
-      socket.on(`community-${slug}`, (data) => {
-        queryClient.setQueryData(["messages", slug], (prev) => [...prev, data]);
+        // update chat on new message dispatched
+        socket.on(`community-${slug}`, (data) => {
+          queryClient.setQueryData(["messages", slug], (prev) => [
+            ...prev,
+            data,
+          ]);
+        });
       });
     }
 
