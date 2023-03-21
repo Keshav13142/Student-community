@@ -18,7 +18,7 @@
 - [x] ~~Fix sidebar issue in blog and profile page (and add nav links in mobile-nav)~~
 - [x] ~~Fix scrollbar height in chat page~~
 - [x] ~~Fix modal styling in smaller screens~~
-- [ ] Fix socket connection in production
+- [x] ~~Fix socket connection in production~~ (hosted socket server on [fly.io](https://fly.io))
 - [ ] Make error boundary UI look good
 - [ ] Switch to ui.shadcn.com(better accessibility and lighter) or mantine(seems more plug and play) from chakra UI
 - [ ] Community visibilty for each year and dept.
