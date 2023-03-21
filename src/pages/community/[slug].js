@@ -21,7 +21,7 @@ const Community = () => {
 
   useEffect(() => {
     // connect to socket server
-    const socket = SocketIOClient.connect(process.env.NEXT_PUBLIC_APP_URL, {
+    const socket = SocketIOClient.connect("/", {
       path: "/api/socketio",
     });
 

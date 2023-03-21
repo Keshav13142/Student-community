@@ -20,7 +20,7 @@
 - [x] ~~Fix modal styling in smaller screens~~
 - [ ] Fix socket connection in production
 - [ ] Make error boundary UI look good
-- [ ] Switch to ui.shadcn.com from chakra UI (better accessibility and lighter)
+- [ ] Switch to ui.shadcn.com(better accessibility and lighter) or mantine(seems more plug and play) from chakra UI
 - [ ] Community visibilty for each year and dept.
 - [ ] Verify clg mail (get dept and year from mail).
 - [ ] Truthful data for student year and dept (probably from their clg email).
