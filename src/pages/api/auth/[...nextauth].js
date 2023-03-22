@@ -13,6 +13,12 @@ export const authOptions = {
         session.user.hasProfile = user.hasProfile;
         session.user.enrollmentStatus = user.enrollmentStatus;
         session.user.isInstitutionAdmin = user.isInstitutionAdmin;
+        // For Guest users
+        if (user.isGuest) {
+          session.user.isGuest = true;
+          session.user.postCount = user.postCount;
+          session.user.communityCount = user.communityCount;
+        }
       }
       return session;
     },

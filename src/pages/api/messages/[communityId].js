@@ -28,10 +28,10 @@ export default async function handler(req, res) {
   }
 
   const { user } = session;
-  const { communitySlug } = req.query;
+  const { communityId } = req.query;
 
-  if (!communitySlug) {
-    res.status(401).json({ error: "Community slug not provided!!" });
+  if (!communityId) {
+    res.status(401).json({ error: "Community id not provided!!" });
     return;
   }
 
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
           },
           community: {
             connect: {
-              slug: communitySlug,
+              id: communityId,
             },
           },
         },
@@ -72,7 +72,7 @@ export default async function handler(req, res) {
       const messages = await prisma.message.findMany({
         where: {
           community: {
-            slug: communitySlug,
+            id: communityId,
           },
         },
         select: messageSelect,
