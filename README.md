@@ -28,6 +28,8 @@
 - [ ] Update students year(1,2,3 or 4) every year (Batch edit by admins/figure out how to do it automagically)
 - [ ] Query filter params in blog page (AI&ML not working , probably cause of `&` symbol?)
 - [ ] User pending request screen
+- [ ] Make codeType as a separate entity.
+- [ ] Make public communities joinable
 - [ ] automagically figure of code type while new-user registration
 - [ ] HOC for protected API routes, managing req types.
 - [ ] Prisma transactions
