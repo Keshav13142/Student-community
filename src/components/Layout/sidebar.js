@@ -163,7 +163,7 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
                       communities?.map((c, i) => (
                         <Link
                           key={c.id}
-                          href={`/community/${c.slug}`}
+                          href={`/community/${c.id}`}
                           onClick={onSidebarClose}
                         >
                           <p className="my-1 p-2 font-medium text-purple-600">

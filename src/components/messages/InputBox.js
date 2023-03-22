@@ -8,7 +8,7 @@ import { io } from "socket.io-client";
 
 let socket;
 
-const MessageInputBox = ({ isDisabled, slug }) => {
+const MessageInputBox = ({ isDisabled, communityId }) => {
   const [input, setInput] = useState("");
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -30,7 +30,7 @@ const MessageInputBox = ({ isDisabled, slug }) => {
     if (mutation.isLoading) return;
     if (input.trim() !== "") {
       setInput("");
-      socket.emit(`community-${slug}`, {
+      socket.emit(`community-${communityId}`, {
         content: input,
         sender: {
           id: session.data?.user?.id,
@@ -38,31 +38,44 @@ const MessageInputBox = ({ isDisabled, slug }) => {
         },
         createdAt: new Date(),
       });
-      mutation.mutate({ slug, content: input });
+      mutation.mutate({ communityId, content: input });
     }
   };
 
   useEffect(() => {
-    if (slug) {
+    if (communityId) {
       // connect to socket server
-      socket = io(process.env.NEXT_PUBLIC_MESSAGE_SOCKET_SERVER_URL, {
-        withCredentials: true,
-      });
+      if (!socket) {
+        socket = io(process.env.NEXT_PUBLIC_MESSAGE_SOCKET_SERVER_URL, {
+          withCredentials: true,
+        });
+      }
 
-      // log socket connection
-      socket.on("connect", () => {
-        console.log("SOCKET CONNECTED!");
-      });
+      if (socket.connected === false) {
+        // log socket connection
+        socket.on("connect", () => {
+          console.log("SOCKET CONNECTED!");
+        });
 
-      // update chat on new message dispatched
-      socket.on(`community-${slug}`, (data) => {
-        queryClient.setQueryData(["messages", slug], (prev) => [...prev, data]);
-      });
+        // update chat on new message dispatched
+        socket.on(`community-${communityId}`, (data) => {
+          queryClient.setQueryData(["messages", communityId], (prev) => [
+            ...prev,
+            data,
+          ]);
+        });
+      }
+      console.log(socket);
     }
 
     // socket disconnet onUnmount if exists
-    if (socket) return () => socket.disconnect();
-  }, [slug]);
+    if (socket && socket.connected)
+      return () => {
+        socket.disconnect();
+        socket = null;
+        console.log("SOCKET DISCONNECTED");
+      };
+  }, [communityId, socket]);
 
   return (
     <form onSubmit={handleMessageSend}>

@@ -85,10 +85,9 @@ const CreateNewPost = ({ allCategories }) => {
   });
 
   const mutation = useMutation(createNewPost, {
-    onError: (error) => {
-      console.log(error);
+    onError: ({ response: { data } }) => {
       toast({
-        title: "Unable to create post",
+        title: data.error,
         status: "error",
         duration: 5000,
         isClosable: true,

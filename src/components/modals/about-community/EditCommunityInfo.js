@@ -49,7 +49,7 @@ const EditCommunityInfo = ({ data, onCancel }) => {
       });
     },
     onSuccess: (newData) => {
-      queryClient.setQueryData(["communityInfo", newData.slug], (prev) => ({
+      queryClient.setQueryData(["communityInfo", newData.id], (prev) => ({
         ...prev,
         ...newData,
       }));

@@ -61,7 +61,7 @@ const DiscoverCommunities = () => {
                     <Avatar src={c.image} name={c.name} size={["sm", "md"]} />
                     <div className="flex flex-col">
                       <Link
-                        href={`/community/${c.slug}`}
+                        href={`/community/${c.id}`}
                         className="text-base font-medium text-blue-700 hover:underline md:text-lg"
                       >
                         # {c.name}

@@ -136,7 +136,7 @@ const SinglePost = ({ post }) => {
           </div>
         </div>
         <div className="w-[95%] self-center rounded-lg border-2 border-gray-200 sm:w-[80%] lg:w-[55%]" />
-        <article className="prose max-w-[90vw] self-center">
+        <article className="prose w-[90vw] max-w-[90vw] self-center md:w-[70vw] lg:w-[60vw] xl:w-[50vw]">
           <RenderMarkdown content={post.content} />
         </article>
         <div className="w-[95%] self-center rounded-lg border-2 border-gray-200 sm:w-[80%] lg:w-[55%]" />

@@ -14,7 +14,9 @@ const Community = () => {
   const session = useSession();
   const toast = useToast();
   // Get the community id from the URL of the dynamic route in NextJS
-  const { slug } = router.query;
+  const { communityId } = router.query;
+
+  console.log("hello");
 
   const [
     { data: communityData, isLoading: isCommLoading, error },
@@ -22,15 +24,18 @@ const Community = () => {
   ] = useQueries({
     queries: [
       {
-        queryKey: ["communityInfo", slug],
-        queryFn: () => getCommunityInfo(slug),
-        enabled: Boolean(slug),
+        queryKey: ["communityInfo", communityId],
+        queryFn: () => getCommunityInfo(communityId),
+        enabled: Boolean(communityId),
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
       },
       {
-        queryKey: ["messages", slug],
-        queryFn: () => fetchMessages(slug),
-        enabled: Boolean(slug),
+        queryKey: ["messages", communityId],
+        queryFn: () => fetchMessages(communityId),
+        enabled: Boolean(communityId),
         refetchOnWindowFocus: false,
+        refetchOnMount: false,
       },
     ],
   });
@@ -89,11 +94,11 @@ const Community = () => {
             isDisabled={isDisabled}
           />
           <ScrollableMessageBox
-            slug={slug}
+            communityId={communityId}
             messages={messages}
             isUserAdminOrMod={isCurrentUserMod || isCurrentUserAdmin}
           />
-          <MessageInputBox isDisabled={isDisabled} slug={slug} />
+          <MessageInputBox isDisabled={isDisabled} communityId={communityId} />
         </div>
       )}
     </>
