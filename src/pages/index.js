@@ -53,21 +53,19 @@ export default function DiscoverCommunities() {
           <p className="mt-5 text-xl font-semibold text-slate-600">
             Get started now..
           </p>
-          <div className="flex gap-5">
-            <Button
-              variant={"outline"}
-              colorScheme="purple"
-              leftIcon={<GoMarkGithub size={20} />}
-              size={["md", "lg"]}
-              isLoading={isGithubLoading}
-              onClick={async () => {
-                setIsGithubLoading(true);
-                await signIn("github");
-              }}
-            >
-              Login with GitHub
-            </Button>
-          </div>
+          <Button
+            variant={"outline"}
+            colorScheme="purple"
+            leftIcon={<GoMarkGithub size={20} />}
+            size={["md", "lg"]}
+            isLoading={isGithubLoading}
+            onClick={async () => {
+              setIsGithubLoading(true);
+              await signIn("github");
+            }}
+          >
+            Login with GitHub
+          </Button>
         </main>
         <footer className="mb-5">
           <p className="text-center text-xs font-medium text-gray-400">
