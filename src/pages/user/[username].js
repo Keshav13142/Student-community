@@ -57,6 +57,11 @@ export async function getServerSideProps({ req, res, query }) {
       githubLink: true,
       email: true,
       bio: true,
+      institutionMember: {
+        select: {
+          institutionId: true,
+        },
+      },
       posts: {
         // If the user is viewing their own page then show unpublished posts
         ...(user.username !== username ? { where: { published: true } } : {}),
@@ -78,6 +83,7 @@ export async function getServerSideProps({ req, res, query }) {
 
   const communities = await prisma.community.findMany({
     where: {
+      institutionId: profile.institutionMember.institutionId,
       ...(user.username !== username
         ? {
             type: {
@@ -87,7 +93,7 @@ export async function getServerSideProps({ req, res, query }) {
         : {}),
     },
     select: {
-      slug: true,
+      id: true,
       name: true,
       image: true,
       desc: true,
@@ -256,7 +262,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                         key={idx}
                         className="rounded-lg border border-purple-400"
                       >
-                        <Link href={`/community/${c.slug}`}>
+                        <Link href={`/community/${c.id}`}>
                           <div className="flex items-center gap-2 rounded-xl p-2">
                             <Avatar
                               src={c.image}
@@ -296,13 +302,18 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <GoMarkGithub size={20} />
-                    <a
-                      className="text-blue-500 hover:underline"
-                      target="_blank"
-                      href={profile.githubLink}
-                    >
-                      {profile.githubLink}
-                    </a>
+                    {profile.githubLink ? (
+                      <a
+                        className="text-blue-500 hover:underline"
+                        target="_blank"
+                        href={profile.githubLink}
+                      >
+                        {profile.githubLink}
+                      </a>
+                    ) : (
+                      "Not updated"
+                    )}
+                    {profile.githubLink}
                   </div>
                   <div className="flex items-center gap-2">
                     <GrLinkedin size={20} />
