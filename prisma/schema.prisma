@@ -53,6 +53,9 @@ model User {
   image              String?
   hasProfile         Boolean            @default(false)
   isInstitutionAdmin Boolean            @default(false)
+  isGuest            Boolean            @default(false)
+  postCount          Int?               @default(0)
+  communityCount     Int?               @default(0)
   enrollmentStatus   EnrollmentStatus   @default(PENDING)
   username           String?            @unique
   bio                String?
@@ -122,9 +125,8 @@ model Category {
 
 model Community {
   id               String             @id @default(cuid())
-  name             String             @unique
+  name             String
   desc             String?
-  slug             String             @unique
   type             CommunityType      @default(PUBLIC)
   default          Boolean            @default(false)
   members          CommunityMember[]
@@ -157,7 +159,7 @@ model CommunityMember {
   id          String              @id @default(cuid())
   user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   type        CommunityMemberType @default(MEMBER)
-  Community   Community?          @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  Community   Community           @relation(fields: [communityId], references: [id], onDelete: Cascade)
   userId      String
   communityId String
 
@@ -187,6 +189,7 @@ model Institution {
   name             String              @unique
   memberCode       String              @unique @default(cuid())
   adminCode        String              @unique @default(cuid())
+  desc             String?
   image            String?
   website          String?
   supportEmail     String?
