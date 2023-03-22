@@ -11,9 +11,9 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { slug } = req.query;
+  const { communityId } = req.query;
 
-  if (!slug) {
+  if (!communityId) {
     res.status(401).json({ message: "Invalid community ID!!" });
     return;
   }
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   //   const { user } = session;
   if (req.method === "GET") {
     const comm = await prisma.community.findUnique({
-      where: { slug },
+      where: { id: communityId },
       select: {
         id: true,
         image: true,

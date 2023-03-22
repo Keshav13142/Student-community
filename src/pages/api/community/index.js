@@ -1,9 +1,5 @@
 import prisma from "@/lib/prisma";
-import {
-  checkIfUserIsInstAdmin,
-  getCommunityWithName,
-  slugify,
-} from "@/lib/server";
+import { checkIfUserIsInstAdmin, getCommunityWithName } from "@/lib/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 
@@ -53,7 +49,6 @@ export default async function handler(req, res) {
         },
         select: {
           id: true,
-          slug: true,
           name: true,
           desc: true,
           image: true,
@@ -65,6 +60,22 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === "POST") {
+      if (user.isGuest) {
+        if (user.communityCount >= 3) {
+          res
+            .status(500)
+            .json({
+              error: "Guest accounts can only create upto 3 communities!!",
+            });
+          return;
+        } else {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { communityCount: { increment: 1 } },
+          });
+        }
+      }
+
       const { name, image, desc, type } = req.body;
 
       const institution = await prisma.institution.findFirst({
@@ -103,7 +114,6 @@ export default async function handler(req, res) {
           desc,
           image,
           type,
-          slug: slugify(name),
           members: {
             create: {
               user: {
@@ -121,11 +131,11 @@ export default async function handler(req, res) {
           },
         },
         select: {
-          slug: true,
+          id: true,
         },
       });
 
-      res.json({ redirect: `/community/${community.slug}` });
+      res.json({ redirect: `/community/${community.id}` });
     }
   } catch (error) {
     console.log(error);
