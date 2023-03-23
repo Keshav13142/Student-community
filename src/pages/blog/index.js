@@ -101,7 +101,7 @@ const Blog = ({ posts, categories }) => {
             {posts.length > 0 ? (
               posts.map((p, idx) => (
                 <div
-                  className="flex items-center justify-between gap-2 rounded-lg border border-slate-300 px-4 py-2"
+                  className="flex items-center justify-between gap-2 rounded-lg border border-slate-300 px-4 py-2 dark:border-slate-500"
                   key={idx}
                 >
                   <div className="max-w-[60%] grow md:max-w-[70%]">
@@ -118,10 +118,10 @@ const Blog = ({ posts, categories }) => {
                       href={`/blog/${p.slug}`}
                       className="mb-2 flex flex-col gap-1 md:gap-2 lg:gap-3"
                     >
-                      <h2 className="text-lg font-medium text-slate-900 md:text-xl lg:text-2xl">
+                      <h2 className="text-lg font-medium text-slate-900 dark:text-slate-300 md:text-xl lg:text-2xl">
                         {p.title}
                       </h2>
-                      <h3 className="text-sm text-gray-500 line-clamp-2 md:max-w-xs xl:text-base">
+                      <h3 className="text-sm text-gray-500 line-clamp-2 dark:text-slate-400 md:max-w-xs xl:text-base">
                         {p.content}
                       </h3>
                     </Link>
@@ -133,7 +133,7 @@ const Blog = ({ posts, categories }) => {
                         {p.categories.slice(0, 2).map((c) => (
                           <div
                             key={c.id}
-                            className="rounded-xl bg-gray-100 px-2 py-0.5 text-xs font-medium text-violet-500 lg:text-sm"
+                            className="rounded-xl bg-gray-100 px-2 py-0.5 text-xs font-medium text-violet-500 dark:bg-purple-600/20 lg:text-sm"
                           >
                             {c.name}
                           </div>
@@ -184,7 +184,7 @@ const Blog = ({ posts, categories }) => {
           </div>
           <div className="order-1 flex h-fit min-w-[35%] flex-col items-center gap-5 p-2 lg:sticky lg:top-24 lg:order-2">
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-medium text-slate-900">
+              <h2 className="text-xl font-medium text-slate-900 dark:text-slate-300">
                 Discover by categories
               </h2>
               <Link href="/blog">
@@ -201,7 +201,7 @@ const Blog = ({ posts, categories }) => {
                 <Link
                   href={`/blog?category=${encodeURIComponent(c.name)}`}
                   key={c.id}
-                  className="min-w-[30%] rounded-xl border border-purple-300 p-1 text-center"
+                  className="min-w-[30%] rounded-xl border-2 border-purple-300 p-1.5 px-2 text-center dark:border-purple-500/60"
                 >
                   {c.name}
                 </Link>

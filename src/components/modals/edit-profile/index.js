@@ -155,7 +155,6 @@ const EditProfile = ({ isOpen, onClose }) => {
                   <Input
                     value={inputs[f.name]}
                     name={f.name}
-                    _placeholder={{ color: "#1a1b26" }}
                     placeholder={f.placeholder}
                     onChange={handleInputChange}
                   />

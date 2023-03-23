@@ -247,7 +247,6 @@ const NewUserForm = () => {
                 <Input
                   value={formValues[f.name]}
                   name={f.name}
-                  _placeholder={{ color: "#1a1b26" }}
                   placeholder={f.placeholder}
                   onChange={handleInputChange}
                 />
@@ -295,7 +294,6 @@ const NewUserForm = () => {
               <Input
                 value={formValues.institutionCode}
                 name={"institutionCode"}
-                _placeholder={{ color: "#1a1b26" }}
                 placeholder={"Enter your code (optional)"}
                 onChange={handleInputChange}
               />

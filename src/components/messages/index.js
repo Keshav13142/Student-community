@@ -22,7 +22,7 @@ import { MdHideSource } from "react-icons/md";
 import Linkify from "react-linkify";
 
 const MsgDayInfo = ({ day }) => (
-  <div className="center my-2 mx-auto w-fit rounded-md bg-gray-200 px-2 py-0.5 text-sm">
+  <div className="center my-2 mx-auto w-fit rounded-md bg-gray-200 px-2 py-0.5 text-sm dark:bg-zinc-600">
     {day}
   </div>
 );
@@ -32,11 +32,13 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
     <div
       ref={ref}
       className={`flex w-full flex-col gap-0.5 rounded-md px-3 py-1.5 ${
-        msg.isOwnMessage ? "bg-green-200" : "bg-purple-200"
+        msg.isOwnMessage
+          ? "bg-green-200 dark:bg-slate-700"
+          : "bg-purple-200 dark:bg-teal-800 dark:text-white"
       }`}
     >
       {msg.isDeleted ? (
-        <div className="flex items-center gap-2 text-slate-500">
+        <div className="flex items-center gap-2 text-slate-500 dark:text-slate-200">
           <BiBlock />
           This message was deleted {msg.deletedBy && `by ${msg.deletedBy}`}
         </div>
@@ -45,7 +47,9 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
           {!msg.isOwnMessage && (
             <div
               className={`${
-                msg.sender ? "text-purple-500" : "text-slate-400"
+                msg.sender
+                  ? "dark:text-puple-400 text-purple-300"
+                  : "text-slate-200"
               } text-sm font-bold`}
             >
               {msg.sender ? msg.sender.username : "[deleted]"}
@@ -59,7 +63,7 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
           >
             {msg.content}
           </Linkify>
-          <span className={`self-end text-xs opacity-40`}>
+          <span className="self-end text-xs opacity-70 dark:text-slate-200">
             {Intl.DateTimeFormat("en-us", {
               timeStyle: "short",
             }).format(msg.currentMsgTime)}
@@ -119,11 +123,9 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
               Delete Message
             </AlertDialogHeader>
-
             <AlertDialogBody>
               Are you sure? You cannot revert this action
             </AlertDialogBody>
-
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel

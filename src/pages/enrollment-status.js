@@ -22,14 +22,12 @@ const Logout = () => (
 
 const info = {
   PENDING: {
-    image: "/process.gif",
     status: "info",
     title: "Your enrollment is being processed by the institution.",
     desc: "You'll be able to login soon 🙂",
     action: <Logout />,
   },
   APPROVED: {
-    image: null,
     status: "success",
     title: "Your request to join was approved.",
     desc: "You can explore the communities",
@@ -42,7 +40,6 @@ const info = {
     ),
   },
   REJECTED: {
-    image: null,
     status: "error",
     title: "Your request to join was rejected.",
     desc: "Please contact the admins of the institution",
@@ -59,12 +56,6 @@ const EnrollmentStatus = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
-      {content.image && (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={content.image} alt="Being processed" className="w-48" />
-        </>
-      )}
       <Alert
         minW="sm"
         maxWidth="fit-content"

@@ -1,10 +1,14 @@
+import { useColorMode } from "@chakra-ui/react";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
+import { tokyoNight } from "@uiw/codemirror-theme-tokyo-night";
 import CodeMirror from "@uiw/react-codemirror";
 
 const MarkdownEditor = ({ onChange, value }) => {
+  const { colorMode } = useColorMode();
   return (
     <CodeMirror
+      {...(colorMode === "dark" ? { theme: tokyoNight } : {})}
       value={value}
       minHeight="30vh"
       extensions={[

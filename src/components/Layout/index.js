@@ -12,7 +12,7 @@ const Layout = ({ children, showCommunityInfo }) => {
   const { onClose, isOpen, onOpen } = useDisclosure();
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col dark:bg-slate-900">
       <Navbar onSidebarOpen={onOpen} showCommunityInfo={showCommunityInfo} />
       <div className="flex grow">
         <aside>

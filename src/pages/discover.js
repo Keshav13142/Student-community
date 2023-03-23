@@ -45,7 +45,7 @@ const DiscoverCommunities = () => {
         </div>
       ) : (
         <div className="m-5 flex grow flex-col items-center gap-5">
-          <h1 className="flex items-center gap-5 text-xl font-medium text-indigo-900 md:text-2xl">
+          <h1 className="flex items-center gap-5 text-xl font-medium text-indigo-900 dark:text-slate-300 md:text-2xl">
             Discover new Communities
             <BsFillPeopleFill />
           </h1>
@@ -56,26 +56,29 @@ const DiscoverCommunities = () => {
           >
             {publicCommunities?.length > 0 ? (
               publicCommunities?.map((c) => (
-                <div className="flex items-center justify-between rounded-md border border-purple-500 p-3">
+                <Link
+                  href={`/community/${c.id}`}
+                  className="flex min-w-[80vw] items-center justify-between rounded-md border border-slate-500 p-3 md:min-w-[60vw] lg:min-w-[30vw]"
+                >
                   <div className="flex items-center gap-3">
                     <Avatar src={c.image} name={c.name} size={["sm", "md"]} />
                     <div className="flex flex-col">
-                      <Link
-                        href={`/community/${c.id}`}
-                        className="text-base font-medium text-blue-700 hover:underline md:text-lg"
-                      >
-                        # {c.name}
-                      </Link>
-                      <span>{c.desc}</span>
+                      <div className="flex flex-col text-base font-medium text-slate-700 dark:text-slate-300 md:text-lg">
+                        <span>{c.name}</span>
+                        <span className="text-sm text-slate-400">{c.desc}</span>
+                      </div>
                     </div>
                   </div>
-                  <Badge
-                    variant="outline"
-                    color={c.type === "PUBLIC" ? "whatsapp.400" : "blue.300"}
-                  >
-                    {c.type}
-                  </Badge>
-                </div>
+                  {c.type === "PUBLIC" && (
+                    <Badge
+                      variant="outline"
+                      fontSize={["2xs", "xs"]}
+                      color="whatsapp.300"
+                    >
+                      {c.type}
+                    </Badge>
+                  )}
+                </Link>
               ))
             ) : (
               <div className="flex flex-col items-center gap-3">
@@ -88,7 +91,9 @@ const DiscoverCommunities = () => {
                 />
                 <div className="flex items-center gap-2 rounded-md border border-purple-400 px-4 py-2 font-medium text-slate-500 md:text-lg">
                   <SlInfo />
-                  <span>No public communities found</span>
+                  <span className="dark:text-slate-400">
+                    No public communities found
+                  </span>
                 </div>
               </div>
             )}
