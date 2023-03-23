@@ -131,7 +131,11 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
         <title>{profile ? `@${profile.username}` : "User not found"}</title>
         <meta
           name="description"
-          content="Platform for students within institutions to interact"
+          content={
+            profile
+              ? profile.bio
+              : "Platform for students within institutions to interact"
+          }
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
@@ -174,7 +178,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                     {profile.posts.length > 0 ? (
                       profile.posts.map((p, idx) => (
                         <div
-                          className="flex items-center justify-between gap-3 rounded-lg border border-slate-300 px-4 py-2"
+                          className="flex items-center justify-between gap-3 rounded-lg border border-slate-300 px-4 py-2 dark:border-slate-500"
                           key={idx}
                         >
                           <div className="grow">
@@ -188,7 +192,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                                   }
                                   className="hover:underline"
                                 >
-                                  <h2 className="text-base font-medium text-slate-900 lg:text-lg">
+                                  <h2 className="text-base font-medium text-slate-900 dark:text-slate-300 lg:text-lg">
                                     {p.title}
                                   </h2>
                                 </Link>
@@ -203,12 +207,11 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                                         router.push(`/blog/${p.id}/edit`)
                                       }
                                       bg="transparent"
-                                      color="blue"
                                     />
                                   )
                                 )}
                               </div>
-                              <h3 className="max-w-[30vw] text-sm text-gray-500 line-clamp-2 lg:text-base">
+                              <h3 className="max-w-[30vw] text-sm text-slate-500 line-clamp-2 dark:text-slate-400 lg:text-base">
                                 {p.content}
                               </h3>
                             </div>
@@ -263,7 +266,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                     {communities.map((c, idx) => (
                       <div
                         key={idx}
-                        className="rounded-lg border border-purple-400"
+                        className="rounded-lg border border-slate-300 dark:border-slate-500"
                       >
                         <Link href={`/community/${c.id}`}>
                           <div className="flex items-center gap-2 rounded-xl p-2">
@@ -273,10 +276,10 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                               size={["sm", "md"]}
                             />
                             <div className="flex flex-col gap-2">
-                              <h4 className="text-base font-medium lg:text-lg">
+                              <h4 className="text-base font-medium dark:text-slate-300 lg:text-lg">
                                 {c.name}
                               </h4>
-                              <span className="text-sm lg:text-base">
+                              <span className="text-sm dark:text-slate-400 lg:text-base">
                                 {c.desc}
                               </span>
                             </div>
@@ -288,7 +291,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                 </TabPanels>
               </Tabs>
             </div>
-            <div className="order-1 h-fit max-w-xl rounded-md border-2 border-purple-300 px-3 py-2 lg:order-2">
+            <div className="order-1 h-fit max-w-xl rounded-md border-2 border-purple-300 px-3 py-2 dark:border-slate-500 dark:text-slate-300 lg:order-2">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                   <Avatar
@@ -298,7 +301,9 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                   />
                   <div>
                     <h3 className="text-xl font-medium">{profile.name}</h3>
-                    <h4 className="text-purple-500">@{profile.username}</h4>
+                    <h4 className="text-purple-500 dark:text-purple-400">
+                      @{profile.username}
+                    </h4>
                   </div>
                 </div>
                 <p>{profile.bio}</p>

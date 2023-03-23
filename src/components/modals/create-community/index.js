@@ -106,7 +106,6 @@ const CreateCommunityModal = ({ isOpen, onClose, onSidebarClose }) => {
             <InputGroup className="flex flex-col">
               <Input
                 name="name"
-                _placeholder={{ color: "#1a1b26" }}
                 placeholder="Community name"
                 onChange={handleInputChange}
               />
@@ -114,14 +113,12 @@ const CreateCommunityModal = ({ isOpen, onClose, onSidebarClose }) => {
             </InputGroup>
             <Input
               name="desc"
-              _placeholder={{ color: "#1a1b26" }}
               placeholder="Description"
               onChange={handleInputChange}
             />
             <InputGroup className="flex flex-col">
               <Input
                 name="image"
-                _placeholder={{ color: "#1a1b26" }}
                 placeholder="Logo link"
                 onChange={handleInputChange}
               />

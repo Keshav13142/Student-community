@@ -52,6 +52,7 @@ export default async function handler(req, res) {
           name: true,
           desc: true,
           image: true,
+          type: true,
         },
       })
     );
@@ -62,11 +63,9 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
       if (user.isGuest) {
         if (user.communityCount >= 3) {
-          res
-            .status(500)
-            .json({
-              error: "Guest accounts can only create upto 3 communities!!",
-            });
+          res.status(500).json({
+            error: "Guest accounts can only create upto 3 communities!!",
+          });
           return;
         } else {
           await prisma.user.update({

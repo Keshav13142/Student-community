@@ -116,11 +116,11 @@ const SinglePost = ({ post }) => {
         <div className="flex w-[90vw] max-w-[90vw] flex-col gap-5 self-center md:w-[70vw] lg:w-[60vw] xl:w-[50vw]">
           <time
             dateTime={new Date(post.createdAt)}
-            className="font-mono text-slate-700"
+            className="font-mono text-slate-700 dark:text-slate-400"
           >
             {format(new Date(post.createdAt), "EEEE, LLLL d, yyyy")}
           </time>
-          <h1 className="text-xl font-medium lg:text-2xl xl:text-4xl">
+          <h1 className="text-xl font-medium dark:text-slate-300 lg:text-2xl xl:text-4xl">
             {post.title}
           </h1>
           <Link
@@ -129,8 +129,10 @@ const SinglePost = ({ post }) => {
           >
             <Avatar src={post.author.image} name={post.author.name} />
             <div className="flex flex-col gap-1">
-              <p className="text-slate-900">{post.author.name}</p>
-              <p className="text-purple-500 hover:text-purple-600">
+              <p className="font-medium text-slate-900 dark:text-slate-300">
+                {post.author.name}
+              </p>
+              <p className="text-purple-500 hover:text-purple-600 dark:text-slate-500">
                 @{post.author.username}
               </p>
             </div>
@@ -146,11 +148,11 @@ const SinglePost = ({ post }) => {
             </>
           )}
         </div>
-        <div className="w-[90vw] max-w-[90vw] self-center rounded-lg border-2 border-gray-200 md:w-[70vw] lg:w-[60vw] xl:w-[50vw]" />
+        <div className="w-[90vw] max-w-[90vw] self-center rounded-lg border-2 border-slate-200 dark:border-slate-700 md:w-[70vw] lg:w-[60vw] xl:w-[50vw]" />
         <article className="prose w-[90vw]  max-w-[90vw] self-center dark:prose-invert md:w-[70vw] lg:w-[60vw] xl:w-[50vw]">
           <RenderMarkdown content={post.content} />
         </article>
-        <div className="w-[90vw] max-w-[90vw] self-center rounded-lg border-2 border-gray-200 md:w-[70vw] lg:w-[60vw] xl:w-[50vw]" />
+        <div className="w-[90vw] max-w-[90vw] self-center rounded-lg border-2 border-slate-200 dark:border-slate-700 md:w-[70vw] lg:w-[60vw] xl:w-[50vw]" />
         <PostComments post={post} />
       </div>
     </>

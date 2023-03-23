@@ -5,7 +5,7 @@ const NewUserProfile = () => {
   return (
     <>
       <Head>
-        <title>Create Profile</title>
+        <title>Profile registration</title>
         <meta
           name="description"
           content="Platform for students within institutions to interact"
