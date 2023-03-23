@@ -199,7 +199,7 @@ const Blog = ({ posts, categories }) => {
             <div className="flex flex-wrap items-center justify-evenly gap-1 gap-y-2">
               {categories.map((c) => (
                 <Link
-                  href={`/blog?category=${c.name}`}
+                  href={`/blog?category=${encodeURIComponent(c.name)}`}
                   key={c.id}
                   className="min-w-[30%] rounded-xl border border-purple-300 p-1 text-center"
                 >
