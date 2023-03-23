@@ -103,7 +103,7 @@ export default async function handler(req, res) {
       });
 
       res.json({
-        redirect: post.slug ? `/blog/${post.slug}` : `/user/@${user.username}`,
+        redirect: post.slug ? `/blog/${post.slug}` : `/user/${user.username}`,
         message: post.published
           ? "Post published successfully"
           : "You can find draft posts in your proile",
@@ -160,7 +160,7 @@ export default async function handler(req, res) {
       });
 
       res.json({
-        redirect: post.slug ? `/blog/${post.slug}` : `/user/@${user.username}`,
+        redirect: post.slug ? `/blog/${post.slug}` : `/user/${user.username}`,
         message: post.published
           ? "Post published successfully"
           : "Successfully saved as draft",

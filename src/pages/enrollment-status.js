@@ -34,7 +34,7 @@ const info = {
     title: "Your request to join was approved.",
     desc: "You can explore the communities",
     action: (
-      <Link href="/community/discover">
+      <Link href="/discover">
         <Button variant="outline" colorScheme="purple">
           Go to Discover screen
         </Button>

@@ -39,6 +39,7 @@ export default async function handler(req, res) {
                 id: true,
                 name: true,
                 image: true,
+                username: true,
               },
             },
           },

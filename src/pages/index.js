@@ -13,7 +13,7 @@ export async function getServerSideProps({ req, res }) {
   if (session?.user) {
     return {
       redirect: {
-        destination: "/community/discover",
+        destination: "/discover",
         permanent: false,
       },
     };

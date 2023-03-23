@@ -32,7 +32,7 @@ export const authOptions = {
   ],
   // What pages should the user be redirected to after the respective actions
   pages: {
-    signIn: "/community/discover",
+    signIn: "/discover",
     signOut: "/",
     error: "/", // Error code passed in query string as ?error=
     newUser: "/auth/new-user", // New users will be directed here on first sign in

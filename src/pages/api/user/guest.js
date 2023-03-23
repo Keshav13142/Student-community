@@ -80,7 +80,7 @@ export default async function handler(req, res) {
       },
     });
 
-    res.status(201).json({ redirect: "/community/discover" });
+    res.status(201).json({ redirect: "/discover" });
   } else {
     const institution = await prisma.institution.findFirst({
       where: {

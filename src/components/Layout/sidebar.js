@@ -84,7 +84,7 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
             </h1>
             <div className="flex flex-col items-center gap-5">
               <Link
-                href="/community/discover"
+                href="/discover"
                 className="underline"
                 onClick={onSidebarClose}
               >
@@ -130,7 +130,7 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
               <div className="flex justify-center md:hidden">
                 <div className="flex items-center gap-5">
                   <Link
-                    href="/community/discover"
+                    href="/discover"
                     className="underline"
                     onClick={onSidebarClose}
                   >

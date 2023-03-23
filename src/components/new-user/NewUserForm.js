@@ -132,7 +132,7 @@ const NewUserForm = () => {
   } = useSession();
 
   if (user.hasProfile && user.enrollmentStatus === "APPROVED") {
-    router.push("/community/discover");
+    router.push("/discover");
   }
 
   const [codeType, setCodeType] = useState("memberCode");

@@ -56,7 +56,7 @@ const CommunityTopBar = ({ data, isDisabled }) => {
             bg="transparent"
             icon={<FaChevronLeft />}
             onClick={() => {
-              router.push("/community/discover");
+              router.push("/discover");
             }}
           />
           <Avatar src={data?.image} size={["sm", "md"]} />

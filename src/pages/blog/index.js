@@ -170,7 +170,7 @@ const Blog = ({ posts, categories }) => {
                   alt="no posts"
                 />
                 <h2 className="text-2xl font-medium">No posts found</h2>
-                <Link href="/blog/new">
+                <Link href="/new">
                   <Button
                     variant="outline"
                     colorScheme="purple"
@@ -207,7 +207,7 @@ const Blog = ({ posts, categories }) => {
                 </Link>
               ))}
             </div>
-            <Link href="/blog/new">
+            <Link href="/new">
               <Button
                 variant="outline"
                 colorScheme="purple"

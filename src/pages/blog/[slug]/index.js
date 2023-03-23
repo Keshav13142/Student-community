@@ -127,7 +127,7 @@ const SinglePost = ({ post }) => {
             <Avatar src={post.author.image} name={post.author.name} />
             <div className="flex flex-col gap-1">
               <p className="text-slate-900">{post.author.name}</p>
-              <Link href={`/user/@${post.author.username}`}>
+              <Link href={`/user/${post.author.username}`}>
                 <p className="text-purple-500 hover:text-purple-600">
                   @{post.author.username}
                 </p>

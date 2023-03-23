@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     if (!comm) {
       res.status(404).json({
         message: "Community does not exist",
-        redirect: "/community/discover",
+        redirect: "/discover",
       });
       return;
     }

@@ -35,20 +35,11 @@ export async function getServerSideProps({ req, res, query }) {
     };
   }
 
-  if (!query.username.startsWith("@")) {
-    return {
-      redirect: {
-        destination: "/community/discover",
-        permanent: false,
-      },
-    };
-  }
-
-  const username = query.username.split("@")[1];
+  const { username } = query;
   const { user } = session;
 
   const profile = await prisma.user.findUnique({
-    where: { username: username },
+    where: { username },
     select: {
       name: true,
       username: true,
@@ -80,6 +71,15 @@ export async function getServerSideProps({ req, res, query }) {
       },
     },
   });
+
+  if (!profile) {
+    return {
+      redirect: {
+        destination: "/discover",
+        permanent: false,
+      },
+    };
+  }
 
   const communities = await prisma.community.findMany({
     where: {
@@ -256,7 +256,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                       </div>
                     )}
                   </TabPanel>
-                  <TabPanel className="flex flex-col gap-3">
+                  <TabPanel className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto">
                     {communities.map((c, idx) => (
                       <div
                         key={idx}
@@ -313,7 +313,6 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                     ) : (
                       "Not updated"
                     )}
-                    {profile.githubLink}
                   </div>
                   <div className="flex items-center gap-2">
                     <GrLinkedin size={20} />

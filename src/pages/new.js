@@ -26,7 +26,7 @@ import { BsFillImageFill } from "react-icons/bs";
 import { HiOutlineUpload } from "react-icons/hi";
 import { IoSaveSharp } from "react-icons/io5";
 import { MdOutlineCategory, MdTitle } from "react-icons/md";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { authOptions } from "./api/auth/[...nextauth]";
 
 export async function getServerSideProps({ req, res }) {
   const session = await getServerSession(req, res, authOptions);

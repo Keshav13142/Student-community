@@ -32,7 +32,7 @@ const Navbar = ({ onSidebarOpen, showCommunityInfo }) => {
               icon={<HiOutlineMenuAlt2 />}
             />
           </div>
-          <Link href="/community/discover">
+          <Link href="/discover">
             <h1 className="self-center text-2xl font-bold">
               Student <span className="text-purple-600">Community</span>
             </h1>
@@ -41,7 +41,7 @@ const Navbar = ({ onSidebarOpen, showCommunityInfo }) => {
         <div className="flex gap-20">
           <div className="hidden items-center md:flex">
             <div className="flex items-center gap-5">
-              <Link href="/community/discover">
+              <Link href="/discover">
                 <Button tabIndex={-1} variant="link" color="purple.600">
                   Discover
                 </Button>
@@ -64,7 +64,7 @@ const Navbar = ({ onSidebarOpen, showCommunityInfo }) => {
               borderWidth="medium"
             />
             <MenuList>
-              <Link href={`/user/@${session.data?.user?.username}`}>
+              <Link href={`/user/${session.data?.user?.username}`}>
                 <MenuItem>My Profile</MenuItem>
               </Link>
               <MenuItem onClick={onOpen}>Settings</MenuItem>
