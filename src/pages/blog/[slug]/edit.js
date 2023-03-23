@@ -276,7 +276,7 @@ const EditPost = ({ post, allCategories }) => {
                   />
                 </TabPanel>
                 <TabPanel>
-                  <article className="prose max-w-[85vw]">
+                  <article className="prose max-w-[85vw] dark:prose-invert">
                     {inputs.content.trim() !== "" ? (
                       <RenderMarkdown content={inputs.content} />
                     ) : (

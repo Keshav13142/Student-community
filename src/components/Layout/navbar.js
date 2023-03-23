@@ -6,16 +6,21 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { BsFillSunFill } from "react-icons/bs";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
+import { MdDarkMode } from "react-icons/md";
 import EditProfile from "../modals/edit-profile";
 
 const Navbar = ({ onSidebarOpen, showCommunityInfo }) => {
   const session = useSession();
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const { colorMode, toggleColorMode } = useColorMode();
+
   return (
     <>
       <EditProfile isOpen={isOpen} onClose={onClose} />
@@ -76,6 +81,22 @@ const Navbar = ({ onSidebarOpen, showCommunityInfo }) => {
                 }}
               >
                 Logout
+              </MenuItem>
+              <MenuItem
+                className="flex items-center gap-2"
+                onClick={toggleColorMode}
+              >
+                {colorMode === "light" ? (
+                  <>
+                    <MdDarkMode />
+                    Dark mode
+                  </>
+                ) : (
+                  <>
+                    <BsFillSunFill />
+                    Light mode
+                  </>
+                )}
               </MenuItem>
             </MenuList>
           </Menu>
