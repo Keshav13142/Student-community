@@ -20,18 +20,20 @@
 - [x] ~~Fix modal styling in smaller screens~~
 - [x] ~~Fix socket connection in production~~ (hosted socket server on [fly.io](https://fly.io))
 - [x] ~~Make error boundary UI look good~~
+- [x] ~~Query filter params in blog page (AI&ML not working , probably cause of `&` symbol?)~~
+- [ ] Make codeType as a separate entity.
+- [ ] Make public communities joinable
 - [ ] Fix auto scroll on new messages in chat.
 - [ ] Handle socket connections more efficiently.
+- [ ] Socket events for deletion
+- [ ] Add dark theme support
 - [ ] Notifications on new messages or events.
 - [ ] Community visibilty for each year and dept.
 - [ ] Verify clg mail (get dept and year from mail).
 - [ ] Truthful data for student year and dept (probably from their clg email).
 - [ ] Admins can view all students, filter by dept and year.
 - [ ] Update students year(1,2,3 or 4) every year (Batch edit by admins/figure out how to do it automagically)
-- [ ] Query filter params in blog page (AI&ML not working , probably cause of `&` symbol?)
 - [ ] User pending request screen
-- [ ] Make codeType as a separate entity.
-- [ ] Make public communities joinable
 - [ ] automagically figure of code type while new-user registration
 - [ ] HOC for protected API routes, managing req types.
 - [ ] Prisma transactions
@@ -39,11 +41,7 @@
 - [ ] Guest user login (have a default community)
 - [ ] Customize UI for clg
 - [ ] Show user info on hover in chat?
-- [ ] Pending req for users joining pvt. communities
-- [ ] Pusher events for deletion
-- [ ] Add email-pass login? (maybe)
+- [ ] Pending req for users joining pvt.communities (idk if this is needed)
 - [ ] Add relavent meta tags to pages
-- [ ] Use NextJs image tags with cloudinary for image storage?
-- [ ] Migrate to nextJs app/ directory
 
 <!-- ![mock](final-year-project-mock.png) -->
