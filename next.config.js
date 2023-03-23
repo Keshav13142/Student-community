@@ -1,9 +1,8 @@
-/** @type {import('next').NextConfig} */
-
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   images: {
@@ -14,6 +13,14 @@ const nextConfig = {
       "cdn-icons-png.flaticon.com",
     ],
   },
+  i18n: {
+    locales: ["en"],
+    defaultLocale: "en",
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  swcMinify: true,
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

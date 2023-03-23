@@ -21,12 +21,13 @@
 - [x] ~~Fix socket connection in production~~ (hosted socket server on [fly.io](https://fly.io))
 - [x] ~~Make error boundary UI look good~~
 - [x] ~~Query filter params in blog page (AI&ML not working , probably cause of `&` symbol?)~~
+- [x] ~~Add dark theme support~~
+- [x] ~~Add relavent meta tags to pages~~
 - [ ] Make codeType as a separate entity.
 - [ ] Make public communities joinable
 - [ ] Fix auto scroll on new messages in chat.
 - [ ] Handle socket connections more efficiently.
 - [ ] Socket events for deletion
-- [ ] Add dark theme support
 - [ ] Notifications on new messages or events.
 - [ ] Community visibilty for each year and dept.
 - [ ] Verify clg mail (get dept and year from mail).
@@ -42,6 +43,5 @@
 - [ ] Customize UI for clg
 - [ ] Show user info on hover in chat?
 - [ ] Pending req for users joining pvt.communities (idk if this is needed)
-- [ ] Add relavent meta tags to pages
 
 <!-- ![mock](final-year-project-mock.png) -->

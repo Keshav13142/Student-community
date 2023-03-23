@@ -1,8 +1,6 @@
 import { createNewPost } from "@/lib/api-calls/posts";
 import prisma from "@/lib/prisma";
 import { createPostSchema, parseZodErrors } from "@/lib/validations";
-import MarkdownEditor from "@/src/components/editor";
-import RenderMarkdown from "@/src/components/render-markdown";
 import {
   Button,
   Input,
@@ -26,6 +24,8 @@ import { BsFillImageFill } from "react-icons/bs";
 import { HiOutlineUpload } from "react-icons/hi";
 import { IoSaveSharp } from "react-icons/io5";
 import { MdOutlineCategory, MdTitle } from "react-icons/md";
+import MarkdownEditor from "../components/editor";
+import RenderMarkdown from "../components/render-markdown";
 import { authOptions } from "./api/auth/[...nextauth]";
 
 export async function getServerSideProps({ req, res }) {
