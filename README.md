@@ -20,7 +20,9 @@
 - [x] ~~Fix modal styling in smaller screens~~
 - [x] ~~Fix socket connection in production~~ (hosted socket server on [fly.io](https://fly.io))
 - [x] ~~Make error boundary UI look good~~
-- [ ] Switch to ui.shadcn.com(better accessibility and lighter) or mantine(seems more plug and play) from chakra UI
+- [ ] Fix auto scroll on new messages in chat.
+- [ ] Handle socket connections more efficiently.
+- [ ] Notifications on new messages or events.
 - [ ] Community visibilty for each year and dept.
 - [ ] Verify clg mail (get dept and year from mail).
 - [ ] Truthful data for student year and dept (probably from their clg email).
@@ -33,6 +35,7 @@
 - [ ] automagically figure of code type while new-user registration
 - [ ] HOC for protected API routes, managing req types.
 - [ ] Prisma transactions
+- [ ] Switch to ui.shadcn.com(better accessibility and lighter) or mantine(seems more plug and play) from chakra UI
 - [ ] Guest user login (have a default community)
 - [ ] Customize UI for clg
 - [ ] Show user info on hover in chat?
