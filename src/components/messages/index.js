@@ -30,6 +30,7 @@ const MsgDayInfo = ({ day }) => (
 const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
   return (
     <div
+      ref={ref}
       className={`flex w-full flex-col gap-0.5 rounded-md px-3 py-1.5 ${
         msg.isOwnMessage ? "bg-green-200" : "bg-purple-200"
       }`}
@@ -76,7 +77,7 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const [deleteMessageId, setDeleteMessageId] = useState(null);
-  const latestMessageRef = useRef(undefined);
+  const chatLastElem = useRef(null);
 
   const mutation = useMutation(hideOrShowMessage, {
     onError: () => {
@@ -97,13 +98,13 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
     },
   });
 
+  const scrollToBottom = () => {
+    chatLastElem.current?.scrollIntoView();
+  };
+
   useEffect(() => {
-    if (messages && latestMessageRef.current) {
-      latestMessageRef.current.scrollIntoView({
-        behavior: "smooth",
-      });
-    }
-  }, [messages]);
+    scrollToBottom();
+  });
 
   return (
     // Fix this scrolling stuff later
@@ -173,7 +174,6 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
                   className={`${
                     msg.isOwnMessage ? "self-end" : "self-start"
                   } w-fit`}
-                  ref={idx + 1 === messages?.length ? latestMessageRef : null}
                 >
                   {isUserAdminOrMod && !msg.isOwnMessage && !msg.isDeleted ? (
                     <ContextMenu
@@ -221,6 +221,11 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
             </h2>
           </div>
         )}
+        <div
+          id="chat-end"
+          className="float-left clear-both h-0 w-0"
+          ref={chatLastElem}
+        />
       </div>
     </>
   );

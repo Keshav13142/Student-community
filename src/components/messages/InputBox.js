@@ -1,17 +1,14 @@
 import { sendMessage } from "@/lib/api-calls/messages";
+import { socket } from "@/lib/socket-client";
 import { IconButton, Input, Tooltip, useToast } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BiSend } from "react-icons/bi";
-import { io } from "socket.io-client";
-
-let socket;
 
 const MessageInputBox = ({ isDisabled, communityId }) => {
   const [input, setInput] = useState("");
   const toast = useToast();
-  const queryClient = useQueryClient();
   const session = useSession();
 
   const mutation = useMutation(sendMessage, {
@@ -41,41 +38,6 @@ const MessageInputBox = ({ isDisabled, communityId }) => {
       mutation.mutate({ communityId, content: input });
     }
   };
-
-  useEffect(() => {
-    if (communityId) {
-      // connect to socket server
-      if (!socket) {
-        socket = io(process.env.NEXT_PUBLIC_MESSAGE_SOCKET_SERVER_URL, {
-          withCredentials: true,
-        });
-      }
-
-      if (socket.connected === false) {
-        // log socket connection
-        socket.on("connect", () => {
-          console.log("SOCKET CONNECTED!");
-        });
-
-        // update chat on new message dispatched
-        socket.on(`community-${communityId}`, (data) => {
-          queryClient.setQueryData(["messages", communityId], (prev) => [
-            ...prev,
-            data,
-          ]);
-        });
-      }
-      console.log(socket);
-    }
-
-    // socket disconnet onUnmount if exists
-    if (socket && socket.connected)
-      return () => {
-        socket.disconnect();
-        socket = null;
-        console.log("SOCKET DISCONNECTED");
-      };
-  }, [communityId, socket]);
 
   return (
     <form onSubmit={handleMessageSend}>

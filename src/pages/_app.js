@@ -10,14 +10,17 @@ import ErrorBoundary from "../components/error-boundary";
 import Layout from "../components/Layout";
 import { TailwindIndicator } from "../components/tailwindcss-indicator";
 
-export default function App({ Component, pageProps }) {
-  const [queryClient] = useState(() => new QueryClient());
+const queryClient = new QueryClient();
 
+export default function App({ Component, pageProps }) {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <ChakraProvider>
-          <SessionProvider session={pageProps.session}>
+          <SessionProvider
+            session={pageProps.session}
+            refetchOnWindowFocus={false}
+          >
             {Component.withLayout ? (
               <Layout
                 showCommunityInfo={Component.withLayout.showCommunityInfo}
