@@ -1,5 +1,6 @@
 import { fetchCommunities } from "@/lib/api-calls/community";
 import {
+  Avatar,
   Button,
   Container,
   Divider,
@@ -10,6 +11,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { Fragment } from "react";
 import { ImInfo } from "react-icons/im";
 import { RiUserAddLine } from "react-icons/ri";
 import { TbBrowserPlus } from "react-icons/tb";
@@ -125,7 +127,7 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
             onClose={onJoinClose}
             onSidebarClose={onSidebarClose}
           />
-          <div className="flex h-full max-w-md flex-col items-center justify-between border-r border-r-slate-200 p-3">
+          <div className="flex h-full max-w-xs flex-col items-center justify-between border-r border-r-slate-200 p-3">
             <div className="flex flex-col items-center gap-3">
               <div className="flex justify-center md:hidden">
                 <div className="flex items-center gap-5">
@@ -156,23 +158,26 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
                 {loading ? (
                   <LoadingSkeleton count={4} />
                 ) : (
-                  <div className="flex max-h-[50vh] grow flex-col overflow-y-auto text-center md:max-h-[70vh]">
+                  <div className="flex max-h-[50vh] grow flex-col overflow-y-auto md:max-h-[65vh]">
                     {communities === [] ? (
                       <h2>Communities you join will show up here!</h2>
                     ) : (
                       communities?.map((c, i) => (
-                        <Link
-                          key={c.id}
-                          href={`/community/${c.id}`}
-                          onClick={onSidebarClose}
-                        >
-                          <p className="my-1 p-2 font-medium text-purple-600">
-                            {`# ${c.name}`}
-                          </p>
+                        <div key={c.id} className="flex flex-col gap-2">
+                          <Link
+                            href={`/community/${c.id}`}
+                            className="flex items-center gap-2"
+                            onClick={onSidebarClose}
+                          >
+                            <Avatar src={c.image} name={c.name} size="sm" />
+                            <p className="p-2 font-medium text-purple-600">
+                              {c.name}
+                            </p>
+                          </Link>
                           {i !== communities.length - 1 && (
-                            <div className="w-full rounded-md border bg-slate-900" />
+                            <div className="my-1 w-full rounded-md border bg-slate-900" />
                           )}
-                        </Link>
+                        </div>
                       ))
                     )}
                   </div>

@@ -156,12 +156,15 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
             </Alert>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-10 rounded-xl p-5 pt-10 lg:flex-row lg:items-start lg:justify-center lg:px-10">
+          <div className="flex flex-col items-center gap-10 rounded-xl px-2 py-5 pt-10 lg:flex-row lg:items-start lg:justify-center lg:px-10">
             <div className="order-2 flex min-w-[50%] max-w-4xl flex-col gap-5 lg:order-1">
               <h1 className="hidden text-2xl font-medium lg:block">
                 {profile.name}
               </h1>
-              <Tabs variant="line">
+              <Tabs
+                variant="line"
+                className="min-w-[90vw] max-w-[90vw] sm:min-w-[80vw] lg:min-w-[0]"
+              >
                 <TabList>
                   <Tab>Posts</Tab>
                   <Tab>Communities</Tab>
@@ -205,7 +208,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                                   )
                                 )}
                               </div>
-                              <h3 className="max-w-sm text-sm text-gray-500 line-clamp-2 lg:text-base">
+                              <h3 className="max-w-[30vw] text-sm text-gray-500 line-clamp-2 lg:text-base">
                                 {p.content}
                               </h3>
                             </div>
@@ -225,9 +228,9 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                             {p.bannerImage === "" || !p.bannerImage ? (
                               <Image
                                 src="https://cdn-icons-png.flaticon.com/512/3875/3875148.png"
-                                className="object-cover"
                                 height="96"
                                 width="128"
+                                className="max-h-[6em] max-w-[6em] object-cover"
                                 alt="No img"
                               />
                             ) : (
