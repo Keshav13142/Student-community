@@ -1,4 +1,4 @@
-import { createUserProfile } from "@/lib/api-calls/user";
+import { createGuestUser, createUserProfile } from "@/lib/api-calls/user";
 import { newUserFormSchema, parseZodErrors } from "@/lib/validations";
 import {
   Button,
@@ -15,6 +15,11 @@ import {
   Portal,
   Radio,
   RadioGroup,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Text,
   Tooltip,
   useToast,
@@ -94,9 +99,25 @@ const formFields = [
         </span>
       </Tooltip>
     ),
-    placeholder: "Institution code",
+    placeholder: "Enter your code",
   },
 ];
+
+const RadioButtons = ({ onChange }) => (
+  <div className="flex items-center gap-10">
+    <span>Code Type</span>
+    <RadioGroup defaultValue="memberCode" onChange={onChange}>
+      <div className="flex gap-5">
+        <Radio colorScheme="blue" value="memberCode" type="button">
+          Member
+        </Radio>
+        <Radio colorScheme="purple" value="adminCode" type="button">
+          Admin
+        </Radio>
+      </div>
+    </RadioGroup>
+  </div>
+);
 
 const reloadSession = () => {
   const event = new Event("visibilitychange");
@@ -111,10 +132,30 @@ const NewUserForm = () => {
   } = useSession();
 
   if (user.hasProfile && user.enrollmentStatus === "APPROVED") {
-    router.push("/community/discover");
+    router.push("/discover");
   }
 
-  const mutation = useMutation(createUserProfile, {
+  const [codeType, setCodeType] = useState("memberCode");
+  const [isGuestLoading, setIsGuestLoading] = useState(false);
+
+  const [formValues, setFormValues] = useState({
+    name: user.name,
+    username: "",
+    bio: "",
+    institutionCode: "",
+    githubLink: "",
+    linkedinLink: "",
+  });
+
+  const [formErrors, setFromErrors] = useState({
+    name: null,
+    username: null,
+    institutionCode: null,
+    githubLink: null,
+    linkedinLink: null,
+  });
+
+  const newProfileMutation = useMutation(createUserProfile, {
     onError: ({
       response: {
         data: { error, ref },
@@ -135,25 +176,32 @@ const NewUserForm = () => {
       reloadSession();
       router.push("/enrollment-status");
     },
+    onSettled: () => {
+      setIsGuestLoading(false);
+    },
   });
 
-  const [codeType, setCodeType] = useState("memberCode");
-
-  const [formValues, setFormValues] = useState({
-    name: user.name,
-    username: "",
-    bio: "",
-    institutionCode: "",
-    githubLink: "",
-    linkedinLink: "",
-  });
-
-  const [formErrors, setFromErrors] = useState({
-    name: null,
-    username: null,
-    institutionCode: null,
-    githubLink: null,
-    linkedinLink: null,
+  const newGuestMutation = useMutation(createGuestUser, {
+    onError: ({
+      response: {
+        data: { error, ref },
+      },
+    }) => {
+      if (ref) {
+        setFromErrors((p) => ({ ...p, [ref]: error }));
+      } else {
+        toast({
+          title: error,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    },
+    onSuccess: (data) => {
+      reloadSession();
+      router.push(data.redirect);
+    },
   });
 
   const handleInputChange = ({ target: { value, name } }) => {
@@ -176,68 +224,109 @@ const NewUserForm = () => {
       return;
     }
 
-    mutation.mutate({
+    newProfileMutation.mutate({
       ...formValues,
       codeType,
     });
   };
 
   return (
-    <form className="flex min-w-[25dvw] flex-col gap-5" onSubmit={handleSubmit}>
-      {formFields.map((f, idx) => (
-        <InputGroup key={idx} className="flex flex-col">
-          <Input
-            value={formValues[f.name]}
-            name={f.name}
-            _placeholder={{ color: "#1a1b26" }}
-            placeholder={f.placeholder}
-            onChange={handleInputChange}
-          />
-          {f.rightElement && (
-            <InputRightElement>{f.rightElement}</InputRightElement>
-          )}
-          <span className="mt-1 text-red-400">{formErrors[f.name]}</span>
-        </InputGroup>
-      ))}
-      <div className="flex items-center gap-10">
-        <span>Code Type</span>
-        <RadioGroup
-          defaultValue="memberCode"
-          onChange={(v) => {
-            setCodeType(v);
-            setFromErrors((p) => ({ ...p, institutionCode: null }));
-          }}
-        >
-          <div className="flex gap-5">
-            <Radio colorScheme="blue" value="memberCode" type="button">
-              Member
-            </Radio>
-            <Radio colorScheme="purple" value="adminCode" type="button">
-              Admin
-            </Radio>
-          </div>
-        </RadioGroup>
-      </div>
-      <Button
-        isLoading={mutation.isLoading}
-        loadingText="creating profile"
-        type="submit"
-        variant="solid"
-        colorScheme="purple"
-      >
-        Join
-      </Button>
-      <Button
-        type="button"
-        variant="outline"
-        colorScheme="purple"
-        onClick={() => {
-          signOut({ redirect: false });
-        }}
-      >
-        Logout
-      </Button>
-    </form>
+    <Tabs variant="line" colorScheme="purple" isFitted>
+      <TabList>
+        <Tab>New Profile</Tab>
+        <Tab>Guest</Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>
+          <form
+            className="flex min-w-[25dvw] flex-col gap-5"
+            onSubmit={handleSubmit}
+          >
+            {formFields.map((f, idx) => (
+              <InputGroup key={idx} className="flex flex-col">
+                <Input
+                  value={formValues[f.name]}
+                  name={f.name}
+                  placeholder={f.placeholder}
+                  onChange={handleInputChange}
+                />
+                {f.rightElement && (
+                  <InputRightElement>{f.rightElement}</InputRightElement>
+                )}
+                <span className="mt-1 text-red-400">{formErrors[f.name]}</span>
+              </InputGroup>
+            ))}
+            <RadioButtons
+              onChange={(v) => {
+                setCodeType(v);
+                setFromErrors((p) => ({ ...p, institutionCode: null }));
+              }}
+            />
+            <div className="flex flex-col gap-4">
+              <Button
+                isLoading={newProfileMutation.isLoading}
+                loadingText="creating profile"
+                type="submit"
+                variant="solid"
+                colorScheme="purple"
+              >
+                Join
+              </Button>
+              <Button
+                type="button"
+                variant="solid"
+                colorScheme="gray"
+                onClick={() => {
+                  signOut({ redirect: false });
+                }}
+              >
+                Logout
+              </Button>
+            </div>
+          </form>
+        </TabPanel>
+        <TabPanel>
+          <form
+            className="flex min-w-[25dvw] flex-col gap-5"
+            onSubmit={handleSubmit}
+          >
+            <InputGroup className="flex flex-col">
+              <Input
+                value={formValues.institutionCode}
+                name={"institutionCode"}
+                placeholder={"Enter your code (optional)"}
+                onChange={handleInputChange}
+              />
+              <span className="mt-1 text-red-400">
+                {formErrors.institutionCode}
+              </span>
+            </InputGroup>
+            <RadioButtons
+              onChange={(v) => {
+                setCodeType(v);
+                setFromErrors((p) => ({ ...p, institutionCode: null }));
+              }}
+            />
+            <Button
+              variant="solid"
+              type="button"
+              colorScheme="purple"
+              size={["sm", "md"]}
+              isLoading={isGuestLoading}
+              onClick={async () => {
+                setIsGuestLoading(true);
+                newGuestMutation.mutate({
+                  institutionCode: formValues.institutionCode,
+                  codeType,
+                });
+              }}
+            >
+              Try as a guest
+            </Button>
+          </form>
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
   );
 };
 

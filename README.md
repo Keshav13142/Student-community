@@ -19,26 +19,29 @@
 - [x] ~~Fix scrollbar height in chat page~~
 - [x] ~~Fix modal styling in smaller screens~~
 - [x] ~~Fix socket connection in production~~ (hosted socket server on [fly.io](https://fly.io))
-- [ ] Make error boundary UI look good
-- [ ] Switch to ui.shadcn.com(better accessibility and lighter) or mantine(seems more plug and play) from chakra UI
+- [x] ~~Make error boundary UI look good~~
+- [x] ~~Query filter params in blog page (AI&ML not working , probably cause of `&` symbol?)~~
+- [x] ~~Add dark theme support~~
+- [x] ~~Add relavent meta tags to pages~~
+- [ ] Make codeType as a separate entity.
+- [ ] Make public communities joinable
+- [ ] Fix auto scroll on new messages in chat.
+- [ ] Handle socket connections more efficiently.
+- [ ] Socket events for deletion
+- [ ] Notifications on new messages or events.
 - [ ] Community visibilty for each year and dept.
 - [ ] Verify clg mail (get dept and year from mail).
 - [ ] Truthful data for student year and dept (probably from their clg email).
 - [ ] Admins can view all students, filter by dept and year.
 - [ ] Update students year(1,2,3 or 4) every year (Batch edit by admins/figure out how to do it automagically)
-- [ ] Query filter params in blog page (AI&ML not working , probably cause of `&` symbol?)
 - [ ] User pending request screen
 - [ ] automagically figure of code type while new-user registration
 - [ ] HOC for protected API routes, managing req types.
 - [ ] Prisma transactions
+- [ ] Switch to ui.shadcn.com(better accessibility and lighter) or mantine(seems more plug and play) from chakra UI
 - [ ] Guest user login (have a default community)
 - [ ] Customize UI for clg
 - [ ] Show user info on hover in chat?
-- [ ] Pending req for users joining pvt. communities
-- [ ] Pusher events for deletion
-- [ ] Add email-pass login? (maybe)
-- [ ] Add relavent meta tags to pages
-- [ ] Use NextJs image tags with cloudinary for image storage?
-- [ ] Migrate to nextJs app/ directory
+- [ ] Pending req for users joining pvt.communities (idk if this is needed)
 
 <!-- ![mock](final-year-project-mock.png) -->

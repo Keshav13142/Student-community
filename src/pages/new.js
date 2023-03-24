@@ -1,8 +1,6 @@
 import { createNewPost } from "@/lib/api-calls/posts";
 import prisma from "@/lib/prisma";
 import { createPostSchema, parseZodErrors } from "@/lib/validations";
-import MarkdownEditor from "@/src/components/editor";
-import RenderMarkdown from "@/src/components/render-markdown";
 import {
   Button,
   Input,
@@ -26,7 +24,9 @@ import { BsFillImageFill } from "react-icons/bs";
 import { HiOutlineUpload } from "react-icons/hi";
 import { IoSaveSharp } from "react-icons/io5";
 import { MdOutlineCategory, MdTitle } from "react-icons/md";
-import { authOptions } from "../api/auth/[...nextauth]";
+import MarkdownEditor from "../components/editor";
+import RenderMarkdown from "../components/render-markdown";
+import { authOptions } from "./api/auth/[...nextauth]";
 
 export async function getServerSideProps({ req, res }) {
   const session = await getServerSession(req, res, authOptions);
@@ -85,10 +85,9 @@ const CreateNewPost = ({ allCategories }) => {
   });
 
   const mutation = useMutation(createNewPost, {
-    onError: (error) => {
-      console.log(error);
+    onError: ({ response: { data } }) => {
       toast({
-        title: "Unable to create post",
+        title: data.error,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -182,11 +181,11 @@ const CreateNewPost = ({ allCategories }) => {
                   />
                 </TabPanel>
                 <TabPanel>
-                  <article className="prose max-w-[85vw]">
+                  <article className="prose max-w-[85vw]  dark:prose-invert">
                     {inputs.content.trim() !== "" ? (
                       <RenderMarkdown content={inputs.content} />
                     ) : (
-                      <div className="text-center font-medium text-slate-500">
+                      <div className="text-center font-medium text-slate-500 dark:text-slate-400">
                         Start typing to see the preview
                       </div>
                     )}
@@ -196,7 +195,7 @@ const CreateNewPost = ({ allCategories }) => {
             </Tabs>
           </div>
           <div className="order-1 flex h-fit flex-col gap-5 p-2 lg:sticky lg:top-24 lg:order-2">
-            <h2 className="self-center text-xl">Options</h2>
+            <h2 className="self-center text-xl dark:text-slate-300">Options</h2>
             <InputGroup className="flex flex-col">
               <Input
                 isDisabled={Boolean(inputs.categoryId)}
@@ -252,6 +251,7 @@ const CreateNewPost = ({ allCategories }) => {
     </>
   );
 };
+
 CreateNewPost.withLayout = { showCommunityInfo: false };
 
 export default CreateNewPost;

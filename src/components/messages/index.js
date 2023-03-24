@@ -22,7 +22,7 @@ import { MdHideSource } from "react-icons/md";
 import Linkify from "react-linkify";
 
 const MsgDayInfo = ({ day }) => (
-  <div className="center my-2 mx-auto w-fit rounded-md bg-gray-200 px-2 py-0.5 text-sm">
+  <div className="center my-2 mx-auto w-fit rounded-md bg-gray-200 px-2 py-0.5 text-sm dark:bg-zinc-600">
     {day}
   </div>
 );
@@ -30,12 +30,15 @@ const MsgDayInfo = ({ day }) => (
 const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
   return (
     <div
+      ref={ref}
       className={`flex w-full flex-col gap-0.5 rounded-md px-3 py-1.5 ${
-        msg.isOwnMessage ? "bg-green-200" : "bg-purple-200"
+        msg.isOwnMessage
+          ? "bg-green-200 dark:bg-slate-700"
+          : "bg-purple-200 dark:bg-teal-800 dark:text-white"
       }`}
     >
       {msg.isDeleted ? (
-        <div className="flex items-center gap-2 text-slate-500">
+        <div className="flex items-center gap-2 text-slate-500 dark:text-slate-200">
           <BiBlock />
           This message was deleted {msg.deletedBy && `by ${msg.deletedBy}`}
         </div>
@@ -44,7 +47,9 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
           {!msg.isOwnMessage && (
             <div
               className={`${
-                msg.sender ? "text-purple-500" : "text-slate-400"
+                msg.sender
+                  ? "dark:text-puple-400 text-purple-300"
+                  : "text-slate-200"
               } text-sm font-bold`}
             >
               {msg.sender ? msg.sender.username : "[deleted]"}
@@ -58,7 +63,7 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
           >
             {msg.content}
           </Linkify>
-          <span className={`self-end text-xs opacity-40`}>
+          <span className="self-end text-xs opacity-70 dark:text-slate-200">
             {Intl.DateTimeFormat("en-us", {
               timeStyle: "short",
             }).format(msg.currentMsgTime)}
@@ -69,14 +74,14 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
   );
 });
 
-const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
+const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
   const session = useSession();
   const toast = useToast();
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const [deleteMessageId, setDeleteMessageId] = useState(null);
-  const latestMessageRef = useRef(undefined);
+  const chatLastElem = useRef(null);
 
   const mutation = useMutation(hideOrShowMessage, {
     onError: () => {
@@ -88,7 +93,7 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
       });
     },
     onSuccess: (newData) => {
-      queryClient.setQueryData(["messages", slug], (prev) =>
+      queryClient.setQueryData(["messages", communityId], (prev) =>
         prev.map((msg) => (msg.id === newData.id ? newData : msg))
       );
     },
@@ -97,13 +102,13 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
     },
   });
 
+  const scrollToBottom = () => {
+    chatLastElem.current?.scrollIntoView();
+  };
+
   useEffect(() => {
-    if (messages && latestMessageRef.current) {
-      latestMessageRef.current.scrollIntoView({
-        behavior: "smooth",
-      });
-    }
-  }, [messages]);
+    scrollToBottom();
+  });
 
   return (
     // Fix this scrolling stuff later
@@ -118,11 +123,9 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
               Delete Message
             </AlertDialogHeader>
-
             <AlertDialogBody>
               Are you sure? You cannot revert this action
             </AlertDialogBody>
-
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
@@ -131,7 +134,7 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
                 colorScheme="red"
                 onClick={() => {
                   mutation.mutate({
-                    slug,
+                    communityId,
                     messageId: deleteMessageId,
                     deletedBy: session?.data?.user?.name,
                   });
@@ -173,7 +176,6 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
                   className={`${
                     msg.isOwnMessage ? "self-end" : "self-start"
                   } w-fit`}
-                  ref={idx + 1 === messages?.length ? latestMessageRef : null}
                 >
                   {isUserAdminOrMod && !msg.isOwnMessage && !msg.isDeleted ? (
                     <ContextMenu
@@ -221,6 +223,11 @@ const ScrollableMessageBox = ({ slug, isUserAdminOrMod, messages }) => {
             </h2>
           </div>
         )}
+        <div
+          id="chat-end"
+          className="float-left clear-both h-0 w-0"
+          ref={chatLastElem}
+        />
       </div>
     </>
   );

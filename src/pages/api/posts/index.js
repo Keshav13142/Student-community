@@ -36,6 +36,20 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
+    if (user.isGuest) {
+      if (user.postCount >= 1) {
+        res
+          .status(500)
+          .json({ error: "Guest accounts can only create 1 blog!!" });
+        return;
+      } else {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { postCount: { increment: 1 } },
+        });
+      }
+    }
+
     const { title, bannerImage, content, categoryId, newCategory, publish } =
       req.body;
 
@@ -89,7 +103,7 @@ export default async function handler(req, res) {
       });
 
       res.json({
-        redirect: post.slug ? `/blog/${post.slug}` : `/user/@${user.username}`,
+        redirect: post.slug ? `/blog/${post.slug}` : `/user/${user.username}`,
         message: post.published
           ? "Post published successfully"
           : "You can find draft posts in your proile",
@@ -146,7 +160,7 @@ export default async function handler(req, res) {
       });
 
       res.json({
-        redirect: post.slug ? `/blog/${post.slug}` : `/user/@${user.username}`,
+        redirect: post.slug ? `/blog/${post.slug}` : `/user/${user.username}`,
         message: post.published
           ? "Post published successfully"
           : "Successfully saved as draft",

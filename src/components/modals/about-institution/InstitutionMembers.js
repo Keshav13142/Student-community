@@ -67,7 +67,7 @@ const InstitutionMembers = ({ members, doAction }) => {
                 Actions
               </MenuButton>
               <MenuList>
-                <Link href={`/user/@${m.user.username}`}>
+                <Link href={`/user/${m.user.username}`}>
                   <MenuItem>
                     <RxExternalLink size={20} className="mr-3" />
                     View Profile

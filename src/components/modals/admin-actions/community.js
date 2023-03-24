@@ -68,7 +68,7 @@ const CommunityActions = ({
       toast(toastOptions);
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(["communityInfo", data.slug], () => data);
+      queryClient.setQueryData(["communityInfo", data.id], () => data);
     },
   });
 

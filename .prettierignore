@@ -2,5 +2,6 @@ dist
 node_modules
 .next
 build
-.contentlayer
+.husky
+.next
 package-lock.json

@@ -49,18 +49,18 @@ const CommunityTopBar = ({ data, isDisabled }) => {
   return (
     <>
       <AboutCommunity data={data} isOpen={isAboutOpen} onClose={onAboutClose} />
-      <div className="flex items-center justify-between border-b-2 border-b-slate-200 p-2">
+      <div className="flex items-center justify-between border-b-2 border-b-slate-200 p-2 dark:border-b-slate-800">
         <div className="flex items-center gap-2 md:gap-4">
           <IconButton
             size="sm"
             bg="transparent"
             icon={<FaChevronLeft />}
             onClick={() => {
-              router.push("/community/discover");
+              router.push("/discover");
             }}
           />
           <Avatar src={data?.image} size={["sm", "md"]} />
-          <h3 className="flex text-base font-medium md:text-xl">
+          <h3 className="flex text-base font-medium dark:text-slate-300 md:text-xl">
             {data?.name}
           </h3>
         </div>

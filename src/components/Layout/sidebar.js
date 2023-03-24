@@ -1,5 +1,6 @@
 import { fetchCommunities } from "@/lib/api-calls/community";
 import {
+  Avatar,
   Button,
   Container,
   Divider,
@@ -10,6 +11,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { Fragment } from "react";
 import { ImInfo } from "react-icons/im";
 import { RiUserAddLine } from "react-icons/ri";
 import { TbBrowserPlus } from "react-icons/tb";
@@ -28,6 +30,12 @@ const LoadingSkeleton = ({ count }) => {
     </>
   );
 };
+
+const SidebarButton = ({ icon, text, onClick }) => (
+  <Button w="full" variant="outline" onClick={onClick} leftIcon={icon}>
+    <span className="text-slate-500 dark:text-slate-400">{text}</span>
+  </Button>
+);
 
 const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
   const session = useSession();
@@ -79,23 +87,26 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
       {!showCommunityInfo ? (
         <div className="mt-10 mb-5 flex h-full flex-col justify-between">
           <div className="flex flex-col gap-10">
-            <h1 className="self-center text-2xl font-bold">
-              Student <span className="text-purple-600">Community</span>
-            </h1>
+            <Link href="/discover" className="self-center">
+              <h1 className="self-center text-2xl font-bold text-slate-700 dark:text-slate-300">
+                Student{" "}
+                <span className="text-purple-600 dark:text-purple-400">
+                  Community
+                </span>
+              </h1>
+            </Link>
             <div className="flex flex-col items-center gap-5">
               <Link
-                href="/community/discover"
-                className="underline"
-                onClick={onSidebarClose}
+                href="/discover"
+                className="font-medium text-purple-600 hover:underline dark:text-purple-400"
               >
-                <Button tabIndex={-1} variant="link" color="purple.600">
-                  Discover
-                </Button>
+                Discover
               </Link>
-              <Link href="/blog" className="underline" onClick={onSidebarClose}>
-                <Button tabIndex={-1} variant="link" color="purple.600">
-                  Blogs
-                </Button>
+              <Link
+                href="/blog"
+                className="font-medium text-purple-600 hover:underline dark:text-purple-400"
+              >
+                Blogs
               </Link>
             </div>
           </div>
@@ -125,90 +136,84 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
             onClose={onJoinClose}
             onSidebarClose={onSidebarClose}
           />
-          <div className="flex h-full max-w-md flex-col items-center justify-between border-r border-r-slate-200 p-3">
+          <div className="flex h-full max-w-xs flex-col items-center justify-between border-r border-r-slate-200 p-3">
             <div className="flex flex-col items-center gap-3">
               <div className="flex justify-center md:hidden">
                 <div className="flex items-center gap-5">
                   <Link
-                    href="/community/discover"
-                    className="underline"
-                    onClick={onSidebarClose}
+                    href="/discover"
+                    className="font-medium text-purple-600 hover:underline dark:text-purple-400"
                   >
-                    <Button tabIndex={-1} variant="link" color="purple.600">
-                      Discover
-                    </Button>
+                    Discover
                   </Link>
                   <Link
                     href="/blog"
-                    className="underline"
-                    onClick={onSidebarClose}
+                    className="font-medium text-purple-600 hover:underline dark:text-purple-400"
                   >
-                    <Button tabIndex={-1} variant="link" color="purple.600">
-                      Blogs
-                    </Button>
+                    Blogs
                   </Link>
                 </div>
               </div>
               <div className="block w-[80%] rounded-md border bg-slate-800 md:hidden" />
               <div className="flex flex-col items-center gap-2">
-                <p className="text-2xl font-medium">Your communities</p>
+                <p className="text-2xl font-medium dark:text-slate-300">
+                  Your communities
+                </p>
                 <Divider />
                 {loading ? (
                   <LoadingSkeleton count={4} />
                 ) : (
-                  <div className="flex max-h-[50vh] grow flex-col overflow-y-auto text-center md:max-h-[70vh]">
+                  <div className="flex max-h-[50vh] grow flex-col overflow-y-auto md:max-h-[65vh]">
                     {communities === [] ? (
                       <h2>Communities you join will show up here!</h2>
                     ) : (
                       communities?.map((c, i) => (
-                        <Link
-                          key={c.id}
-                          href={`/community/${c.slug}`}
-                          onClick={onSidebarClose}
-                        >
-                          <p className="my-1 p-2 font-medium text-purple-600">
-                            {`# ${c.name}`}
-                          </p>
+                        <div key={c.id} className="flex flex-col gap-2">
+                          <Link
+                            href={`/community/${c.id}`}
+                            className="flex items-center gap-2"
+                            onClick={onSidebarClose}
+                          >
+                            <Avatar src={c.image} name={c.name} size="sm" />
+                            <p className="p-2 font-medium text-purple-600 dark:text-slate-400">
+                              {c.name}
+                            </p>
+                          </Link>
                           {i !== communities.length - 1 && (
-                            <div className="w-full rounded-md border bg-slate-900" />
+                            <div className="my-1 w-full rounded-md border bg-slate-900" />
                           )}
-                        </Link>
+                        </div>
                       ))
                     )}
                   </div>
                 )}
               </div>
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="flex w-full flex-col gap-3">
               {session.data?.user?.isInstitutionAdmin && (
-                <Button
-                  w="full"
-                  variant="outline"
-                  colorScheme="purple"
+                <SidebarButton
                   onClick={onCreateOpen}
-                  leftIcon={<TbBrowserPlus fontSize={20} />}
-                >
-                  Create new community
-                </Button>
+                  icon={
+                    <TbBrowserPlus
+                      fontSize={20}
+                      className="text-slate-700 dark:text-slate-400"
+                    />
+                  }
+                  text="Create new community"
+                />
               )}
-              <Button
-                w="full"
-                variant="outline"
-                colorScheme="purple"
+              <SidebarButton
                 onClick={onJoinOpen}
-                leftIcon={<RiUserAddLine />}
-              >
-                Have an invite code?
-              </Button>
-              <Button
-                w="full"
-                variant="outline"
-                colorScheme="purple"
+                icon={
+                  <RiUserAddLine className="text-slate-700 dark:text-slate-400" />
+                }
+                text="Have an invite code?"
+              />
+              <SidebarButton
                 onClick={onAboutOpen}
-                leftIcon={<ImInfo />}
-              >
-                About Institution
-              </Button>
+                icon={<ImInfo className="text-slate-700 dark:text-slate-400" />}
+                text="About Institution"
+              />
             </div>
           </div>
         </>

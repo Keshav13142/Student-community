@@ -1,9 +1,5 @@
 import prisma from "@/lib/prisma";
-import {
-  checkIfUserIsCommAdmin,
-  getCommunityWithName,
-  slugify,
-} from "@/lib/server";
+import { checkIfUserIsCommAdmin, getCommunityWithName } from "@/lib/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 
@@ -55,7 +51,6 @@ export default async function handler(req, res) {
           desc,
           image,
           type,
-          slug: slugify(name),
         },
         select: {
           id: true,
@@ -63,7 +58,6 @@ export default async function handler(req, res) {
           desc: true,
           image: true,
           type: true,
-          slug: true,
         },
       });
 

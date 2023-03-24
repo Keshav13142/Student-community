@@ -35,20 +35,11 @@ export async function getServerSideProps({ req, res, query }) {
     };
   }
 
-  if (!query.username.startsWith("@")) {
-    return {
-      redirect: {
-        destination: "/community/discover",
-        permanent: false,
-      },
-    };
-  }
-
-  const username = query.username.split("@")[1];
+  const { username } = query;
   const { user } = session;
 
   const profile = await prisma.user.findUnique({
-    where: { username: username },
+    where: { username },
     select: {
       name: true,
       username: true,
@@ -57,6 +48,11 @@ export async function getServerSideProps({ req, res, query }) {
       githubLink: true,
       email: true,
       bio: true,
+      institutionMember: {
+        select: {
+          institutionId: true,
+        },
+      },
       posts: {
         // If the user is viewing their own page then show unpublished posts
         ...(user.username !== username ? { where: { published: true } } : {}),
@@ -76,8 +72,18 @@ export async function getServerSideProps({ req, res, query }) {
     },
   });
 
+  if (!profile) {
+    return {
+      redirect: {
+        destination: "/discover",
+        permanent: false,
+      },
+    };
+  }
+
   const communities = await prisma.community.findMany({
     where: {
+      institutionId: profile.institutionMember.institutionId,
       ...(user.username !== username
         ? {
             type: {
@@ -87,7 +93,7 @@ export async function getServerSideProps({ req, res, query }) {
         : {}),
     },
     select: {
-      slug: true,
+      id: true,
       name: true,
       image: true,
       desc: true,
@@ -125,7 +131,11 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
         <title>{profile ? `@${profile.username}` : "User not found"}</title>
         <meta
           name="description"
-          content="Platform for students within institutions to interact"
+          content={
+            profile
+              ? profile.bio
+              : "Platform for students within institutions to interact"
+          }
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
@@ -150,12 +160,15 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
             </Alert>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-10 rounded-xl p-5 pt-10 lg:flex-row lg:items-start lg:justify-center lg:px-10">
+          <div className="flex flex-col items-center gap-10 rounded-xl px-2 py-5 pt-10 lg:flex-row lg:items-start lg:justify-center lg:px-10">
             <div className="order-2 flex min-w-[50%] max-w-4xl flex-col gap-5 lg:order-1">
               <h1 className="hidden text-2xl font-medium lg:block">
                 {profile.name}
               </h1>
-              <Tabs variant="line">
+              <Tabs
+                variant="line"
+                className="min-w-[90vw] max-w-[90vw] sm:min-w-[80vw] lg:min-w-[0]"
+              >
                 <TabList>
                   <Tab>Posts</Tab>
                   <Tab>Communities</Tab>
@@ -165,7 +178,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                     {profile.posts.length > 0 ? (
                       profile.posts.map((p, idx) => (
                         <div
-                          className="flex items-center justify-between gap-3 rounded-lg border border-slate-300 px-4 py-2"
+                          className="flex items-center justify-between gap-3 rounded-lg border border-slate-300 px-4 py-2 dark:border-slate-500"
                           key={idx}
                         >
                           <div className="grow">
@@ -179,7 +192,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                                   }
                                   className="hover:underline"
                                 >
-                                  <h2 className="text-base font-medium text-slate-900 lg:text-lg">
+                                  <h2 className="text-base font-medium text-slate-900 dark:text-slate-300 lg:text-lg">
                                     {p.title}
                                   </h2>
                                 </Link>
@@ -194,12 +207,11 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                                         router.push(`/blog/${p.id}/edit`)
                                       }
                                       bg="transparent"
-                                      color="blue"
                                     />
                                   )
                                 )}
                               </div>
-                              <h3 className="max-w-sm text-sm text-gray-500 line-clamp-2 lg:text-base">
+                              <h3 className="max-w-[30vw] text-sm text-slate-500 line-clamp-2 dark:text-slate-400 lg:text-base">
                                 {p.content}
                               </h3>
                             </div>
@@ -219,9 +231,9 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                             {p.bannerImage === "" || !p.bannerImage ? (
                               <Image
                                 src="https://cdn-icons-png.flaticon.com/512/3875/3875148.png"
-                                className="object-cover"
                                 height="96"
                                 width="128"
+                                className="max-h-[6em] max-w-[6em] object-cover"
                                 alt="No img"
                               />
                             ) : (
@@ -250,13 +262,13 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                       </div>
                     )}
                   </TabPanel>
-                  <TabPanel className="flex flex-col gap-3">
+                  <TabPanel className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto">
                     {communities.map((c, idx) => (
                       <div
                         key={idx}
-                        className="rounded-lg border border-purple-400"
+                        className="rounded-lg border border-slate-300 dark:border-slate-500"
                       >
-                        <Link href={`/community/${c.slug}`}>
+                        <Link href={`/community/${c.id}`}>
                           <div className="flex items-center gap-2 rounded-xl p-2">
                             <Avatar
                               src={c.image}
@@ -264,10 +276,10 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                               size={["sm", "md"]}
                             />
                             <div className="flex flex-col gap-2">
-                              <h4 className="text-base font-medium lg:text-lg">
+                              <h4 className="text-base font-medium dark:text-slate-300 lg:text-lg">
                                 {c.name}
                               </h4>
-                              <span className="text-sm lg:text-base">
+                              <span className="text-sm dark:text-slate-400 lg:text-base">
                                 {c.desc}
                               </span>
                             </div>
@@ -279,7 +291,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                 </TabPanels>
               </Tabs>
             </div>
-            <div className="order-1 h-fit max-w-xl rounded-md border-2 border-purple-300 px-3 py-2 lg:order-2">
+            <div className="order-1 h-fit max-w-xl rounded-md border-2 border-purple-300 px-3 py-2 dark:border-slate-500 dark:text-slate-300 lg:order-2">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                   <Avatar
@@ -289,20 +301,26 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                   />
                   <div>
                     <h3 className="text-xl font-medium">{profile.name}</h3>
-                    <h4 className="text-purple-500">@{profile.username}</h4>
+                    <h4 className="text-purple-500 dark:text-purple-400">
+                      @{profile.username}
+                    </h4>
                   </div>
                 </div>
                 <p>{profile.bio}</p>
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <GoMarkGithub size={20} />
-                    <a
-                      className="text-blue-500 hover:underline"
-                      target="_blank"
-                      href={profile.githubLink}
-                    >
-                      {profile.githubLink}
-                    </a>
+                    {profile.githubLink ? (
+                      <a
+                        className="text-blue-500 hover:underline"
+                        target="_blank"
+                        href={profile.githubLink}
+                      >
+                        {profile.githubLink}
+                      </a>
+                    ) : (
+                      "Not updated"
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <GrLinkedin size={20} />

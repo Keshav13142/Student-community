@@ -1,17 +1,14 @@
 import { sendMessage } from "@/lib/api-calls/messages";
+import { socket } from "@/lib/socket-client";
 import { IconButton, Input, Tooltip, useToast } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BiSend } from "react-icons/bi";
-import { io } from "socket.io-client";
 
-let socket;
-
-const MessageInputBox = ({ isDisabled, slug }) => {
+const MessageInputBox = ({ isDisabled, communityId }) => {
   const [input, setInput] = useState("");
   const toast = useToast();
-  const queryClient = useQueryClient();
   const session = useSession();
 
   const mutation = useMutation(sendMessage, {
@@ -30,7 +27,7 @@ const MessageInputBox = ({ isDisabled, slug }) => {
     if (mutation.isLoading) return;
     if (input.trim() !== "") {
       setInput("");
-      socket.emit(`community-${slug}`, {
+      socket.emit(`community-${communityId}`, {
         content: input,
         sender: {
           id: session.data?.user?.id,
@@ -38,31 +35,9 @@ const MessageInputBox = ({ isDisabled, slug }) => {
         },
         createdAt: new Date(),
       });
-      mutation.mutate({ slug, content: input });
+      mutation.mutate({ communityId, content: input });
     }
   };
-
-  useEffect(() => {
-    if (slug) {
-      // connect to socket server
-      socket = io(process.env.NEXT_PUBLIC_MESSAGE_SOCKET_SERVER_URL, {
-        withCredentials: true,
-      });
-
-      // log socket connection
-      socket.on("connect", () => {
-        console.log("SOCKET CONNECTED!");
-      });
-
-      // update chat on new message dispatched
-      socket.on(`community-${slug}`, (data) => {
-        queryClient.setQueryData(["messages", slug], (prev) => [...prev, data]);
-      });
-    }
-
-    // socket disconnet onUnmount if exists
-    if (socket) return () => socket.disconnect();
-  }, [slug]);
 
   return (
     <form onSubmit={handleMessageSend}>

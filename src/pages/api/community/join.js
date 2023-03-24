@@ -79,14 +79,14 @@ export default async function handler(req, res) {
         ],
       },
       select: {
-        slug: true,
+        id: true,
       },
     });
 
     // Return if above case is true
     if (community) {
       res.json({
-        redirect: `/community/${community.slug}`,
+        redirect: `/community/${community.id}`,
         isExistingUser: true,
       });
       return;
@@ -113,12 +113,11 @@ export default async function handler(req, res) {
         id: true,
         name: true,
         image: true,
-        slug: true,
       },
     });
 
     res.json({
-      redirect: `/community/${joinedCommunity.slug}`,
+      redirect: `/community/${joinedCommunity.id}`,
       data: joinedCommunity,
     });
   } catch (error) {
