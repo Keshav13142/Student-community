@@ -42,7 +42,7 @@ export default async function handler(req, res) {
 
     try {
       // Update the community details
-      const community = await prisma.community.update({
+      await prisma.community.update({
         where: {
           id: communityId,
         },
@@ -52,16 +52,9 @@ export default async function handler(req, res) {
           image,
           type,
         },
-        select: {
-          id: true,
-          name: true,
-          desc: true,
-          image: true,
-          type: true,
-        },
       });
 
-      res.json(community);
+      res.status(200).end();
     } catch (error) {
       console.log(error);
       res.status(422).json({ error: error.message });

@@ -117,11 +117,13 @@ export default async function handler(req, res) {
         data: {
           status: approvalStatus ? "APPROVED" : "REJECTED",
         },
-        select: {
-          id: true,
-          status: true,
-          user: approvalStatus,
-        },
+        ...(approvalStatus
+          ? {
+              select: {
+                userId: true,
+              },
+            }
+          : {}),
       });
 
       // If the request is approved then add the user as a community member
@@ -135,7 +137,7 @@ export default async function handler(req, res) {
               create: {
                 user: {
                   connect: {
-                    id: approval.user.id,
+                    id: approval.userId,
                   },
                 },
                 type: "MEMBER",
@@ -145,7 +147,7 @@ export default async function handler(req, res) {
         });
       }
 
-      res.json(approval);
+      res.status(200).end();
     }
   } catch (error) {
     console.log(error);

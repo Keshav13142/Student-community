@@ -59,24 +59,18 @@ export default async function handler(req, res) {
         data: {
           status: approvalStatus ? "APPROVED" : "REJECTED",
         },
-        select: {
-          id: true,
-          status: true,
-          institutionId: true,
-          user: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-              username: true,
-            },
-          },
-        },
+        ...(approvalStatus
+          ? {
+              select: {
+                userId: true,
+              },
+            }
+          : {}),
       });
 
       await prisma.user.update({
         where: {
-          id: approval.user.id,
+          id: approval.userId,
         },
         data: {
           enrollmentStatus: approvalStatus ? "APPROVED" : "REJECTED",
@@ -94,7 +88,7 @@ export default async function handler(req, res) {
               create: {
                 user: {
                   connect: {
-                    id: approval.user.id,
+                    id: approval.userId,
                   },
                 },
               },
@@ -122,7 +116,7 @@ export default async function handler(req, res) {
               create: {
                 user: {
                   connect: {
-                    id: approval.user.id,
+                    id: approval.userId,
                   },
                 },
               },
@@ -131,7 +125,7 @@ export default async function handler(req, res) {
         });
       }
 
-      res.json(approval);
+      res.status(200).end();
     }
   } catch (error) {
     console.log(error);

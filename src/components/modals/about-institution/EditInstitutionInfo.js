@@ -53,8 +53,8 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
         isClosable: true,
       });
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["aboutInstitution"], () => data);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["aboutInstitution"] });
       onCancel();
     },
   });
@@ -81,56 +81,54 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <div className="flex flex-col gap-4">
-        {formFields.map((f, idx) => (
-          <div key={idx} className="flex flex-col">
-            <span className="mb-1 font-medium">{f.placeholder}</span>
-            <InputGroup>
-              <Input
-                value={inputs[f.name]}
-                name={f.name}
-                placeholder={f.placeholder}
-                onChange={handleInputChange}
-              />
-              {f.icon && <InputRightElement>{f.icon}</InputRightElement>}
-              <span className="mt-1 text-red-400">{errors[f.name]}</span>
-            </InputGroup>
-          </div>
-        ))}
-        <div className="flex items-center gap-3">
-          <Button
-            disabled={mutation.isLoading}
-            colorScheme="red"
-            variant="outline"
-            onClick={() => {
-              setInputs(initialInputs);
-              setErrors(initialErrors);
-              onCancel();
-            }}
-            type="button"
-          >
-            Cancel
-          </Button>
-          <Button
-            disabled={mutation.isLoading}
-            variant="outline"
-            color="cadetblue"
-            onClick={() => {
-              setInputs(initialInputs);
-              setErrors(initialErrors);
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            isLoading={mutation.isLoading}
-            colorScheme="purple"
-            type="submit"
-          >
-            Submit
-          </Button>
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+      {formFields.map((f, idx) => (
+        <div key={idx} className="flex flex-col">
+          <span className="mb-1 font-medium">{f.placeholder}</span>
+          <InputGroup>
+            <Input
+              value={inputs[f.name]}
+              name={f.name}
+              placeholder={f.placeholder}
+              onChange={handleInputChange}
+            />
+            {f.icon && <InputRightElement>{f.icon}</InputRightElement>}
+            <span className="mt-1 text-red-400">{errors[f.name]}</span>
+          </InputGroup>
         </div>
+      ))}
+      <div className="mt-2 flex items-center justify-center gap-3">
+        <Button
+          disabled={mutation.isLoading}
+          colorScheme="red"
+          variant="outline"
+          onClick={() => {
+            setInputs(initialInputs);
+            setErrors(initialErrors);
+            onCancel();
+          }}
+          type="button"
+        >
+          Cancel
+        </Button>
+        <Button
+          disabled={mutation.isLoading}
+          variant="outline"
+          color="cadetblue"
+          onClick={() => {
+            setInputs(initialInputs);
+            setErrors(initialErrors);
+          }}
+        >
+          Reset
+        </Button>
+        <Button
+          isLoading={mutation.isLoading}
+          colorScheme="purple"
+          type="submit"
+        >
+          Submit
+        </Button>
       </div>
     </form>
   );

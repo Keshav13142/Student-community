@@ -34,7 +34,7 @@ const JoinCommunity = ({ isOpen, onClose, onSidebarClose }) => {
         isClosable: true,
       });
     },
-    onSuccess: ({ isExistingUser, data, redirect }) => {
+    onSuccess: ({ isExistingUser, redirect }) => {
       if (isExistingUser) {
         router.push(redirect);
         toast({
@@ -44,12 +44,9 @@ const JoinCommunity = ({ isOpen, onClose, onSidebarClose }) => {
           isClosable: true,
         });
       } else {
-        queryClient.setQueryData(["userCommunities"], (prev) => [
-          ...prev,
-          data,
-        ]);
+        queryClient.invalidateQueries({ queryKey: ["userCommunities"] });
         toast({
-          title: `Welcome to ${data.name}`,
+          title: `Joined community sucessfully`,
           status: "success",
           duration: 2500,
           isClosable: true,

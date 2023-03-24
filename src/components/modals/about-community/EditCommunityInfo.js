@@ -48,16 +48,9 @@ const EditCommunityInfo = ({ data, onCancel }) => {
         isClosable: true,
       });
     },
-    onSuccess: (newData) => {
-      queryClient.setQueryData(["communityInfo", newData.id], (prev) => ({
-        ...prev,
-        ...newData,
-      }));
-      queryClient.setQueryData(["userCommunities"], (prev) =>
-        prev.map((comm) =>
-          comm.id === newData.id ? { ...comm, ...newData } : comm
-        )
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["communityInfo", data.id] });
+      queryClient.invalidateQueries({ queryKey: ["userCommunities"] });
       toast({
         title: "Updated info!!",
         status: "success",

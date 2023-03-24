@@ -1,4 +1,7 @@
-import { requestToJoinCommunity } from "@/lib/api-calls/community";
+import {
+  joinPublicCommunity,
+  requestToJoinCommunity,
+} from "@/lib/api-calls/community";
 import {
   Avatar,
   Button,
@@ -6,7 +9,8 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { FaChevronLeft } from "react-icons/fa";
@@ -16,10 +20,12 @@ import AboutCommunity from "../modals/about-community";
 const CommunityTopBar = ({ data, isDisabled }) => {
   const router = useRouter();
   const toast = useToast();
+  const session = useSession();
+  const queryClient = useQueryClient();
 
   const [isRequestDisabled, setIsRequestDisabled] = useState(false);
 
-  const mutation = useMutation(requestToJoinCommunity, {
+  const requestMutation = useMutation(requestToJoinCommunity, {
     onError: (error) => {
       setIsRequestDisabled(true);
       toast({
@@ -29,11 +35,33 @@ const CommunityTopBar = ({ data, isDisabled }) => {
         isClosable: true,
       });
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       setIsRequestDisabled(true);
       toast({
         title: "A request has been sent to the admin!",
         status: "info",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
+
+  const joinMutation = useMutation(joinPublicCommunity, {
+    onError: () => {
+      toast({
+        title: "Something went wrong!",
+        status: "info",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["communityInfo", data.id] });
+      queryClient.invalidateQueries({ queryKey: ["userCommunities"] });
+
+      toast({
+        title: `Joined ${data.name}`,
+        status: "success",
         duration: 3000,
         isClosable: true,
       });
@@ -68,16 +96,30 @@ const CommunityTopBar = ({ data, isDisabled }) => {
           {isDisabled && !isRequestDisabled && (
             <Button
               onClick={() => {
-                mutation.mutate(data.id);
+                requestMutation.mutate(data.id);
               }}
-              isLoading={mutation.isLoading}
+              isLoading={requestMutation.isLoading}
               variant="outline"
               colorScheme="purple"
               size="sm"
             >
-              Join
+              Request to Join
             </Button>
           )}
+          {data.type === "PUBLIC" &&
+            !data.members.find((m) => m.user.id === session.data?.user.id) && (
+              <Button
+                onClick={() => {
+                  joinMutation.mutate(data.id);
+                }}
+                isLoading={joinMutation.isLoading}
+                variant="outline"
+                colorScheme="purple"
+                size="sm"
+              >
+                Join
+              </Button>
+            )}
           <IconButton
             icon={<ImInfo />}
             onClick={onAboutOpen}

@@ -54,8 +54,11 @@ const InstitutionAdminActions = ({
     onError: () => {
       toast(toastOptions);
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["aboutInstitution"], () => data);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["aboutInstitution"] });
+    },
+    onSettled: () => {
+      onClose();
     },
   });
 
@@ -67,7 +70,6 @@ const InstitutionAdminActions = ({
     if (type === "remove-from-admin") {
       mutation.mutate({ ...data, action: "revoke" });
     }
-    onClose();
   };
 
   return (
@@ -103,6 +105,7 @@ const InstitutionAdminActions = ({
             colorScheme="red"
             variant={"outline"}
             mr={3}
+            isLoading={mutation.isLoading}
             onClick={handleAction}
           >
             Proceed

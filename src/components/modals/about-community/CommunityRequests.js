@@ -25,10 +25,13 @@ const CommunityRequests = ({ communityId }) => {
         isClosable: true,
       });
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["community_requests", communityId], (prev) =>
-        prev.map((r) => (r.id === data.id ? data : r))
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["community_requests", communityId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["communityInfo", communityId],
+      });
     },
   });
 

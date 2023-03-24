@@ -1,10 +1,13 @@
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]";
+import { authOptions } from "../../auth/[...nextauth]";
 
 // Handle request to join private communitites
 export default async function handler(req, res) {
-  if (req.method !== "POST") return;
+  if (req.method !== "POST") {
+    res.status(405).end();
+    return;
+  }
 
   const session = await getServerSession(req, res, authOptions);
 
@@ -15,7 +18,6 @@ export default async function handler(req, res) {
   }
 
   const { user } = session;
-
   const { inviteCode } = req.body;
 
   // Return error if user is not logged in

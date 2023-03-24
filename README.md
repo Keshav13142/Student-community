@@ -23,7 +23,7 @@
 - [x] ~~Query filter params in blog page (AI&ML not working , probably cause of `&` symbol?)~~
 - [x] ~~Add dark theme support~~
 - [x] ~~Add relavent meta tags to pages~~
-- [ ] Make public communities joinable
+- [x] ~~Make public communities joinable~~
 - [ ] Fix auto scroll on new messages in chat.
 - [ ] Make codeType as a separate entity.
 - [ ] Fix dark mode images

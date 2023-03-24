@@ -12,6 +12,8 @@ export default async function handler(req, res) {
     return;
   }
 
+  const { user } = session;
+
   const { institutionId, userId, action } = req.body;
 
   if (!institutionId || !userId || !action) {
@@ -19,7 +21,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (!(await checkIfUserIsInstAdmin(user.id, institutionId))) {
+  if (!user.isInstitutionAdmin) {
     res
       .status(401)
       .json({ error: "You don't have permission to perform this action!!" });
@@ -29,7 +31,7 @@ export default async function handler(req, res) {
   // Adding user's as institution admins
   try {
     if (req.method === "PATCH") {
-      const institution = await prisma.institution.update({
+      await prisma.institution.update({
         where: {
           id: institutionId,
         },
@@ -50,25 +52,8 @@ export default async function handler(req, res) {
             },
           },
         },
-        include: {
-          members: {
-            select: {
-              id: true,
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  username: true,
-                  image: true,
-                },
-              },
-              type: true,
-            },
-          },
-        },
       });
-
-      res.json(institution);
+      res.status(200).end();
     }
   } catch (error) {
     console.log(error);

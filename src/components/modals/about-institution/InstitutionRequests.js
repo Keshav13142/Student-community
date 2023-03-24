@@ -25,11 +25,10 @@ const InstitutionRequests = ({ institutionId }) => {
         isClosable: true,
       });
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(
-        ["institution_requests", institutionId],
-        (prev) => prev.map((r) => (r.id === data.id ? data : r))
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["institution_requests", institutionId],
+      });
     },
   });
 

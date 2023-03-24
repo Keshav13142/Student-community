@@ -67,14 +67,18 @@ const CommunityActions = ({
     onError: () => {
       toast(toastOptions);
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["communityInfo", data.id], () => data);
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["communityInfo", communityId],
+      });
+    },
+    onSettled: () => {
+      onClose();
     },
   });
 
   const handleAction = () => {
     mutation.mutate({ memberId, communityId, ...getRoleAction(type) });
-    onClose();
   };
 
   return (
@@ -107,6 +111,7 @@ const CommunityActions = ({
             Cancel
           </Button>
           <Button
+            isLoading={mutation.isLoading}
             colorScheme="red"
             variant={"outline"}
             mr={3}
