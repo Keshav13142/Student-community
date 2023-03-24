@@ -74,7 +74,7 @@ const JoinCommunity = ({ isOpen, onClose, onSidebarClose }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={["xs", "sm", "md", "xl"]}>
+    <Modal isOpen={isOpen} onClose={onClose} size={["xs", "sm", "md"]}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader className="text-center">

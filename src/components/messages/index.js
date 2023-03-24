@@ -38,9 +38,9 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
       }`}
     >
       {msg.isDeleted ? (
-        <div className="flex items-center gap-2 text-slate-500 dark:text-slate-200">
-          <BiBlock />
-          This message was deleted {msg.deletedBy && `by ${msg.deletedBy}`}
+        <div className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+          <BiBlock size={20} />
+          Deleted {msg.deletedBy && `by ${msg.deletedBy}`}
         </div>
       ) : (
         <>
@@ -48,7 +48,7 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
             <div
               className={`${
                 msg.sender
-                  ? "dark:text-puple-400 text-purple-300"
+                  ? "text-blue-600 dark:text-purple-400"
                   : "text-slate-200"
               } text-sm font-bold`}
             >
@@ -108,7 +108,7 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
 
   useEffect(() => {
     scrollToBottom();
-  });
+  }, [messages]);
 
   return (
     // Fix this scrolling stuff later
@@ -175,7 +175,7 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
                 <div
                   className={`${
                     msg.isOwnMessage ? "self-end" : "self-start"
-                  } w-fit`}
+                  } max-w-[45%]`}
                 >
                   {isUserAdminOrMod && !msg.isOwnMessage && !msg.isDeleted ? (
                     <ContextMenu

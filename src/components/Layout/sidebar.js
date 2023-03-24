@@ -136,7 +136,7 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
             onClose={onJoinClose}
             onSidebarClose={onSidebarClose}
           />
-          <div className="flex h-full max-w-xs flex-col items-center justify-between border-r border-r-slate-200 p-3">
+          <div className="flex h-full max-w-xs flex-col items-center justify-between border-r border-r-slate-200 p-3 dark:border-r-slate-700">
             <div className="flex flex-col items-center gap-3">
               <div className="flex justify-center md:hidden">
                 <div className="flex items-center gap-5">
