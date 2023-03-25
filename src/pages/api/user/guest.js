@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { institutionCode, codeType } = req.body;
+  const { institutionCode } = req.body;
   const randStr = new Date().toISOString().split(".")[1];
 
   const userData = {
@@ -84,10 +84,20 @@ export default async function handler(req, res) {
   } else {
     const institution = await prisma.institution.findFirst({
       where: {
-        [codeType]: institutionCode,
+        institutionCodes: {
+          some: {
+            code: institutionCode,
+          },
+        },
       },
       select: {
         id: true,
+        institutionCodes: {
+          select: {
+            code: true,
+            type: true,
+          },
+        },
       },
     });
 
@@ -106,31 +116,56 @@ export default async function handler(req, res) {
       },
     });
 
+    const userType = institution.institutionCodes.find(
+      (item) => item.code === institutionCode
+    ).type;
+
+    if (userType === "MEMBER") {
+      await prisma.pendingApprovals.create({
+        data: {
+          institution: {
+            connect: {
+              id: institution.id,
+            },
+          },
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+      });
+    }
+
     await prisma.user.update({
       where: { id: user.id },
       data: {
         ...userData,
-        isInstitutionAdmin: codeType === "adminCode",
-        enrollmentStatus: codeType === "adminCode" ? "APPROVED" : "PENDING",
-        institutionMember: {
-          create: {
-            Institution: {
-              connect: { id: institution.id },
-            },
-            type: codeType === "adminCode" ? "ADMIN" : "MEMBER",
-          },
-        },
-        communityMember: {
-          create: {
-            Community: {
-              connect: { id: community.id },
-            },
-            type: codeType === "adminCode" ? "ADMIN" : "MEMBER",
-          },
-        },
+        isInstitutionAdmin: userType === "ADMIN",
+        enrollmentStatus: userType === "ADMIN" ? "APPROVED" : "PENDING",
+        ...(userType === "ADMIN"
+          ? {
+              institutionMember: {
+                create: {
+                  Institution: {
+                    connect: { id: institution.id },
+                  },
+                  type: "ADMIN",
+                },
+              },
+              communityMember: {
+                create: {
+                  Community: {
+                    connect: { id: community.id },
+                  },
+                  type: "ADMIN",
+                },
+              },
+            }
+          : {}),
       },
     });
 
-    res.status(201).json({ redirect: "/enrollment-status" });
+    res.status(201).end();
   }
 }

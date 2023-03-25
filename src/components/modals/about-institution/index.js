@@ -72,7 +72,7 @@ const AboutInstitution = ({ isOpen, onClose }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader className="flex items-center justify-center gap-2">
-            <h1 className="text-xl text-purple-500 md:text-2xl">
+            <h1 className="text-xl text-purple-500 dark:text-slate-300 md:text-2xl">
               {institutionData?.name}
             </h1>
             {isCurrentUserAdmin && (
@@ -91,7 +91,7 @@ const AboutInstitution = ({ isOpen, onClose }) => {
           <ModalBody>
             <Tabs
               isFitted
-              variant="enclosed-colored"
+              variant="line"
               colorScheme="purple"
               index={tabIndex}
               onChange={handleTabsChange}

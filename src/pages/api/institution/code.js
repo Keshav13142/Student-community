@@ -14,18 +14,21 @@ export default async function handler(req, res) {
   const { user } = session;
 
   if (req.method === "GET") {
-    res.json(
-      await prisma.institution.findFirst({
-        where: {
-          members: {
-            some: { AND: [{ user: { id: user.id } }, { type: "ADMIN" }] },
+    const codes = await prisma.institution.findFirst({
+      where: {
+        members: {
+          some: { AND: [{ user: { id: user.id } }, { type: "ADMIN" }] },
+        },
+      },
+      select: {
+        institutionCodes: {
+          select: {
+            code: true,
+            type: true,
           },
         },
-        select: {
-          adminCode: true,
-          memberCode: true,
-        },
-      })
-    );
+      },
+    });
+    res.json(codes.institutionCodes);
   }
 }

@@ -50,7 +50,7 @@ export default function DiscoverCommunities() {
           </>
         )}
       </Button>
-      <main className="mx-3 flex grow flex-col items-center justify-center gap-5 text-center">
+      <div className="mx-3 flex grow flex-col items-center justify-center gap-5 text-center">
         <h1 className="text-2xl font-extrabold md:text-4xl">
           Student <span className=" text-purple-600">Community</span> Platform
         </h1>
@@ -75,7 +75,7 @@ export default function DiscoverCommunities() {
         >
           Login with GitHub
         </Button>
-      </main>
+      </div>
       <footer className="mx-5 mb-5 flex flex-col items-center justify-center gap-2 text-center text-xs font-medium text-gray-400 md:flex-row">
         <p>
           Student Community is open source on{" "}

@@ -56,7 +56,7 @@ const InstitutionRequests = ({ institutionId }) => {
           return (
             <div
               key={id}
-              className="flex min-w-full items-center justify-between gap-3 rounded-lg border border-purple-400 p-2 shadow-sm 
+              className="flex min-w-full items-center justify-between gap-3 rounded-lg border-2 border-purple-400 p-2 shadow-sm dark:border-slate-600 
 md:min-w-[80%]"
             >
               <div className="flex items-center gap-3">
@@ -65,7 +65,7 @@ md:min-w-[80%]"
                   <span className="text-sm font-medium md:text-base">
                     {user.name}
                   </span>
-                  <span className="cursor-pointer text-sm text-blue-700">{`@${user.username}`}</span>
+                  <span className="cursor-pointer text-sm text-blue-700 dark:text-slate-400">{`@${user.username}`}</span>
                 </div>
               </div>
               {status === "APPROVED" && (
