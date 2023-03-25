@@ -23,8 +23,6 @@ npm run dev
 
 > You need to run this [socket server](https://github.com/Keshav13142/student_comm_socket_server), for real-time messaging to work
 
-Create a `.env` file similar to [`.env.example`](https://github.com/Keshav13142/Student-community/blob/main/.env.example).
-
 ## TODO
 
 - [x] ~~Functional Chat messages UI~~
