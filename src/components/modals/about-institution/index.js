@@ -25,7 +25,7 @@ import InstitutionInfo from "./InstitutionInfo";
 import Members from "./InstitutionMembers";
 import InstitutionRequests from "./InstitutionRequests";
 
-const AboutInstitution = ({ isOpen, onClose }) => {
+const AboutInstitution = ({ isOpen, onClose, onSidebarClose }) => {
   const { data: institutionData } = useQuery(
     ["aboutInstitution"],
     fetchInstitutionData
@@ -114,6 +114,10 @@ const AboutInstitution = ({ isOpen, onClose }) => {
                 </TabPanel>
                 <TabPanel>
                   <Members
+                    onClose={() => {
+                      onClose();
+                      onSidebarClose();
+                    }}
                     doAction={(data) => {
                       setAction(data);
                       onActionsOpen();

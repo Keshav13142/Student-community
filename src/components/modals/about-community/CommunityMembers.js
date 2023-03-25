@@ -18,7 +18,7 @@ import {
 } from "react-icons/md";
 import { RxExternalLink } from "react-icons/rx";
 
-const CommunityMembers = ({ data, doAction }) => {
+const CommunityMembers = ({ data, doAction, onClose }) => {
   const session = useSession();
 
   return (
@@ -84,7 +84,7 @@ const CommunityMembers = ({ data, doAction }) => {
                 Actions
               </MenuButton>
               <MenuList>
-                <Link href={`/user/${m.user.username}`}>
+                <Link href={`/user/${m.user.username}`} onClick={onClose}>
                   <MenuItem>
                     <RxExternalLink size={20} className="mr-3" />
                     View Profile

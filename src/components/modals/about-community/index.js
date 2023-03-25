@@ -114,6 +114,7 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
                 </TabPanel>
                 <TabPanel>
                   <CommunityMembers
+                    onClose={onClose}
                     doAction={(data) => {
                       setAction(data);
                       onActionsOpen();

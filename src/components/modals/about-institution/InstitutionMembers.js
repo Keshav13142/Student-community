@@ -14,7 +14,7 @@ import { IoMdRemoveCircleOutline } from "react-icons/io";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { RxExternalLink } from "react-icons/rx";
 
-const InstitutionMembers = ({ members, doAction }) => {
+const InstitutionMembers = ({ members, doAction, onClose }) => {
   const session = useSession();
 
   return (
@@ -67,7 +67,7 @@ const InstitutionMembers = ({ members, doAction }) => {
                 Actions
               </MenuButton>
               <MenuList>
-                <Link href={`/user/${m.user.username}`}>
+                <Link href={`/user/${m.user.username}`} onClick={onClose}>
                   <MenuItem>
                     <RxExternalLink size={20} className="mr-3" />
                     View Profile
