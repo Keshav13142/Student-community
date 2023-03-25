@@ -50,6 +50,9 @@ Create a `.env` file similar to [`.env.example`](https://github.com/Keshav13142/
 - [x] ~~Add relavent meta tags to pages~~
 - [x] ~~Make public communities joinable~~
 - [ ] Fix auto scroll on new messages in chat.
+- [ ] Use react hook form in blog create/edit page
+- [ ] Chat infinite scroll.
+- [ ] Blog page pagination.
 - [ ] Make codeType as a separate entity.
 - [ ] Fix dark mode images
 - [ ] Handle socket connections more efficiently.

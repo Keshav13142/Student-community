@@ -105,11 +105,11 @@ const EditPost = ({ post, allCategories }) => {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
+  const [content, setContent] = useState(post.content);
 
   const [inputs, setInputs] = useState({
     title: post.title,
     bannerImage: post.bannerImage,
-    content: post.content,
     categoryId: post.categories.length !== 0 ? post.categories[0].id : "",
     newCategory: "",
     publish: post.published,
@@ -118,10 +118,6 @@ const EditPost = ({ post, allCategories }) => {
   const [errors, setErrors] = useState({
     title: null,
     bannerImage: null,
-    content: null,
-    categoryId: null,
-    newCategory: null,
-    publish: null,
   });
 
   const updateMutation = useMutation(updatePost, {
@@ -176,7 +172,7 @@ const EditPost = ({ post, allCategories }) => {
   };
 
   const handleCreate = () => {
-    if (inputs.content.trim().length < 100) {
+    if (content.trim().length < 100) {
       toast({
         title: "Content must contain atleast 100 characters",
         status: "warning",
@@ -186,8 +182,10 @@ const EditPost = ({ post, allCategories }) => {
       return;
     }
 
+    let postData = { ...inputs, content };
+
     // Check the form inputs for error
-    let parsedInputs = createPostSchema.safeParse(inputs);
+    let parsedInputs = createPostSchema.safeParse(postData);
 
     // Map through the errors and get then in the right format
     if (!parsedInputs.success) {
@@ -195,13 +193,13 @@ const EditPost = ({ post, allCategories }) => {
       return;
     }
 
-    updateMutation.mutate({ ...inputs, postId: post.id });
+    updateMutation.mutate({ ...postData, postId: post.id });
   };
 
   return (
     <>
       <Head>
-        <title>Edit - {post.title}</title>
+        <title>Edit | {post.title}</title>
         <meta
           name="description"
           content="Platform for students within institutions to interact"
@@ -268,17 +266,12 @@ const EditPost = ({ post, allCategories }) => {
               </TabList>
               <TabPanels className="max-h-[60vh] min-h-[30vh] overflow-y-auto">
                 <TabPanel>
-                  <MarkdownEditor
-                    value={inputs.content}
-                    onChange={(value) =>
-                      setInputs((prev) => ({ ...prev, content: value }))
-                    }
-                  />
+                  <MarkdownEditor value={content} onChange={setContent} />
                 </TabPanel>
                 <TabPanel>
                   <article className="prose max-w-[85vw] dark:prose-invert">
-                    {inputs.content.trim() !== "" ? (
-                      <RenderMarkdown content={inputs.content} />
+                    {content.trim() !== "" ? (
+                      <RenderMarkdown content={content} />
                     ) : (
                       <div className="text-center font-medium text-slate-500">
                         Start typing to see the preview

@@ -1,4 +1,4 @@
-import { hideOrShowMessage } from "@/lib/api-calls/messages";
+import { fetchMessages, hideOrShowMessage } from "@/lib/api-calls/messages";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -12,7 +12,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ContextMenu } from "chakra-ui-contextmenu";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -74,7 +74,7 @@ const MessageBubble = forwardRef(function MessageBubble({ msg }, ref) {
   );
 });
 
-const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
+const ScrollableMessageBox = ({ communityId, isUserAdminOrMod }) => {
   const session = useSession();
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -102,6 +102,16 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
     },
   });
 
+  const { data: messages, isLoading } = useQuery(
+    ["messages", communityId],
+    () => fetchMessages(communityId),
+    {
+      enabled: Boolean(communityId),
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    }
+  );
+
   const scrollToBottom = () => {
     chatLastElem.current?.scrollIntoView();
   };
@@ -110,8 +120,30 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod, messages }) => {
     scrollToBottom();
   }, [messages]);
 
+  if (isLoading) {
+    return (
+      <div className="flex h-72 grow flex-col gap-2 overflow-y-auto scroll-smooth py-2 px-5">
+        {[...new Array(9)].map((_, i) => (
+          <div
+            key={i}
+            className={`${
+              i % 2 === 0 ? "self-end" : "self-start"
+            } flex w-1/4 flex-col gap-2 rounded-md bg-slate-100 px-3 py-5 dark:bg-slate-800/50`}
+          >
+            <div className="h-1.5 animate-pulse rounded-lg bg-slate-300/60 dark:bg-slate-700/70" />
+            <div className="h-1.5 animate-pulse rounded-lg bg-slate-300/60 dark:bg-slate-700/70" />
+            <div
+              className={`h-1.5 w-[70%] animate-pulse rounded-lg bg-slate-300/60 dark:bg-slate-700/70 ${
+                i % 2 === 0 ? "self-end" : "self-start"
+              }`}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
-    // Fix this scrolling stuff later
     <>
       <AlertDialog
         isOpen={isOpen}

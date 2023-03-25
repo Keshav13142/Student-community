@@ -13,19 +13,6 @@ import { TailwindIndicator } from "../components/tailwindcss-indicator";
 const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }) {
-  let content = <Component {...pageProps} />;
-
-  if (Component.withLayout) {
-    content = (
-      <Layout showCommunityInfo={Component.withLayout.showCommunityInfo}>
-        {content}
-      </Layout>
-    );
-  }
-  if (Component.withAuth) {
-    content = <AuthGuard>{content}</AuthGuard>;
-  }
-
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -35,7 +22,25 @@ export default function App({ Component, pageProps }) {
             refetchOnWindowFocus={false}
           >
             <DefaultHead />
-            {content}
+            {Component.withLayout ? (
+              <Layout
+                showCommunityInfo={Component.withLayout.showCommunityInfo}
+              >
+                {Component.withAuth ? (
+                  <AuthGuard>
+                    <Component {...pageProps} />
+                  </AuthGuard>
+                ) : (
+                  <Component {...pageProps} />
+                )}
+              </Layout>
+            ) : Component.withAuth ? (
+              <AuthGuard>
+                <Component {...pageProps} />
+              </AuthGuard>
+            ) : (
+              <Component {...pageProps} />
+            )}
             <ReactQueryDevtools />
             <Analytics />
             <TailwindIndicator />
