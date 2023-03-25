@@ -41,7 +41,7 @@ const Navbar = ({ onSidebarOpen, showCommunityInfo }) => {
             />
           </div>
           <Link href="/discover">
-            <h1 className="self-center text-2xl font-medium text-slate-700 dark:text-slate-300">
+            <h1 className="self-center text-2xl font-bold text-slate-700 dark:text-slate-300">
               Student{" "}
               <span className="text-purple-600 dark:text-purple-400">
                 Community

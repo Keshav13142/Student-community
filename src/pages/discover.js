@@ -58,7 +58,7 @@ const DiscoverCommunities = () => {
               publicCommunities?.map((c) => (
                 <Link
                   href={`/community/${c.id}`}
-                  className="flex min-w-[80vw] items-center justify-between rounded-md border border-slate-500 p-3 md:min-w-[60vw] lg:min-w-[30vw]"
+                  className="flex min-w-[80dvw] items-center justify-between rounded-md border border-slate-500 p-3 md:min-w-[60dvw] lg:min-w-[30dvw]"
                 >
                   <div className="flex items-center gap-3">
                     <Avatar src={c.image} name={c.name} size={["sm", "md"]} />

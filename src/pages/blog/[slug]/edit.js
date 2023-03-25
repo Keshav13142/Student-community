@@ -242,7 +242,7 @@ const EditPost = ({ post, allCategories }) => {
       </AlertDialog>
       <div>
         <div className="flex flex-col items-center justify-center gap-5 py-10 lg:flex-row lg:items-start xl:gap-10  2xl:gap-20">
-          <div className="order-2 flex w-[90vw] flex-col gap-10 md:w-[70vw] lg:order-1 lg:w-[60vw] xl:w-[50vw]">
+          <div className="order-2 flex w-[90ddvw] flex-col gap-10 md:w-[70dvw] lg:order-1 lg:w-[60dvw] xl:w-[50dvw]">
             {fields.map((f, idx) => (
               <InputGroup key={idx} className="flex flex-col">
                 <Input
@@ -264,12 +264,12 @@ const EditPost = ({ post, allCategories }) => {
                 <Tab>Write</Tab>
                 <Tab>Preview</Tab>
               </TabList>
-              <TabPanels className="max-h-[60vh] min-h-[30vh] overflow-y-auto">
+              <TabPanels className="max-h-[60dvh] min-h-[30dvh] overflow-y-auto">
                 <TabPanel>
                   <MarkdownEditor value={content} onChange={setContent} />
                 </TabPanel>
                 <TabPanel>
-                  <article className="prose max-w-[85vw] dark:prose-invert">
+                  <article className="prose max-w-[85dvw] dark:prose-invert">
                     {content.trim() !== "" ? (
                       <RenderMarkdown content={content} />
                     ) : (

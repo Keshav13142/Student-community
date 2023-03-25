@@ -14,7 +14,7 @@ const NewUserProfile = () => {
         <link rel="icon" href="/favicon.png" />
       </Head>
       <div className="flex min-h-screen items-center justify-center">
-        <div className="flex min-h-[100vh] flex-col gap-10 md:min-h-[80vh]">
+        <div className="flex min-h-[100dvh] flex-col gap-10 md:min-h-[80dvh]">
           <h1 className="self-center text-2xl font-medium md:text-3xl lg:text-4xl">
             Complete your <span className=" text-purple-600">Profile</span>
           </h1>

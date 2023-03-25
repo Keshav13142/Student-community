@@ -44,7 +44,7 @@ const PostComments = ({ post }) => {
       <h2 className="text-2xl font-medium underline dark:text-slate-300">
         Comments
       </h2>
-      <div className="flex max-h-[20vh] flex-col gap-2 overflow-y-auto">
+      <div className="flex max-h-[20dvh] flex-col gap-2 overflow-y-auto">
         {comments.map((m) => (
           <div
             key={m.id}

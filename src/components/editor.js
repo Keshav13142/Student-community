@@ -10,7 +10,7 @@ const MarkdownEditor = ({ onChange, value }) => {
     <CodeMirror
       {...(colorMode === "dark" ? { theme: tokyoNight } : {})}
       value={value}
-      minHeight="30vh"
+      minHeight="30dvh"
       extensions={[
         markdown({
           base: markdownLanguage,

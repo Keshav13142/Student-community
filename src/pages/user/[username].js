@@ -167,14 +167,14 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
               </h1>
               <Tabs
                 variant="line"
-                className="min-w-[90vw] max-w-[90vw] sm:min-w-[80vw] lg:min-w-[0]"
+                className="min-w-[90dvw] max-w-[90dvw] sm:min-w-[80dvw] lg:min-w-[0]"
               >
                 <TabList>
                   <Tab>Posts</Tab>
                   <Tab>Communities</Tab>
                 </TabList>
                 <TabPanels>
-                  <TabPanel className="flex max-h-[60vh] flex-col gap-5 overflow-y-auto">
+                  <TabPanel className="flex max-h-[60dvh] flex-col gap-5 overflow-y-auto">
                     {profile.posts.length > 0 ? (
                       profile.posts.map((p, idx) => (
                         <div
@@ -211,7 +211,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                                   )
                                 )}
                               </div>
-                              <h3 className="max-w-[30vw] text-sm text-slate-500 line-clamp-2 dark:text-slate-400 lg:text-base">
+                              <h3 className="max-w-[30dvw] text-sm text-slate-500 line-clamp-2 dark:text-slate-400 lg:text-base">
                                 {p.content}
                               </h3>
                             </div>
@@ -262,7 +262,7 @@ const UserProfile = ({ profile, communities, ownProfile }) => {
                       </div>
                     )}
                   </TabPanel>
-                  <TabPanel className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto">
+                  <TabPanel className="flex max-h-[60dvh] flex-col gap-3 overflow-y-auto">
                     {communities.map((c, idx) => (
                       <div
                         key={idx}

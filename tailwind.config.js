@@ -5,11 +5,7 @@ module.exports = {
   darkMode: ["class", '[data-theme="dark"]'],
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {
-      fontFamily: {
-        sans: ["var(--font-inter)"],
-      },
-    },
+    extend: {},
   },
   plugins: [
     require("@tailwindcss/line-clamp"),

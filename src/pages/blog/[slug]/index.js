@@ -113,7 +113,7 @@ const SinglePost = ({ post }) => {
         >
           Back to all posts
         </Button>
-        <div className="flex w-[90vw] max-w-[90vw] flex-col gap-5 self-center md:w-[70vw] lg:w-[60vw] xl:w-[50vw]">
+        <div className="flex w-[90dvw] max-w-[90dvw] flex-col gap-5 self-center md:w-[70dvw] lg:w-[60dvw] xl:w-[50dvw]">
           <time
             dateTime={new Date(post.createdAt)}
             className="font-mono text-slate-700 dark:text-slate-400"
@@ -148,11 +148,11 @@ const SinglePost = ({ post }) => {
             </>
           )}
         </div>
-        <div className="w-[90vw] max-w-[90vw] self-center rounded-lg border-2 border-slate-200 dark:border-slate-700 md:w-[70vw] lg:w-[60vw] xl:w-[50vw]" />
-        <article className="prose w-[90vw]  max-w-[90vw] self-center dark:prose-invert md:w-[70vw] lg:w-[60vw] xl:w-[50vw]">
+        <div className="w-[90dvw] max-w-[90dvw] self-center rounded-lg border-2 border-slate-200 dark:border-slate-700 md:w-[70dvw] lg:w-[60dvw] xl:w-[50dvw]" />
+        <article className="prose w-[90dvw]  max-w-[90dvw] self-center dark:prose-invert md:w-[70dvw] lg:w-[60dvw] xl:w-[50dvw]">
           <RenderMarkdown content={post.content} />
         </article>
-        <div className="w-[90vw] max-w-[90vw] self-center rounded-lg border-2 border-slate-200 dark:border-slate-700 md:w-[70vw] lg:w-[60vw] xl:w-[50vw]" />
+        <div className="w-[90dvw] max-w-[90dvw] self-center rounded-lg border-2 border-slate-200 dark:border-slate-700 md:w-[70dvw] lg:w-[60dvw] xl:w-[50dvw]" />
         <PostComments post={post} />
       </div>
     </>

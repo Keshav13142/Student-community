@@ -11,7 +11,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { Fragment } from "react";
 import { ImInfo } from "react-icons/im";
 import { RiUserAddLine } from "react-icons/ri";
 import { TbBrowserPlus } from "react-icons/tb";
@@ -87,8 +86,12 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
       {!showCommunityInfo ? (
         <div className="mt-10 mb-5 flex h-full flex-col justify-between">
           <div className="flex flex-col gap-10">
-            <Link href="/discover" className="self-center">
-              <h1 className="self-center text-2xl font-medium text-slate-700 dark:text-slate-300">
+            <Link
+              href="/discover"
+              className="self-center"
+              onClick={onSidebarClose}
+            >
+              <h1 className="self-center text-2xl font-bold text-slate-700 dark:text-slate-300">
                 Student{" "}
                 <span className="text-purple-600 dark:text-purple-400">
                   Community
@@ -97,12 +100,14 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
             </Link>
             <div className="flex flex-col items-center gap-5">
               <Link
+                onClick={onSidebarClose}
                 href="/discover"
                 className="font-medium text-purple-600 hover:underline dark:text-purple-400"
               >
                 Discover
               </Link>
               <Link
+                onClick={onSidebarClose}
                 href="/blog"
                 className="font-medium text-purple-600 hover:underline dark:text-purple-400"
               >
@@ -141,12 +146,14 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
               <div className="flex justify-center md:hidden">
                 <div className="flex items-center gap-5">
                   <Link
+                    onClick={onSidebarClose}
                     href="/discover"
                     className="font-medium text-purple-600 hover:underline dark:text-purple-400"
                   >
                     Discover
                   </Link>
                   <Link
+                    onClick={onSidebarClose}
                     href="/blog"
                     className="font-medium text-purple-600 hover:underline dark:text-purple-400"
                   >
@@ -156,14 +163,14 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
               </div>
               <div className="block w-[80%] rounded-md border bg-slate-800 md:hidden" />
               <div className="flex flex-col items-center gap-2">
-                <p className="text-2xl font-medium dark:text-slate-300">
+                <p className="text-2xl font-semibold text-slate-700 dark:text-slate-300">
                   Your communities
                 </p>
                 <Divider />
                 {loading ? (
                   <LoadingSkeleton count={4} />
                 ) : (
-                  <div className="flex max-h-[50vh] grow flex-col overflow-y-auto md:max-h-[65vh]">
+                  <div className="flex max-h-[50dvh] grow flex-col overflow-y-auto md:max-h-[65dvh]">
                     {communities === [] ? (
                       <h2>Communities you join will show up here!</h2>
                     ) : (
