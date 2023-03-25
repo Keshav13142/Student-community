@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { institutionCode, codeType } = req.body;
+  const { institutionCode } = req.body;
   const randStr = new Date().toISOString().split(".")[1];
 
   const userData = {
@@ -120,28 +120,49 @@ export default async function handler(req, res) {
       (item) => item.code === institutionCode
     ).type;
 
+    if (userType === "MEMBER") {
+      await prisma.pendingApprovals.create({
+        data: {
+          institution: {
+            connect: {
+              id: institution.id,
+            },
+          },
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+      });
+    }
+
     await prisma.user.update({
       where: { id: user.id },
       data: {
         ...userData,
         isInstitutionAdmin: userType === "ADMIN",
         enrollmentStatus: userType === "ADMIN" ? "APPROVED" : "PENDING",
-        institutionMember: {
-          create: {
-            Institution: {
-              connect: { id: institution.id },
-            },
-            type: userType === "ADMIN" ? "ADMIN" : "MEMBER",
-          },
-        },
-        communityMember: {
-          create: {
-            Community: {
-              connect: { id: community.id },
-            },
-            type: userType === "ADMIN" ? "ADMIN" : "MEMBER",
-          },
-        },
+        ...(userType === "ADMIN"
+          ? {
+              institutionMember: {
+                create: {
+                  Institution: {
+                    connect: { id: institution.id },
+                  },
+                  type: "ADMIN",
+                },
+              },
+              communityMember: {
+                create: {
+                  Community: {
+                    connect: { id: community.id },
+                  },
+                  type: "ADMIN",
+                },
+              },
+            }
+          : {}),
       },
     });
 
