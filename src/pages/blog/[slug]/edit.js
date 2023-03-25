@@ -241,16 +241,15 @@ const EditPost = ({ post, allCategories }) => {
         </AlertDialogOverlay>
       </AlertDialog>
       <div>
-        <div className="flex flex-col items-center justify-center gap-5 py-10 lg:flex-row lg:items-start xl:gap-10  2xl:gap-20">
-          <div className="order-2 flex w-[90ddvw] flex-col gap-10 md:w-[70dvw] lg:order-1 lg:w-[60dvw] xl:w-[50dvw]">
+        <div className="flex flex-col items-center justify-center gap-5 py-10 lg:flex-row lg:items-start xl:gap-10 2xl:gap-20">
+          <div className="order-2 flex w-[90dvw] flex-col gap-10 md:w-[70dvw] lg:order-1 lg:w-[60dvw] xl:w-[50dvw]">
             {fields.map((f, idx) => (
               <InputGroup key={idx} className="flex flex-col">
                 <Input
                   value={inputs[f.name]}
                   name={f.name}
                   placeholder={f.placeholder}
-                  focusBorderColor="purple.400"
-                  borderColor="purple.200"
+                  focusBorderColor="purple.600"
                   onChange={handleInputChange}
                 />
                 {f.rightElement && (
@@ -290,8 +289,7 @@ const EditPost = ({ post, allCategories }) => {
                 value={inputs.newCategory}
                 name="newCategory"
                 placeholder={"Create a new category"}
-                focusBorderColor="purple.400"
-                borderColor="purple.200"
+                focusBorderColor="purple.600"
                 onChange={handleInputChange}
               />
               <InputRightElement>
@@ -305,8 +303,7 @@ const EditPost = ({ post, allCategories }) => {
               name="categoryId"
               isDisabled={inputs.newCategory !== ""}
               placeholder="Choose a category"
-              focusBorderColor="purple.400"
-              borderColor="purple.200"
+              focusBorderColor="purple.600"
             >
               {allCategories?.map((c) => (
                 <option key={c.id} value={c.id}>

@@ -11,6 +11,7 @@ const MarkdownEditor = ({ onChange, value }) => {
       {...(colorMode === "dark" ? { theme: tokyoNight } : {})}
       value={value}
       minHeight="30dvh"
+      maxHeight="55dvh"
       extensions={[
         markdown({
           base: markdownLanguage,

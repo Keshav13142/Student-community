@@ -153,9 +153,8 @@ const CreateNewPost = ({ allCategories }) => {
                 <Input
                   value={inputs[f.name]}
                   name={f.name}
+                  focusBorderColor="purple.600"
                   placeholder={f.placeholder}
-                  focusBorderColor="purple.400"
-                  borderColor="purple.200"
                   onChange={handleInputChange}
                 />
                 {f.rightElement && (
@@ -191,12 +190,11 @@ const CreateNewPost = ({ allCategories }) => {
             <h2 className="self-center text-xl dark:text-slate-300">Options</h2>
             <InputGroup className="flex flex-col">
               <Input
+                focusBorderColor="purple.600"
                 isDisabled={Boolean(inputs.categoryId)}
                 value={inputs.newCategory}
                 name="newCategory"
                 placeholder={"Create a new category"}
-                focusBorderColor="purple.400"
-                borderColor="purple.200"
                 onChange={handleInputChange}
               />
               <InputRightElement>
@@ -205,12 +203,11 @@ const CreateNewPost = ({ allCategories }) => {
               <span className="mt-1 text-red-400">{errors.newCategory}</span>
             </InputGroup>
             <Select
+              focusBorderColor="purple.600"
               onChange={handleInputChange}
               name="categoryId"
               isDisabled={inputs.newCategory !== ""}
               placeholder="Choose a category"
-              focusBorderColor="purple.400"
-              borderColor="purple.200"
             >
               {allCategories?.map((c) => (
                 <option key={c.id} value={c.id}>
