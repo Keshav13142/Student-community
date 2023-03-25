@@ -1,15 +1,14 @@
 import { getCommunityInfo } from "@/lib/api-calls/community";
-import { fetchMessages } from "@/lib/api-calls/messages";
 import { socket } from "@/lib/socket-client";
 import CommunityTopBar from "@/src/components/community/TopBar";
 import ScrollableMessageBox from "@/src/components/messages";
-import { Progress, useToast } from "@chakra-ui/react";
-import { useQueries, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@chakra-ui/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import MessageInputBox from "../../components/messages/InputBox";
 
 const Community = () => {
   const router = useRouter();
@@ -20,27 +19,19 @@ const Community = () => {
   // Get the community id from the URL of the dynamic route in NextJS
   const { communityId } = router.query;
 
-  const [
-    { data: communityData, isLoading: isCommLoading, error },
-    { data: messages, isLoading: isMessagesLoading },
-  ] = useQueries({
-    queries: [
-      {
-        queryKey: ["communityInfo", communityId],
-        queryFn: () => getCommunityInfo(communityId),
-        enabled: Boolean(communityId),
-        refetchOnWindowFocus: false,
-        refetchOnMount: false,
-      },
-      {
-        queryKey: ["messages", communityId],
-        queryFn: () => fetchMessages(communityId),
-        enabled: Boolean(communityId),
-        refetchOnWindowFocus: false,
-        refetchOnMount: false,
-      },
-    ],
-  });
+  const {
+    data: communityData,
+    isLoading: isCommLoading,
+    error,
+  } = useQuery(
+    ["communityInfo", communityId],
+    () => getCommunityInfo(communityId),
+    {
+      enabled: Boolean(communityId),
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    }
+  );
 
   useEffect(() => {
     console.log("SOCKET CONNECTED");
@@ -58,9 +49,11 @@ const Community = () => {
       if (communityId) socket.off(`community-${communityId}`);
       console.log("SOCKET DISCONNECTED");
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [communityId]);
 
   if (error) {
+    router.push(redirect);
     const { message, redirect } = error.response.data;
     toast({
       title: message,
@@ -68,7 +61,6 @@ const Community = () => {
       duration: 2500,
       isClosable: true,
     });
-    router.push(redirect);
     return null;
   }
 
@@ -84,13 +76,6 @@ const Community = () => {
     communityData?.type === "RESTRICTED" &&
     !communityData?.members.find((m) => m.user.id === session.data?.user.id);
 
-  const MessageInputBox = dynamic(
-    () => import("../../components/messages/InputBox"),
-    {
-      ssr: false,
-    }
-  );
-
   return (
     <>
       <Head>
@@ -99,28 +84,22 @@ const Community = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      {isCommLoading || isMessagesLoading ? (
-        <div>
-          <Progress size="md" isIndeterminate colorScheme="purple" />
-        </div>
-      ) : (
-        <div className="flex grow flex-col justify-between">
-          <CommunityTopBar
-            data={{
-              ...communityData,
-              isCurrentUserMod,
-              isCurrentUserAdmin,
-            }}
-            isDisabled={isDisabled}
-          />
-          <ScrollableMessageBox
-            communityId={communityId}
-            messages={messages}
-            isUserAdminOrMod={isCurrentUserMod || isCurrentUserAdmin}
-          />
-          <MessageInputBox isDisabled={isDisabled} communityId={communityId} />
-        </div>
-      )}
+      <div className="flex grow flex-col justify-between">
+        <CommunityTopBar
+          data={{
+            ...communityData,
+            isCurrentUserMod,
+            isCurrentUserAdmin,
+          }}
+          isLoading={isCommLoading}
+          isDisabled={isDisabled}
+        />
+        <ScrollableMessageBox
+          communityId={communityId}
+          isUserAdminOrMod={isCurrentUserMod || isCurrentUserAdmin}
+        />
+        <MessageInputBox isDisabled={isDisabled} communityId={communityId} />
+      </div>
     </>
   );
 };

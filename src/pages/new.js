@@ -19,7 +19,7 @@ import { useMutation } from "@tanstack/react-query";
 import { getServerSession } from "next-auth";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
 import { HiOutlineUpload } from "react-icons/hi";
 import { IoSaveSharp } from "react-icons/io5";
@@ -65,11 +65,11 @@ const fields = [
 const CreateNewPost = ({ allCategories }) => {
   const toast = useToast();
   const router = useRouter();
+  const [content, setContent] = useState("");
 
   const [inputs, setInputs] = useState({
     title: "",
     bannerImage: "",
-    content: "",
     categoryId: null,
     newCategory: "",
     publish: false,
@@ -78,10 +78,6 @@ const CreateNewPost = ({ allCategories }) => {
   const [errors, setErrors] = useState({
     title: null,
     bannerImage: null,
-    content: null,
-    categoryId: null,
-    newCategory: null,
-    publish: null,
   });
 
   const mutation = useMutation(createNewPost, {
@@ -114,7 +110,7 @@ const CreateNewPost = ({ allCategories }) => {
   };
 
   const handleCreate = () => {
-    if (inputs.content.trim().length < 100) {
+    if (content.trim().length < 100) {
       toast({
         title: "Content must contain atleast 100 characters",
         status: "warning",
@@ -124,8 +120,10 @@ const CreateNewPost = ({ allCategories }) => {
       return;
     }
 
+    let postData = { ...inputs, content };
+
     // Check the form inputs for error
-    let parsedInputs = createPostSchema.safeParse(inputs);
+    let parsedInputs = createPostSchema.safeParse(postData);
 
     // Map through the errors and get then in the right format
     if (!parsedInputs.success) {
@@ -133,7 +131,7 @@ const CreateNewPost = ({ allCategories }) => {
       return;
     }
 
-    mutation.mutate(inputs);
+    mutation.mutate(postData);
   };
 
   return (
@@ -173,17 +171,12 @@ const CreateNewPost = ({ allCategories }) => {
               </TabList>
               <TabPanels className="max-h-[60vh] min-h-[30vh] overflow-y-auto">
                 <TabPanel>
-                  <MarkdownEditor
-                    value={inputs.content}
-                    onChange={(value) => {
-                      setInputs((prev) => ({ ...prev, content: value }));
-                    }}
-                  />
+                  <MarkdownEditor value={content} onChange={setContent} />
                 </TabPanel>
                 <TabPanel>
                   <article className="prose max-w-[85vw]  dark:prose-invert">
-                    {inputs.content.trim() !== "" ? (
-                      <RenderMarkdown content={inputs.content} />
+                    {content.trim() !== "" ? (
+                      <RenderMarkdown content={content} />
                     ) : (
                       <div className="text-center font-medium text-slate-500 dark:text-slate-400">
                         Start typing to see the preview
