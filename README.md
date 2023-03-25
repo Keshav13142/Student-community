@@ -27,7 +27,6 @@ Create a `.env` file similar to [`.env.example`](https://github.com/Keshav13142/
 
 ## TODO
 
-- [x] ~~Fix routing after profile creation (only in firefox?)~~
 - [x] ~~Functional Chat messages UI~~
 - [x] ~~Delete/Hide messages~~
 - [x] ~~Don't send message content if they're hidden (in requests)~~
@@ -49,7 +48,9 @@ Create a `.env` file similar to [`.env.example`](https://github.com/Keshav13142/
 - [x] ~~Add dark theme support~~
 - [x] ~~Add relavent meta tags to pages~~
 - [x] ~~Make public communities joinable~~
+- [ ] Fix routing after profile creation
 - [ ] Fix auto scroll on new messages in chat.
+- [ ] Leave communities, and institution
 - [ ] Use react hook form in blog create/edit page
 - [ ] Chat infinite scroll.
 - [ ] Blog page pagination.

@@ -84,10 +84,20 @@ export default async function handler(req, res) {
   } else {
     const institution = await prisma.institution.findFirst({
       where: {
-        [codeType]: institutionCode,
+        institutionCodes: {
+          some: {
+            code: institutionCode,
+          },
+        },
       },
       select: {
         id: true,
+        institutionCodes: {
+          select: {
+            code: true,
+            type: true,
+          },
+        },
       },
     });
 
@@ -106,18 +116,22 @@ export default async function handler(req, res) {
       },
     });
 
+    const userType = institution.institutionCodes.find(
+      (item) => item.code === institutionCode
+    ).type;
+
     await prisma.user.update({
       where: { id: user.id },
       data: {
         ...userData,
-        isInstitutionAdmin: codeType === "adminCode",
-        enrollmentStatus: codeType === "adminCode" ? "APPROVED" : "PENDING",
+        isInstitutionAdmin: userType === "ADMIN",
+        enrollmentStatus: userType === "ADMIN" ? "APPROVED" : "PENDING",
         institutionMember: {
           create: {
             Institution: {
               connect: { id: institution.id },
             },
-            type: codeType === "adminCode" ? "ADMIN" : "MEMBER",
+            type: userType === "ADMIN" ? "ADMIN" : "MEMBER",
           },
         },
         communityMember: {
@@ -125,12 +139,16 @@ export default async function handler(req, res) {
             Community: {
               connect: { id: community.id },
             },
-            type: codeType === "adminCode" ? "ADMIN" : "MEMBER",
+            type: userType === "ADMIN" ? "ADMIN" : "MEMBER",
           },
         },
       },
     });
 
-    res.status(201).json({ redirect: "/enrollment-status" });
+    res
+      .status(201)
+      .json({
+        redirect: userType === "ADMIN" ? "/discover" : "/enrollment-status",
+      });
   }
 }

@@ -35,9 +35,9 @@ const Navbar = ({ onSidebarOpen, showCommunityInfo }) => {
             <IconButton
               variant="ghost"
               colorScheme="purple"
-              fontSize="25px"
+              size={["xs", "sm"]}
               onClick={onSidebarOpen}
-              icon={<HiOutlineMenuAlt2 />}
+              icon={<HiOutlineMenuAlt2 size={20} />}
             />
           </div>
           <Link href="/discover">

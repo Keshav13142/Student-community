@@ -15,17 +15,9 @@ export default async function handler(req, res) {
   const { user } = session;
 
   if (req.method === "POST") {
-    const {
-      username,
-      bio,
-      githubLink,
-      linkedinLink,
-      codeType,
-      name,
-      institutionCode,
-    } = req.body;
+    const { username, bio, githubLink, linkedinLink, name, institutionCode } =
+      req.body;
 
-    // Check if the user has a admin or member code and perform appropriate action
     try {
       if (
         await prisma.user.findUnique({
@@ -40,24 +32,41 @@ export default async function handler(req, res) {
         return;
       }
 
-      // Check if the code is valid
-      if (
-        !(await prisma.institution.findFirst({
-          where: {
-            [codeType]: institutionCode,
+      const institution = await prisma.institution.findFirst({
+        where: {
+          institutionCodes: {
+            some: {
+              code: institutionCode,
+            },
           },
-        }))
-      ) {
+        },
+        select: {
+          id: true,
+          institutionCodes: {
+            select: {
+              code: true,
+              type: true,
+            },
+          },
+        },
+      });
+
+      // Check if the code is valid
+      if (!institution) {
         res
           .status(500)
           .json({ error: "Invalid code!!", ref: "institutionCode" });
         return;
       }
 
-      if (codeType === "adminCode") {
+      const userType = institution.institutionCodes.find(
+        (item) => item.code === institutionCode
+      ).type;
+
+      if (userType === "ADMIN") {
         await prisma.institution.update({
           where: {
-            adminCode: institutionCode,
+            id: institution.id,
           },
           data: {
             members: {
@@ -67,7 +76,7 @@ export default async function handler(req, res) {
                     id: user.id,
                   },
                 },
-                type: codeType === "adminCode" ? "ADMIN" : "MEMBER",
+                type: userType,
               },
             },
           },
@@ -95,19 +104,19 @@ export default async function handler(req, res) {
                     id: user.id,
                   },
                 },
-                type: codeType === "adminCode" ? "ADMIN" : "MEMBER",
+                type: userType,
               },
             },
           },
         });
       }
 
-      if (codeType === "memberCode") {
+      if (userType === "MEMBER") {
         await prisma.pendingApprovals.create({
           data: {
             institution: {
               connect: {
-                memberCode: institutionCode,
+                id: institution.id,
               },
             },
             user: {
@@ -119,15 +128,15 @@ export default async function handler(req, res) {
         });
       }
 
-      // Create the user's profile
+      // Update the user's profile
       const updatedUser = await prisma.user.update({
         where: { id: user.id },
         data: {
           hasProfile: true,
           enrollmentStatus: {
-            set: codeType === "adminCode" ? "APPROVED" : "PENDING",
+            set: userType === "ADMIN" ? "APPROVED" : "PENDING",
           },
-          isInstitutionAdmin: codeType === "adminCode" ? true : false,
+          isInstitutionAdmin: userType === "ADMIN" ? true : false,
           username,
           bio,
           name,

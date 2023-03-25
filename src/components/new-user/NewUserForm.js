@@ -103,22 +103,6 @@ const formFields = [
   },
 ];
 
-const RadioButtons = ({ onChange }) => (
-  <div className="flex items-center gap-10">
-    <span>Code Type</span>
-    <RadioGroup defaultValue="memberCode" onChange={onChange}>
-      <div className="flex gap-5">
-        <Radio colorScheme="blue" value="memberCode" type="button">
-          Member
-        </Radio>
-        <Radio colorScheme="purple" value="adminCode" type="button">
-          Admin
-        </Radio>
-      </div>
-    </RadioGroup>
-  </div>
-);
-
 const reloadSession = () => {
   const event = new Event("visibilitychange");
   document.dispatchEvent(event);
@@ -135,7 +119,6 @@ const NewUserForm = () => {
     router.push("/discover");
   }
 
-  const [codeType, setCodeType] = useState("memberCode");
   const [isGuestLoading, setIsGuestLoading] = useState(false);
 
   const [formValues, setFormValues] = useState({
@@ -224,10 +207,7 @@ const NewUserForm = () => {
       return;
     }
 
-    newProfileMutation.mutate({
-      ...formValues,
-      codeType,
-    });
+    newProfileMutation.mutate(formValues);
   };
 
   return (
@@ -256,12 +236,6 @@ const NewUserForm = () => {
                 <span className="mt-1 text-red-400">{formErrors[f.name]}</span>
               </InputGroup>
             ))}
-            <RadioButtons
-              onChange={(v) => {
-                setCodeType(v);
-                setFromErrors((p) => ({ ...p, institutionCode: null }));
-              }}
-            />
             <div className="flex flex-col gap-4">
               <Button
                 isLoading={newProfileMutation.isLoading}
@@ -301,12 +275,6 @@ const NewUserForm = () => {
                 {formErrors.institutionCode}
               </span>
             </InputGroup>
-            <RadioButtons
-              onChange={(v) => {
-                setCodeType(v);
-                setFromErrors((p) => ({ ...p, institutionCode: null }));
-              }}
-            />
             <Button
               variant="solid"
               type="button"
@@ -317,7 +285,6 @@ const NewUserForm = () => {
                 setIsGuestLoading(true);
                 newGuestMutation.mutate({
                   institutionCode: formValues.institutionCode,
-                  codeType,
                 });
               }}
             >

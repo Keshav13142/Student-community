@@ -65,6 +65,7 @@ const PostComments = ({ post }) => {
       <form className="flex gap-3" onSubmit={handleSendComment}>
         <Input
           value={input}
+          size={["sm", "md"]}
           placeholder="Send a message"
           borderWidth={2}
           onChange={(e) => {
@@ -72,6 +73,7 @@ const PostComments = ({ post }) => {
           }}
         />
         <IconButton
+          size={["sm", "md"]}
           isDisabled={mutation.isLoading}
           icon={<BiSend />}
           type="submit"

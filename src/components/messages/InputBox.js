@@ -48,8 +48,9 @@ const MessageInputBox = ({ isDisabled, communityId }) => {
         }
         hasArrow
       >
-        <div className="flex gap-5 p-3">
+        <div className="flex items-center gap-5 p-3">
           <Input
+            size={["sm", "md"]}
             disabled={isDisabled}
             value={input}
             placeholder="Send a message"
@@ -58,7 +59,12 @@ const MessageInputBox = ({ isDisabled, communityId }) => {
               setInput(e.target.value);
             }}
           />
-          <IconButton isDisabled={isDisabled} icon={<BiSend />} type="submit" />
+          <IconButton
+            isDisabled={isDisabled}
+            icon={<BiSend />}
+            type="submit"
+            size={["sm", "md"]}
+          />
         </div>
       </Tooltip>
     </form>

@@ -1,45 +1,22 @@
-import { Badge, IconButton, Input, useToast } from "@chakra-ui/react";
+import { Badge } from "@chakra-ui/react";
 import Image from "next/image";
-import { FiCopy } from "react-icons/fi";
-
-const InviteCode = ({ code, title }) => {
-  const toast = useToast();
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(code);
-    toast({
-      title: "Code copied to clipboard!",
-      status: "success",
-      orientation: "vertical",
-      position: "top",
-      duration: 1000,
-      isClosable: true,
-      variant: "subtle",
-    });
-  };
-  return (
-    <div className="flex min-w-[60%] gap-5">
-      <span>{title} Code</span>
-      <Input value={code} type="password" isReadOnly variant="flushed" />
-      <IconButton icon={<FiCopy />} onClick={copyToClipboard} />
-    </div>
-  );
-};
+import InviteCode from "../../invite-code";
 
 const CommunityInfo = ({ data, code }) => {
   return (
-    <div className="flex flex-col items-center gap-5">
+    <div className="mx-auto flex max-w-fit flex-col gap-5 text-base font-medium text-slate-600 dark:text-slate-300 md:text-lg">
       <Image
         src="https://illustrations.popsy.co/violet/student-with-diploma.svg"
         alt="default community"
-        className="object-cover"
+        className="self-center object-cover"
         width={300}
         height={300}
       />
-      <div className="font-medium">
-        Type :
+      <div className="flex items-center gap-2">
+        <span>Type :</span>
         <Badge
-          className="ml-2 text-base"
+          fontSize={["2xs", "xs"]}
+          className="max-w-fit text-base"
           variant="outline"
           color={
             data.type === "PUBLIC"
@@ -52,9 +29,12 @@ const CommunityInfo = ({ data, code }) => {
           {data.type}
         </Badge>
       </div>
-      <div className="font-medium">
-        Description :
-        <span className="font-normal"> {data?.desc || "Not provided"}</span>
+      <div className="flex flex-col">
+        <span>Description :</span>
+        <span className="font-normal text-slate-600 dark:text-slate-400">
+          {" "}
+          {data?.desc || "Not provided"}
+        </span>
       </div>
       {data.isCurrentUserAdmin && <InviteCode code={code} title="Invite" />}
     </div>
