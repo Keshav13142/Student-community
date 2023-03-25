@@ -23,7 +23,7 @@ const InstitutionMembers = ({ members, doAction }) => {
         return (
           <div
             key={m.id}
-            className="flex min-w-full items-center justify-between gap-2 rounded-lg border border-purple-400 p-2 shadow-sm md:min-w-[80%]"
+            className="flex min-w-full items-center justify-between gap-2 rounded-lg border-2 border-purple-400 p-2 shadow-sm dark:border-slate-600 md:min-w-[80%]"
           >
             <div className="flex items-center gap-3">
               <Avatar
@@ -45,7 +45,7 @@ const InstitutionMembers = ({ members, doAction }) => {
                     <span className="text-base font-medium">{m.user.name}</span>
                   )}
                 </span>
-                <span className="cursor-pointer text-sm text-blue-700 md:text-base">{`@${m.user.username}`}</span>
+                <span className="cursor-pointer text-sm text-blue-700 dark:text-slate-400 md:text-base">{`@${m.user.username}`}</span>
               </div>
             </div>
             {m.type === "ADMIN" ? (

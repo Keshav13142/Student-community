@@ -68,7 +68,9 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
         <ModalOverlay />
         <ModalContent className="min-w-[30%]">
           <ModalHeader className="mt-5 flex items-center justify-center gap-2 text-center">
-            <h1 className="text-lg text-purple-500 lg:text-xl">{data.name}</h1>
+            <h1 className="text-lg text-purple-500 dark:text-slate-300 lg:text-xl">
+              {data.name}
+            </h1>
             {data.isCurrentUserAdmin && (
               <IconButton
                 size="xs"

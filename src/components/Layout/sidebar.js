@@ -88,7 +88,7 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
         <div className="mt-10 mb-5 flex h-full flex-col justify-between">
           <div className="flex flex-col gap-10">
             <Link href="/discover" className="self-center">
-              <h1 className="self-center text-2xl font-bold text-slate-700 dark:text-slate-300">
+              <h1 className="self-center text-2xl font-medium text-slate-700 dark:text-slate-300">
                 Student{" "}
                 <span className="text-purple-600 dark:text-purple-400">
                   Community

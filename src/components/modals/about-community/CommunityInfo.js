@@ -36,7 +36,7 @@ const CommunityInfo = ({ data, code }) => {
         width={300}
         height={300}
       />
-      <div className="font-bold">
+      <div className="font-medium">
         Type :
         <Badge
           className="ml-2 text-base"
@@ -52,7 +52,7 @@ const CommunityInfo = ({ data, code }) => {
           {data.type}
         </Badge>
       </div>
-      <div className="font-bold">
+      <div className="font-medium">
         Description :
         <span className="font-normal"> {data?.desc || "Not provided"}</span>
       </div>
