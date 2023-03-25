@@ -145,10 +145,6 @@ export default async function handler(req, res) {
       },
     });
 
-    res
-      .status(201)
-      .json({
-        redirect: userType === "ADMIN" ? "/discover" : "/enrollment-status",
-      });
+    res.status(201).end();
   }
 }
