@@ -1,7 +1,6 @@
 import { getInstInviteCodes } from "@/lib/api-calls/institution";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import InviteCode from "../../invite-code";
 
 const InstitutionInfo = ({ data }) => {
@@ -17,13 +16,6 @@ const InstitutionInfo = ({ data }) => {
 
   return (
     <div className="mx-auto flex max-w-fit flex-col gap-5 text-base font-medium text-slate-600 dark:text-slate-300 md:text-lg">
-      <Image
-        src="https://illustrations.popsy.co/violet/business-analysis.svg"
-        alt="default community"
-        className="self-center object-cover"
-        width={200}
-        height={200}
-      />
       <div className="flex flex-col">
         <span>Name :</span>
         <span className="font-normal text-slate-600 dark:text-slate-400">

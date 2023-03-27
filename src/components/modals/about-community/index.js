@@ -6,6 +6,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  Avatar,
   Button,
   IconButton,
   Menu,
@@ -33,7 +34,7 @@ import { AiOutlineClear } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
 import { HiDotsVertical } from "react-icons/hi";
 import { IoExitOutline } from "react-icons/io5";
-import { MdOutlineDelete } from "react-icons/md";
+import { MdOutlineDelete, MdOutlineLockReset } from "react-icons/md";
 import CommunityActions from "../admin-actions/community";
 import CommunityInfo from "./CommunityInfo";
 import { default as CommunityMembers } from "./CommunityMembers";
@@ -42,14 +43,14 @@ import EditCommunityInfo from "./EditCommunityInfo";
 
 const CommunityMenu = ({ communityId, isCurrentUserAdmin, onEditOpen }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [alertInfo, setAlertInfo] = useState();
+  const [alertAction, setAlertAction] = useState();
   const cancelRef = useRef(null);
   const toast = useToast();
   const queryClient = useQueryClient();
   const router = useRouter();
 
   const showAlert = (type) => {
-    setAlertInfo(type);
+    setAlertAction(type);
     onOpen();
   };
 
@@ -140,6 +141,32 @@ const CommunityMenu = ({ communityId, isCurrentUserAdmin, onEditOpen }) => {
     onSettled: onClose,
   });
 
+  const resetCodesMutation = useMutation(communityActions, {
+    onError: ({
+      response: {
+        data: { error, message },
+      },
+    }) => {
+      toast({
+        title: error,
+        description: message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["communityInviteCode"] });
+      toast({
+        title: "Sucessfully reset invite codes",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    },
+    onSettled: onClose,
+  });
+
   const alertTypes = {
     "clear-chat": {
       title: "Clear all messages",
@@ -147,23 +174,29 @@ const CommunityMenu = ({ communityId, isCurrentUserAdmin, onEditOpen }) => {
       action: "Clear",
       mutation: clearChatMutation,
     },
-    "delete-comm": {
+    "delete-community": {
       title: "Delete community",
       desc: "Are you sure? You can't undo this action afterwards.",
       action: "Delete",
       mutation: deleteCommMutation,
     },
-    "leave-comm": {
+    "leave-community": {
       title: "Leave community",
       desc: "Are you sure? You can't undo this action afterwards.\nMessages you sent won't be deleted.",
       action: "Leave",
       mutation: leaveCommMutation,
     },
+    "reset-code": {
+      title: "Reset invite code",
+      desc: "Performing this action will invalidate all previous invite codes and cannot be reverted.",
+      action: "Reset",
+      mutation: resetCodesMutation,
+    },
   };
 
   const handleAlertClick = () => {
-    const alert = alertTypes[alertInfo];
-    alert.mutation.mutate({ communityId, action: alert.action.toLowerCase() });
+    const alert = alertTypes[alertAction];
+    alert.mutation.mutate({ communityId, action: alertAction });
   };
 
   return (
@@ -177,20 +210,20 @@ const CommunityMenu = ({ communityId, isCurrentUserAdmin, onEditOpen }) => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              {alertTypes[alertInfo]?.title}
+              {alertTypes[alertAction]?.title}
             </AlertDialogHeader>
-            <AlertDialogBody>{alertTypes[alertInfo]?.desc}</AlertDialogBody>
+            <AlertDialogBody>{alertTypes[alertAction]?.desc}</AlertDialogBody>
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>
               <Button
                 colorScheme="red"
-                isLoading={alertTypes[alertInfo]?.mutation.isLoading}
+                isLoading={alertTypes[alertAction]?.mutation.isLoading}
                 onClick={handleAlertClick}
                 ml={3}
               >
-                {alertTypes[alertInfo]?.action}
+                {alertTypes[alertAction]?.action}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -217,6 +250,15 @@ const CommunityMenu = ({ communityId, isCurrentUserAdmin, onEditOpen }) => {
               </MenuItem>
               <MenuItem
                 color="red.300"
+                icon={<MdOutlineLockReset size={20} />}
+                onClick={() => {
+                  showAlert("reset-code");
+                }}
+              >
+                Reset invite codes
+              </MenuItem>
+              <MenuItem
+                color="red.300"
                 icon={<AiOutlineClear size={20} />}
                 onClick={() => {
                   showAlert("clear-chat");
@@ -228,7 +270,7 @@ const CommunityMenu = ({ communityId, isCurrentUserAdmin, onEditOpen }) => {
                 color="red.300"
                 icon={<MdOutlineDelete size={20} />}
                 onClick={() => {
-                  showAlert("delete-comm");
+                  showAlert("delete-community");
                 }}
               >
                 Delete community
@@ -238,7 +280,7 @@ const CommunityMenu = ({ communityId, isCurrentUserAdmin, onEditOpen }) => {
           <MenuItem
             icon={<IoExitOutline size={20} />}
             onClick={() => {
-              showAlert("leave-comm");
+              showAlert("leave-community");
             }}
           >
             Leave community
@@ -264,6 +306,7 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
 
   const [tabIndex, setTabIndex] = useState(0);
   const handleTabsChange = (index) => {
+    if (index !== 0) setIsEditMode(false);
     setTabIndex(index);
   };
 
@@ -294,9 +337,12 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
         <ModalOverlay />
         <ModalContent className="min-w-[30%]">
           <ModalHeader className="mt-5 flex items-center justify-center gap-2">
-            <h1 className="text-lg text-purple-500 dark:text-slate-300 lg:text-xl">
-              {data.name}
-            </h1>
+            <div className="flex items-center gap-2">
+              <Avatar src={data?.image} name={data?.name} size="sm" />
+              <h1 className="text-xl text-purple-500 dark:text-slate-300 md:text-2xl">
+                {data?.name}
+              </h1>
+            </div>
             {data.isCurrentUserMember && (
               <CommunityMenu
                 communityId={data.id}
@@ -334,7 +380,7 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
                       }}
                     />
                   ) : (
-                    <CommunityInfo data={data} code={codeData?.code} />
+                    <CommunityInfo data={data} code={codeData?.[0].code} />
                   )}
                 </TabPanel>
                 <TabPanel>
