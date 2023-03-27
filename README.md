@@ -48,9 +48,9 @@ npm run dev
 - [x] ~~Make public communities joinable~~
 - [x] ~~Fix routing after profile creation~~
 - [x] ~~Make codeType as a separate entity~~
+- [x] ~~Clear chat, delelte comm (only admin) and leave community~~
 - [ ] Fix auto scroll on new messages in chat.
-- [ ] Leave communities, and institution
-- [ ] Reset institution codes (by admins)
+- [ ] Reset institution/community codes (by admins)
 - [ ] Use react hook form in blog create/edit page
 - [ ] Chat infinite scroll.
 - [ ] Blog page pagination.
