@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       res.json(posts);
     } catch (error) {
       console.log(error);
-      res.status(422).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   }
 
@@ -110,7 +110,7 @@ export default async function handler(req, res) {
       });
     } catch (error) {
       console.log(error);
-      res.status(422).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   }
 
@@ -167,7 +167,7 @@ export default async function handler(req, res) {
       });
     } catch (error) {
       console.log(error);
-      res.status(422).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   }
 
@@ -187,7 +187,7 @@ export default async function handler(req, res) {
       });
     } catch (error) {
       console.log(error);
-      res.status(422).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   }
 }
