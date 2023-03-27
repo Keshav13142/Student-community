@@ -15,7 +15,7 @@ const PostComments = ({ post }) => {
       toast({
         title: "Failed to send message😢",
         status: "error",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     },

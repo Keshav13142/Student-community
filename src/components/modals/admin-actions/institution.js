@@ -37,7 +37,7 @@ const options = {
 const toastOptions = {
   title: "Something went wrong!😢",
   status: "error",
-  duration: 3000,
+  duration: 5000,
   isClosable: true,
 };
 

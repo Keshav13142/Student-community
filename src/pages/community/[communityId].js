@@ -30,6 +30,7 @@ const Community = () => {
       enabled: Boolean(communityId),
       refetchOnWindowFocus: false,
       refetchOnMount: false,
+      retry: false,
     }
   );
 
@@ -53,8 +54,8 @@ const Community = () => {
   }, [communityId]);
 
   if (error) {
-    router.push(redirect);
     const { message, redirect } = error.response.data;
+    router.push(redirect);
     toast({
       title: message,
       status: "warning",
@@ -72,9 +73,12 @@ const Community = () => {
     (m) => m.user.id === session.data?.user.id && m.type === "MODERATOR"
   );
 
+  const isCurrentUserMember = communityData?.members.find(
+    (m) => m.user.id === session.data?.user.id
+  );
+
   const isDisabled =
-    communityData?.type === "RESTRICTED" &&
-    !communityData?.members.find((m) => m.user.id === session.data?.user.id);
+    communityData?.type === "RESTRICTED" && !isCurrentUserMember;
 
   return (
     <>
@@ -90,6 +94,7 @@ const Community = () => {
             ...communityData,
             isCurrentUserMod,
             isCurrentUserAdmin,
+            isCurrentUserMember,
           }}
           isLoading={isCommLoading}
           isDisabled={isDisabled}

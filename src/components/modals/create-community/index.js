@@ -35,7 +35,7 @@ const CreateCommunityModal = ({ isOpen, onClose, onSidebarClose }) => {
         title: error,
         status: "error",
         description: "Unable to create community",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     },
@@ -47,7 +47,7 @@ const CreateCommunityModal = ({ isOpen, onClose, onSidebarClose }) => {
       toast({
         title: "Created community successfully!",
         status: "success",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
       router.push(redirect);

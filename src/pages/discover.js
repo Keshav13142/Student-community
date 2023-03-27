@@ -57,6 +57,7 @@ const DiscoverCommunities = () => {
             {publicCommunities?.length > 0 ? (
               publicCommunities?.map((c) => (
                 <Link
+                  key={c.id}
                   href={`/community/${c.id}`}
                   className="flex min-w-[80dvw] items-center justify-between rounded-md border border-slate-500 p-3 md:min-w-[60dvw] lg:min-w-[30dvw]"
                 >

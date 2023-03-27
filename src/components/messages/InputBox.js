@@ -14,9 +14,10 @@ const MessageInputBox = ({ isDisabled, communityId }) => {
   const mutation = useMutation(sendMessage, {
     onError: () => {
       toast({
-        title: "Failed to send message😢",
+        title: "Failed to send message",
+        description: "Refresh the page or try again later",
         status: "error",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     },

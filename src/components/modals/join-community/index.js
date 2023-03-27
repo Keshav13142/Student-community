@@ -30,7 +30,7 @@ const JoinCommunity = ({ isOpen, onClose, onSidebarClose }) => {
       toast({
         title: error.response.data.error,
         status: "error",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     },

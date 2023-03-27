@@ -88,7 +88,7 @@ const ScrollableMessageBox = ({ communityId, isUserAdminOrMod }) => {
       toast({
         title: "Unable to perform action",
         status: "error",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     },

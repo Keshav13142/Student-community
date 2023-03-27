@@ -49,7 +49,7 @@ const EditInstitutionInfo = ({ data, onCancel }) => {
       toast({
         title: "Failed to update!!",
         status: "error",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     },

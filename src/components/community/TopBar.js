@@ -31,7 +31,7 @@ const CommunityTopBar = ({ data, isDisabled }) => {
       toast({
         title: error.response.data.error,
         status: "info",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     },
@@ -40,7 +40,7 @@ const CommunityTopBar = ({ data, isDisabled }) => {
       toast({
         title: "A request has been sent to the admin!",
         status: "info",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     },
@@ -51,7 +51,7 @@ const CommunityTopBar = ({ data, isDisabled }) => {
       toast({
         title: "Something went wrong!",
         status: "info",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     },
@@ -62,7 +62,7 @@ const CommunityTopBar = ({ data, isDisabled }) => {
       toast({
         title: `Joined ${data.name}`,
         status: "success",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     },
