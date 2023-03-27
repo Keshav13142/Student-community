@@ -78,7 +78,7 @@ const CommunityTopBar = ({ data, isDisabled }) => {
     <>
       <AboutCommunity data={data} isOpen={isAboutOpen} onClose={onAboutClose} />
       <div className="flex items-center justify-between border-b-2 border-b-slate-200 p-2 dark:border-b-slate-800">
-        <div className="flex items-center gap-2 md:gap-4">
+        <div className="flex max-w-fit items-center gap-2 md:gap-4">
           <IconButton
             size="sm"
             bg="transparent"
@@ -87,7 +87,7 @@ const CommunityTopBar = ({ data, isDisabled }) => {
               router.push("/discover");
             }}
           />
-          <Avatar src={data?.image} size={["sm", "md"]} />
+          <Avatar name={data?.name} size={["sm", "md"]} />
           <h3 className="flex text-base font-medium dark:text-slate-300 md:text-xl">
             {data?.name}
           </h3>
