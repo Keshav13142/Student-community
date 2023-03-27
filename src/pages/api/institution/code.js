@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         },
       },
       select: {
-        institutionCodes: {
+        inviteCodes: {
           select: {
             code: true,
             type: true,
@@ -29,6 +29,6 @@ export default async function handler(req, res) {
         },
       },
     });
-    res.json(codes.institutionCodes);
+    res.json(codes.inviteCodes);
   }
 }

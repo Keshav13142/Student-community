@@ -38,7 +38,7 @@ export default async function handler(req, res) {
 
     const institution = await prisma.institution.findFirst({
       where: {
-        institutionCodes: {
+        inviteCodes: {
           some: {
             code: institutionCode,
           },
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
       },
       select: {
         id: true,
-        institutionCodes: {
+        inviteCodes: {
           select: {
             code: true,
             type: true,
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    const userType = institution.institutionCodes.find(
+    const userType = institution.inviteCodes.find(
       (item) => item.code === institutionCode
     ).type;
 

@@ -13,16 +13,21 @@ export default async function handler(req, res) {
   }
 
   const { user } = session;
-  const { communityId } = req.query;
 
   if (req.method !== "POST") {
     res.status(405).end();
     return;
   }
 
+  const { communityId } = req.query;
   const { action } = req.body;
 
-  if (action === "delete") {
+  if (action === "delete-community") {
+    if (!checkIfUserIsCommAdmin(user.id, communityId)) {
+      res.status(400).end();
+      return;
+    }
+
     try {
       await prisma.community.delete({ where: { id: communityId } });
 
@@ -30,16 +35,19 @@ export default async function handler(req, res) {
       return;
     } catch (error) {
       console.log(error);
-      res
-        .status(500)
-        .json({
-          error: "Failed to delete community",
-          message: "Try again later",
-        });
+      res.status(500).json({
+        error: "Failed to delete community",
+        message: "Try again later",
+      });
     }
   }
 
-  if (action === "clear") {
+  if (action === "clear-chat") {
+    if (!checkIfUserIsCommAdmin(user.id, communityId)) {
+      res.status(400).end();
+      return;
+    }
+
     try {
       const { count } = await prisma.message.deleteMany({
         where: { communityId },
@@ -48,22 +56,15 @@ export default async function handler(req, res) {
       return;
     } catch (error) {
       console.log(error);
-      res
-        .status(500)
-        .json({
-          error: "Failed to clear messages",
-          message: "Try again later",
-        });
+      res.status(500).json({
+        error: "Failed to clear messages",
+        message: "Try again later",
+      });
     }
   }
 
-  if (action === "leave") {
+  if (action === "leave-community") {
     try {
-      if (!checkIfUserIsCommAdmin(user.id, communityId)) {
-        res.status(400).end();
-        return;
-      }
-
       const commAdmins = await prisma.communityMember.findMany({
         where: { communityId, type: "ADMIN" },
       });
@@ -94,12 +95,36 @@ export default async function handler(req, res) {
       return;
     } catch (error) {
       console.log(error);
-      res
-        .status(500)
-        .json({
-          error: "Failed to leave community",
-          message: "Try again later",
-        });
+      res.status(500).json({
+        error: "Failed to leave community",
+        message: "Try again later",
+      });
+    }
+  }
+
+  if (action === "reset-code") {
+    try {
+      await prisma.inviteCode.deleteMany({ where: { communityId } });
+
+      await prisma.community.update({
+        where: { id: communityId },
+        data: {
+          inviteCodes: {
+            create: {
+              type: "MEMBER",
+            },
+          },
+        },
+      });
+
+      res.status(200).end();
+      return;
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        error: "Failed to reset codes",
+        message: "Try again later",
+      });
     }
   }
 

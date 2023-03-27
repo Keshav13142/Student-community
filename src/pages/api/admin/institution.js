@@ -60,14 +60,14 @@ export default async function handler(req, res) {
           website,
           supportEmail,
           desc,
-          institutionCodes: {
+          inviteCodes: {
             createMany: {
               data: [{ type: "ADMIN" }, { type: "MEMBER" }],
             },
           },
         },
         include: {
-          institutionCodes: {
+          inviteCodes: {
             select: {
               code: true,
               type: true,
@@ -84,6 +84,11 @@ export default async function handler(req, res) {
           institution: {
             connect: {
               id: institution.id,
+            },
+          },
+          inviteCodes: {
+            create: {
+              type: "MEMBER",
             },
           },
           default: true,

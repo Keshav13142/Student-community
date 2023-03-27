@@ -21,15 +21,21 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "GET") {
-    res.json(
-      await prisma.community.findUnique({
-        where: {
-          id: communityId,
+    const { inviteCodes } = await prisma.community.findUnique({
+      where: {
+        id: communityId,
+      },
+      select: {
+        inviteCodes: {
+          select: {
+            id: true,
+            code: true,
+            type: true,
+          },
         },
-        select: {
-          code: true,
-        },
-      })
-    );
+      },
+    });
+
+    res.json(inviteCodes);
   }
 }

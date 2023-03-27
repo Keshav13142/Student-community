@@ -26,6 +26,7 @@ export default async function handler(req, res) {
     return;
   }
 
+  // TODO -> I feel like this is too complicated, I beleive it can be simplified
   try {
     // Check if user is in the same institution as the community, and also if the code is valid
     const institution = await prisma.institution.findFirst({
@@ -43,7 +44,11 @@ export default async function handler(req, res) {
           {
             communities: {
               some: {
-                code: inviteCode,
+                inviteCodes: {
+                  some: {
+                    code: inviteCode,
+                  },
+                },
               },
             },
           },
@@ -76,7 +81,11 @@ export default async function handler(req, res) {
             },
           },
           {
-            code: inviteCode,
+            inviteCodes: {
+              some: {
+                code: inviteCode,
+              },
+            },
           },
         ],
       },
@@ -97,7 +106,7 @@ export default async function handler(req, res) {
     // Add the user as a member of the community
     const joinedCommunity = await prisma.community.update({
       where: {
-        code: inviteCode,
+        id: community.id,
       },
       data: {
         members: {

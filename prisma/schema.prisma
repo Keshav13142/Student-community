@@ -51,12 +51,12 @@ model User {
   email              String             @unique
   emailVerified      DateTime?
   image              String?
+  enrollmentStatus   Status             @default(PENDING)
   hasProfile         Boolean            @default(false)
   isInstitutionAdmin Boolean            @default(false)
   isGuest            Boolean            @default(false)
   postCount          Int?               @default(0)
   communityCount     Int?               @default(0)
-  enrollmentStatus   EnrollmentStatus   @default(PENDING)
   username           String?            @unique
   bio                String?
   githubLink         String?
@@ -132,22 +132,22 @@ model Community {
   members          CommunityMember[]
   messages         Message[]
   image            String?
-  code             String             @unique @default(cuid())
   institution      Institution        @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   institutionId    String
   pendingApprovals PendingApprovals[]
+  inviteCodes      InviteCode[]
 
   @@index([institutionId])
 }
 
 model PendingApprovals {
-  id            String         @id @default(cuid())
-  status        ApprovalStatus @default(PENDING)
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String       @id @default(cuid())
+  status        Status       @default(PENDING)
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
-  community     Community?     @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  community     Community?   @relation(fields: [communityId], references: [id], onDelete: Cascade)
   communityId   String?
-  institution   Institution?   @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  institution   Institution? @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   institutionId String?
 
   @@unique([userId, communityId])
@@ -195,27 +195,30 @@ model Institution {
   communities      Community[]
   posts            Post[]
   pendingApprovals PendingApprovals[]
-  institutionCodes InstitutionCode[]
+  inviteCodes      InviteCode[]
 }
 
 model InstitutionMember {
-  id            String                @id @default(cuid())
-  user          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type          InstitutionMemberType @default(MEMBER)
-  Institution   Institution           @relation(fields: [institutionId], references: [id], onDelete: Cascade)
-  userId        String                @unique
+  id            String        @id @default(cuid())
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          AdminOrMember @default(MEMBER)
+  Institution   Institution   @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  userId        String        @unique
   institutionId String
 
   @@index([institutionId])
 }
 
-model InstitutionCode {
-  id            String              @id @default(cuid())
-  code          String              @unique @default(cuid())
-  type          InstitutionCodeType
-  institution   Institution         @relation(fields: [institutionId], references: [id], onDelete: Cascade)
-  institutionId String
+model InviteCode {
+  id            String        @id @default(cuid())
+  code          String        @unique @default(cuid())
+  type          AdminOrMember
+  community     Community?    @relation(fields: [communityId], references: [id])
+  institution   Institution?  @relation(fields: [institutionId], references: [id])
+  communityId   String?
+  institutionId String?
 
+  @@index([communityId])
   @@index([institutionId])
 }
 
@@ -225,12 +228,7 @@ enum CommunityType {
   RESTRICTED //Anyone can view, but must request access from admin to become member and send msg
 }
 
-enum InstitutionMemberType {
-  ADMIN // Can create communtities and appoint other admins.
-  MEMBER // Members can also be appointed as moderators, with elevated priviledges
-}
-
-enum InstitutionCodeType {
+enum AdminOrMember {
   ADMIN
   MEMBER
 }
@@ -241,13 +239,7 @@ enum CommunityMemberType {
   MODERATOR
 }
 
-enum ApprovalStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
-
-enum EnrollmentStatus {
+enum Status {
   PENDING
   APPROVED
   REJECTED

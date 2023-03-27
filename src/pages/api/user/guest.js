@@ -38,6 +38,11 @@ export default async function handler(req, res) {
         image:
           "https://i.chzbgr.com/full/9673052416/h59373B90/person-write-code-run-code-have-bug-have-bug-feature",
         website: "https://github.com/keshav13142",
+        inviteCodes: {
+          createMany: {
+            data: [{ type: "ADMIN" }, { type: "MEMBER" }],
+          },
+        },
       },
     });
 
@@ -50,6 +55,11 @@ export default async function handler(req, res) {
         institution: {
           connect: {
             id: institution.id,
+          },
+        },
+        inviteCodes: {
+          create: {
+            type: "MEMBER",
           },
         },
       },
@@ -84,7 +94,7 @@ export default async function handler(req, res) {
   } else {
     const institution = await prisma.institution.findFirst({
       where: {
-        institutionCodes: {
+        inviteCodes: {
           some: {
             code: institutionCode,
           },
@@ -92,7 +102,7 @@ export default async function handler(req, res) {
       },
       select: {
         id: true,
-        institutionCodes: {
+        inviteCodes: {
           select: {
             code: true,
             type: true,
@@ -116,7 +126,7 @@ export default async function handler(req, res) {
       },
     });
 
-    const userType = institution.institutionCodes.find(
+    const userType = institution.inviteCodes.find(
       (item) => item.code === institutionCode
     ).type;
 
