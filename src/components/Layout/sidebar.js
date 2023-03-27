@@ -10,13 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ImInfo } from "react-icons/im";
 import { RiUserAddLine } from "react-icons/ri";
 import { TbBrowserPlus } from "react-icons/tb";
-import AboutInstitution from "../modals/about-institution";
-import CreateCommunityModal from "../modals/create-community";
-import JoinCommunity from "../modals/join-community";
 
 const LoadingSkeleton = ({ count }) => {
   return (
@@ -75,6 +73,22 @@ const SideBar = ({ onSidebarClose, showCommunityInfo }) => {
 
     return null;
   }
+
+  const AboutInstitution = dynamic(
+    () => import("../modals/about-institution"),
+    {
+      ssr: false,
+    }
+  );
+  const JoinCommunity = dynamic(() => import("../modals/join-community"), {
+    ssr: false,
+  });
+  const CreateCommunityModal = dynamic(
+    () => import("../modals/create-community"),
+    {
+      ssr: false,
+    }
+  );
 
   return (
     <>

@@ -11,11 +11,11 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { FaChevronLeft } from "react-icons/fa";
 import { ImInfo } from "react-icons/im";
-import AboutCommunity from "../modals/about-community";
 
 const CommunityTopBar = ({ data, isDisabled }) => {
   const router = useRouter();
@@ -73,6 +73,13 @@ const CommunityTopBar = ({ data, isDisabled }) => {
     onClose: onAboutClose,
     onOpen: onAboutOpen,
   } = useDisclosure();
+
+  const AboutCommunity = dynamic(
+    () => import("../../components/modals/about-community"),
+    {
+      ssr: false,
+    }
+  );
 
   return (
     <>
