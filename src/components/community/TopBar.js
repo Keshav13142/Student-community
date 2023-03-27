@@ -87,7 +87,11 @@ const CommunityTopBar = ({ data, isDisabled }) => {
               router.push("/discover");
             }}
           />
-          <Avatar name={data?.name} size={["sm", "md"]} />
+          <Avatar
+            name={data?.name}
+            size={["sm", "md"]}
+            src={!data.image || data.image === "" ? null : data.image}
+          />
           <h3 className="flex text-base font-medium dark:text-slate-300 md:text-xl">
             {data?.name}
           </h3>
