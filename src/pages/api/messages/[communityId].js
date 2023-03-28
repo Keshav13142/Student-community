@@ -57,7 +57,17 @@ export default async function handler(req, res) {
             },
           },
         },
-        select: messageSelect,
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          sender: {
+            select: {
+              username: true,
+              id: true,
+            },
+          },
+        },
       });
 
       res.status(201).json(message);

@@ -2,14 +2,12 @@ import { sendMessage } from "@/lib/api-calls/messages";
 import { socket } from "@/lib/socket-client";
 import { IconButton, Input, Tooltip, useToast } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { BiSend } from "react-icons/bi";
 
 const MessageInputBox = ({ isDisabled, communityId }) => {
   const [input, setInput] = useState("");
   const toast = useToast();
-  const session = useSession();
 
   const mutation = useMutation(sendMessage, {
     onError: () => {
@@ -21,6 +19,9 @@ const MessageInputBox = ({ isDisabled, communityId }) => {
         isClosable: true,
       });
     },
+    onSuccess: (message) => {
+      socket.emit(`community-${communityId}`, message);
+    },
   });
 
   const handleMessageSend = async (e) => {
@@ -28,14 +29,6 @@ const MessageInputBox = ({ isDisabled, communityId }) => {
     if (mutation.isLoading) return;
     if (input.trim() !== "") {
       setInput("");
-      socket.emit(`community-${communityId}`, {
-        content: input,
-        sender: {
-          id: session.data?.user?.id,
-          username: session.data?.user?.username,
-        },
-        createdAt: new Date(),
-      });
       mutation.mutate({ communityId, content: input });
     }
   };
@@ -61,6 +54,7 @@ const MessageInputBox = ({ isDisabled, communityId }) => {
             }}
           />
           <IconButton
+            isLoading={mutation.isLoading}
             isDisabled={isDisabled}
             icon={<BiSend />}
             type="submit"
