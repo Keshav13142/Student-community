@@ -28,8 +28,6 @@ const Community = () => {
     () => getCommunityInfo(communityId),
     {
       enabled: Boolean(communityId),
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
       retry: false,
     }
   );

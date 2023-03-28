@@ -68,7 +68,8 @@ export default async function handler(req, res) {
       const commAdmins = await prisma.communityMember.findMany({
         where: { communityId, type: "ADMIN" },
       });
-      if (commAdmins.length <= 1) {
+
+      if (commAdmins.length <= 1 && commAdmins[0].userId === user.id) {
         res.status(400).json({
           error: "You are the only admin in the community",
           message:

@@ -380,7 +380,7 @@ const AboutCommunity = ({ isOpen, onClose, data }) => {
                       }}
                     />
                   ) : (
-                    <CommunityInfo data={data} code={codeData?.[0].code} />
+                    <CommunityInfo data={data} code={codeData?.[0]?.code} />
                   )}
                 </TabPanel>
                 <TabPanel>

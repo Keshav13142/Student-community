@@ -128,6 +128,11 @@ export default async function handler(req, res) {
               id: institution.id,
             },
           },
+          inviteCodes: {
+            create: {
+              type: "MEMBER",
+            },
+          },
         },
         select: {
           id: true,

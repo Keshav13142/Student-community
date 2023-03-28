@@ -56,6 +56,18 @@ export default async function handler(req, res) {
       },
       select: {
         name: true,
+        communities: {
+          where: {
+            inviteCodes: {
+              some: {
+                code: inviteCode,
+              },
+            },
+          },
+          select: {
+            id: true,
+          },
+        },
       },
     });
 
@@ -94,6 +106,8 @@ export default async function handler(req, res) {
       },
     });
 
+    console.log(community);
+
     // Return if above case is true
     if (community) {
       res.json({
@@ -106,7 +120,7 @@ export default async function handler(req, res) {
     // Add the user as a member of the community
     const joinedCommunity = await prisma.community.update({
       where: {
-        id: community.id,
+        id: institution.communities[0].id,
       },
       data: {
         members: {
@@ -132,6 +146,7 @@ export default async function handler(req, res) {
       data: joinedCommunity,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error.message });
   }
 }
