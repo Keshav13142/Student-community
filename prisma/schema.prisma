@@ -54,9 +54,6 @@ model User {
   enrollmentStatus   Status             @default(PENDING)
   hasProfile         Boolean            @default(false)
   isInstitutionAdmin Boolean            @default(false)
-  isGuest            Boolean            @default(false)
-  postCount          Int?               @default(0)
-  communityCount     Int?               @default(0)
   username           String?            @unique
   bio                String?
   githubLink         String?
