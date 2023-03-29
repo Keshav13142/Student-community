@@ -13,42 +13,42 @@ import { TailwindIndicator } from "../components/tailwindcss-indicator";
 const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }) {
-  return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <ChakraProvider>
-          <SessionProvider
-            session={pageProps.session}
-            refetchOnWindowFocus={false}
-          >
-            <DefaultHead />
-            <main>
-              {Component.withLayout ? (
-                <Layout
-                  showCommunityInfo={Component.withLayout.showCommunityInfo}
-                >
-                  {Component.withAuth ? (
-                    <AuthGuard>
-                      <Component {...pageProps} />
-                    </AuthGuard>
-                  ) : (
-                    <Component {...pageProps} />
-                  )}
-                </Layout>
-              ) : Component.withAuth ? (
-                <AuthGuard>
-                  <Component {...pageProps} />
-                </AuthGuard>
-              ) : (
-                <Component {...pageProps} />
-              )}
-            </main>
-            <ReactQueryDevtools />
-            <Analytics />
-            <TailwindIndicator />
-          </SessionProvider>
-        </ChakraProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
-  );
+	return (
+		<ErrorBoundary>
+			<QueryClientProvider client={queryClient}>
+				<ChakraProvider>
+					<SessionProvider
+						session={pageProps.session}
+						refetchOnWindowFocus={false}
+					>
+						<DefaultHead />
+						<main>
+							{Component.withLayout ? (
+								<Layout
+									showCommunityInfo={Component.withLayout.showCommunityInfo}
+								>
+									{Component.withAuth ? (
+										<AuthGuard>
+											<Component {...pageProps} />
+										</AuthGuard>
+									) : (
+										<Component {...pageProps} />
+									)}
+								</Layout>
+							) : Component.withAuth ? (
+								<AuthGuard>
+									<Component {...pageProps} />
+								</AuthGuard>
+							) : (
+								<Component {...pageProps} />
+							)}
+						</main>
+						<ReactQueryDevtools />
+						<Analytics />
+						<TailwindIndicator />
+					</SessionProvider>
+				</ChakraProvider>
+			</QueryClientProvider>
+		</ErrorBoundary>
+	);
 }
