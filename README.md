@@ -25,7 +25,7 @@ npm run dev
 
 ## TODO
 
-- [x] ~~Functional Chat messages UI~~
+<!-- - [x] ~~Functional Chat messages UI~~
 - [x] ~~Delete/Hide messages~~
 - [x] ~~Don't send message content if they're hidden (in requests)~~
 - [x] ~~Add requests feature to join institution~~
@@ -49,8 +49,11 @@ npm run dev
 - [x] ~~Fix routing after profile creation~~
 - [x] ~~Make codeType as a separate entity~~
 - [x] ~~Clear chat, delelte comm (only admin) and leave community~~
+- [x] ~~Reset institution/community codes (by admins)~~
+- [x] ~~Guest user login (have a default community)~~
+- [x] ~~automagically figure of code type while new-user registration~~ -->
+
 - [ ] Fix auto scroll on new messages in chat.
-- [ ] Reset institution/community codes (by admins)
 - [ ] Use react hook form in blog create/edit page
 - [ ] Chat infinite scroll.
 - [ ] Blog page pagination.
@@ -64,11 +67,9 @@ npm run dev
 - [ ] Admins can view all students, filter by dept and year.
 - [ ] Update students year(1,2,3 or 4) every year (Batch edit by admins/figure out how to do it automagically)
 - [ ] User pending request screen
-- [ ] automagically figure of code type while new-user registration
 - [ ] HOC for protected API routes, managing req types.
 - [ ] Prisma transactions
 - [ ] Switch to ui.shadcn.com(better accessibility and lighter) or mantine(seems more plug and play) from chakra UI
-- [ ] Guest user login (have a default community)
 - [ ] Customize UI for clg
 - [ ] Show user info on hover in chat?
 - [ ] Pending req for users joining pvt.communities (idk if this is needed)
